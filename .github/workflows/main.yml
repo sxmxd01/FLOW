@@ -3,11 +3,15 @@ name: Build APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Allows you to run it manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./FocusFlow
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,14 +22,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4 # <-- This automatically handles the missing files!
 
       - name: Build APK with Gradle
-        run: ./gradlew assembleDebug # Use 'assembleRelease' for a release build
+        run: gradle assembleDebug # <-- Notice we use 'gradle', not './gradlew'
 
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: FocusFlow-APK
+          path: FocusFlow/app/build/outputs/apk/debug/app-debug.apk
