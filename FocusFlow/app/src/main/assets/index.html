@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="color-scheme" content="dark">
+<title>FocusFlow — Study Planner</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  background:#0a0b0e;color:#dfe1e8;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  -webkit-user-select:none;user-select:none;
+  -webkit-touch-callout:none;
+  overscroll-behavior:none;
+}
+input,textarea,select{-webkit-user-select:text;user-select:text}
+*{touch-action:manipulation}
+.blk,.tl-wrap{touch-action:pan-y}
+.grip,.bar{touch-action:none}
+.blk{transform:translateZ(0);backface-visibility:hidden}
+
+body::before{
+  content:"";position:fixed;inset:-30%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(40% 30% at 15% 0%, rgba(110,122,160,.16), transparent 70%),
+    radial-gradient(36% 28% at 90% 100%, rgba(90,120,130,.10), transparent 70%);
+  filter:blur(38px);
+}
+#app{
+  position:relative;z-index:1;height:100vh;height:100dvh;max-width:520px;margin:0 auto;
+  display:flex;flex-direction:column;padding:0 12px;
+}
+
+/* ---------- header ---------- */
+header{
+  flex:0 0 auto;display:flex;align-items:flex-start;justify-content:space-between;
+  padding:calc(12px + env(safe-area-inset-top)) 4px 10px;gap:10px;
+}
+.hl{display:flex;flex-direction:column;gap:3px;min-width:0}
+.brand{font-size:16px;font-weight:700;letter-spacing:-.2px;color:#e8eaf0}
+.brand span{color:#95a0b8}
+.date-pill{font-size:10.5px;font-weight:600;color:#7c8296;letter-spacing:.2px}
+.hdr-actions{display:flex;gap:6px;flex:0 0 auto}
+.ic{
+  width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.045);color:#a5acc0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .15s,color .15s,transform .1s;
+}
+.ic:active{transform:scale(.92);background:rgba(255,255,255,.10)}
+
+/* ---------- week strip ---------- */
+.week{
+  flex:0 0 auto;display:flex;gap:6px;padding:2px 0 10px;
+  overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain;
+}
+.week::-webkit-scrollbar{display:none}
+.day-chip{
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:9px 2px 8px;border-radius:13px;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.065);
+  color:#7f8598;font-size:10px;font-weight:600;letter-spacing:.4px;
+  transition:background .15s,border-color .15s,color .15s;
+}
+.day-chip:active{transform:scale(.95)}
+.day-chip .dnum{font-size:13.5px;font-weight:700;color:#ccd0dc}
+.day-chip.active{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.20);color:#e3e5ec}
+.day-chip.active .dnum{color:#fff}
+.day-chip.today .dnum{color:#a8dbe8}
+.dbar{width:18px;height:2px;border-radius:2px;background:rgba(255,255,255,.11);overflow:hidden;margin-top:1px}
+.dbar i{display:block;height:100%;border-radius:2px;background:#8ba2b8;transition:width .3s}
+
+/* ---------- materials ---------- */
+.mats{
+  flex:0 0 auto;display:flex;gap:8px;padding:0 0 11px;
+  overflow-x:auto;scrollbar-width:none;min-height:64px;overscroll-behavior-x:contain;
+}
+.mats::-webkit-scrollbar{display:none}
+.mat{
+  position:relative;flex:0 0 150px;padding:10px 12px 9px;border-radius:15px;overflow:hidden;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.075);
+}
+.mat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c);opacity:.95}
+.mat-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:6px}
+.mat-title{
+  font-size:12px;font-weight:600;line-height:1.25;color:#d0d4df;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.pct{font-size:11.5px;font-weight:700;color:#a3aabd;flex:0 0 auto;font-variant-numeric:tabular-nums}
+.bar{height:22px;display:flex;align-items:center;cursor:pointer;touch-action:none}
+.track{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.10);overflow:hidden}
+.fill{height:100%;border-radius:3px;background:var(--c);opacity:.95;transition:width .06s linear}
+.units{font-size:10px;color:#7a8094;margin-top:5px;font-weight:600;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mat.add{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  flex:0 0 88px;color:#7f8598;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.14);
+}
+.mat.add span{font-size:18px;line-height:1;color:#95a0b8}
+.mats-empty{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;color:#6a7083;font-weight:600;
+}
+
+/* ---------- timeline ---------- */
+.tl-wrap{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;position:relative;
+  border-radius:18px;background:rgba(255,255,255,.022);
+  border:1px solid rgba(255,255,255,.065);
+  scrollbar-width:none;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.tl-wrap::-webkit-scrollbar{display:none}
+.tl{position:relative}
+.hour{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.05)}
+.hour span{position:absolute;left:10px;top:-7px;font-size:9.5px;font-weight:600;color:#666c80;font-variant-numeric:tabular-nums}
+.now-line{position:absolute;left:44px;right:8px;height:0;border-top:1px dashed rgba(200,130,145,.65);z-index:5}
+.now-line::before{content:"";position:absolute;left:-2px;top:-3px;width:6px;height:6px;border-radius:50%;background:#cc8a9a;box-shadow:0 0 6px rgba(204,138,154,.7)}
+
+.empty{
+  position:absolute;left:0;right:0;top:32%;text-align:center;padding:0 30px;
+  color:#6a7083;font-size:12px;font-weight:600;line-height:1.7;pointer-events:none;
+}
+.empty b{display:block;color:#959cad;font-size:13px;font-weight:700;margin-bottom:4px}
+
+.blk{
+  position:absolute;left:46px;right:9px;border-radius:11px;
+  display:flex;align-items:stretch;overflow:hidden;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.09);
+  border-left:3px solid var(--c);
+  transition:box-shadow .18s, opacity .18s, background .18s;
+  will-change:transform;
+}
+.blk.dragging{
+  z-index:20;background:rgba(255,255,255,.10);
+  box-shadow:0 16px 32px -14px #000, 0 0 0 1px rgba(255,255,255,.22);
+  transition:none;
+}
+.blk.done{opacity:.45}
+.blk.done .blk-title{text-decoration:line-through;color:#a3aabd}
+.blk.fixed{
+  background:rgba(255,255,255,.028);
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 5px, transparent 5px 11px);
+  border-color:rgba(255,255,255,.075);
+  border-left:3px solid #596173;
+}
+.blk.fixed .blk-title{color:#aab0c0}
+.lock{flex:0 0 22px;display:flex;align-items:center;justify-content:center;color:#6a7083;font-size:9px}
+.grip{
+  flex:0 0 26px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.03);cursor:grab;touch-action:none;
+}
+.grip::before{
+  content:"";width:8px;height:16px;opacity:.65;
+  background-image:radial-gradient(circle, rgba(255,255,255,.65) 1px, transparent 1.3px);
+  background-size:4px 4px;
+}
+.blk-body{flex:1 1 auto;min-width:0;padding:5px 6px 5px 8px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;cursor:pointer}
+.blk-time{font-size:9.5px;font-weight:600;letter-spacing:.3px;color:#868da1;font-variant-numeric:tabular-nums}
+.blk-title{font-size:12px;font-weight:600;line-height:1.2;color:#e3e5ec;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blk.sm .blk-time{display:none}
+.chk{
+  flex:0 0 36px;border:0;background:transparent;color:rgba(255,255,255,.25);
+  font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:color .15s,transform .1s;
+}
+.chk:active{transform:scale(.88)}
+.blk.done .chk{color:#8bb59a}
+
+/* ---------- bottom bar ---------- */
+.bottom{
+  flex:0 0 auto;display:flex;align-items:center;gap:14px;
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+}
+.stats{display:flex;flex-direction:column;line-height:1.15}
+.stat-v{font-size:15px;font-weight:700;color:#d6dae4;font-variant-numeric:tabular-nums}
+.stat-l{font-size:9px;font-weight:600;letter-spacing:.7px;color:#6a7083;text-transform:uppercase}
+.spacer{flex:1 1 auto}
+.btn{
+  border:0;border-radius:12px;font-family:inherit;font-weight:700;cursor:pointer;
+  transition:transform .1s, background .15s;
+}
+.btn:active{transform:scale(.95)}
+.btn.primary{padding:13px 18px;font-size:13px;color:#0a0b0e;background:#d1d6e2}
+.btn.primary:active{background:#bcc3d2}
+.btn.ghost{padding:12px 14px;font-size:12.5px;color:#aab0c0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}
+.btn.ghost:active{background:rgba(255,255,255,.11)}
+.btn.danger{background:rgba(200,115,125,.14);border:1px solid rgba(200,115,125,.28);color:#d099a2}
+.btn.tiny{padding:11px 14px;font-size:12px}
+
+/* ---------- sheet ---------- */
+.backdrop{
+  position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.62);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.backdrop.show{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:520px;margin:0 auto;
+  background:rgba(22,24,30,.97);
+  -webkit-backdrop-filter:blur(18px) saturate(120%);backdrop-filter:blur(18px) saturate(120%);
+  border-top:1px solid rgba(255,255,255,.10);border-radius:22px 22px 0 0;
+  padding:10px 20px calc(20px + env(safe-area-inset-bottom));
+  transform:translateY(112%);transition:transform .28s cubic-bezier(.2,.85,.3,1);
+  box-shadow:0 -20px 50px -22px #000;
+  max-height:88dvh;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain;
+}
+.sheet::-webkit-scrollbar{display:none}
+.sheet.show{transform:translateY(0)}
+.handle{width:36px;height:4px;border-radius:3px;background:rgba(255,255,255,.20);margin:0 auto 16px}
+.sheet-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;background:#7d93a8}
+.sheet-title{font-size:15px;font-weight:700;letter-spacing:-.2px;color:#e8eaf0}
+.sheet-sub{font-size:11.5px;color:#868da1;font-weight:600;margin-top:2px}
+.sec{font-size:9.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:#6a7083;margin:16px 0 4px}
+.sec:first-child{margin-top:0}
+.ctl-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.06)}
+.ctl-row > span{font-size:12.5px;font-weight:600;color:#aab0c0;flex:0 0 auto}
+.stepper{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.055);border-radius:11px;padding:3px;border:1px solid rgba(255,255,255,.075)}
+.stepper button{
+  width:36px;height:32px;border:0;border-radius:8px;background:transparent;color:#dfe2ea;
+  font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;
+}
+.stepper button:active{background:rgba(255,255,255,.12)}
+.stepper b{min-width:62px;text-align:center;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;color:#dfe2ea}
+.sheet-actions{display:flex;gap:9px;margin-top:16px}
+.sheet-actions .btn{flex:1;padding:15px;font-size:13.5px}
+.inp{
+  width:100%;padding:13px 15px;border-radius:12px;font-family:inherit;font-size:16px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);
+  color:#e8eaf0;outline:none;margin-bottom:10px;-webkit-appearance:none;appearance:none;
+}
+.inp::placeholder{color:#6a7083}
+.inp:focus{border-color:rgba(155,170,195,.50)}
+select.inp{background-image:none}
+
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,.06)}
+.row .nm{font-size:12.5px;font-weight:600;color:#ccd0dc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.row .sub{font-size:10.5px;color:#7a8094;font-weight:600;margin-top:2px}
+.row .right{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.xbtn{
+  width:34px;height:34px;border:0;border-radius:9px;background:rgba(255,255,255,.05);
+  color:#7f8598;font-size:16px;cursor:pointer;font-family:inherit;touch-action:manipulation;
+}
+.xbtn:active{background:rgba(255,255,255,.12)}
+
+.stars{display:flex;gap:4px}
+.star{
+  width:36px;height:36px;border:0;border-radius:10px;
+  background:rgba(255,255,255,.055);color:#6a7083;
+  font-size:14px;cursor:pointer;font-family:inherit;transition:background .12s,color .12s;
+  touch-action:manipulation;
+}
+.star.on{background:rgba(205,218,240,.18);color:#dde3f0}
+.star:active{transform:scale(.92)}
+
+.cdot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto;vertical-align:middle;margin-right:6px}
+.mchip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 13px;border-radius:11px;font-family:inherit;font-size:12px;font-weight:600;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);color:#a3aabd;cursor:pointer;
+  max-width:100%;touch-action:manipulation;transition:background .12s,border-color .12s,color .12s;
+}
+.mchip:active{transform:scale(.97)}
+.mchip.sel{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.25);color:#e8eaf0}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0 2px}
+
+.day-mini{
+  width:32px;height:32px;border-radius:9px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);color:#a3aabd;font-family:inherit;font-size:11px;font-weight:700;
+  cursor:pointer;touch-action:manipulation;transition:background .12s,color .12s,border-color .12s;
+}
+.day-mini.on{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);color:#fff}
+
+.goalbar{height:4px;border-radius:3px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:6px}
+.goalbar i{display:block;height:100%;border-radius:3px;background:#95a5bc;transition:width .3s}
+
+.note{font-size:11.5px;line-height:1.6;color:#7a8094;font-weight:500;padding:6px 0 2px}
+.note b{color:#aab0c0;font-weight:700}
+
+.share-preview{margin-bottom:18px}
+.share-preview img{
+  width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+  display:block;background:#0a0b0e;
+}
+.share-preview .cap{font-size:12px;color:#868da1;line-height:1.55;margin-top:10px;font-weight:500}
+.share-preview .btn{width:100%;margin-top:10px}
+
+#toast{
+  position:fixed;left:50%;bottom:96px;transform:translate(-50%,14px);z-index:80;
+  padding:11px 18px;border-radius:100px;font-size:12.5px;font-weight:600;
+  background:rgba(30,32,40,.97);border:1px solid rgba(255,255,255,.11);
+  color:#d1d6e2;backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:.25s;max-width:90vw;
+  display:flex;align-items:center;gap:10px;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast .tmsg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#toast button{
+  border:0;background:transparent;color:#dde3f0;font-weight:800;cursor:pointer;
+  font-family:inherit;font-size:12.5px;text-decoration:underline;padding:0;flex:0 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <div class="hl">
+      <div class="brand">Focus<span>Flow</span></div>
+      <div class="date-pill" id="datePill">—</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="ic" id="reviewBtn" aria-label="Review"></button>
+      <button class="ic" id="shareBtn" aria-label="Share"></button>
+      <button class="ic" id="setBtn" aria-label="Settings"></button>
+    </div>
+  </header>
+
+  <div class="week" id="week"></div>
+  <div class="mats" id="mats"></div>
+
+  <div class="tl-wrap" id="tlWrap">
+    <div class="tl" id="tl"></div>
+  </div>
+
+  <div class="bottom">
+    <div class="stats"><div class="stat-v" id="statPlanned">0h</div><div class="stat-l">planned</div></div>
+    <div class="stats"><div class="stat-v" id="statDone">0%</div><div class="stat-l">done</div></div>
+    <div class="spacer"></div>
+    <button class="btn ghost" id="autoBtn">Auto</button>
+    <button class="btn primary" id="addBtn">+ Block</button>
+  </div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="sheet" id="sheet"></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   CONSTANTS
+============================================================ */
+const HH = 62;
+const PXPM = HH / 60;
+const SNAP = 15;
+const MIN_DUR = 25;
+const MAX_DUR = 150;
+const MIN_FIXED = 15;
+const MAX_FIXED = 720;
+const BREAK = 10;
+const STORAGE_KEY = 'focusflow_v2';
+/* Android bridge (null when opened in a normal browser) */
+const NATIVE = (typeof window.FFNative !== 'undefined') ? window.FFNative : null;
+const DEFAULT_NOTIF = { start:true, end:true, lead:0, fixed:true };
+let nativeStatus = { notif:true, exact:true };
+const SHARE_W = 1080, SHARE_H = 1350;
+
+const COLORS = ['#8095c9','#7fb392','#b58da8','#b8a184','#8095c0','#a58ab5','#8296a8'];
+
+const ICON_REVIEW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg>';
+const ICON_SHARE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+const ICON_SET = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+
+/* ============================================================
+   HELPERS
+============================================================ */
+const $   = s => document.querySelector(s);
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const uid = () => Math.random().toString(36).slice(2,9);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+
+function fmtShort(m){
+  m = ((m % 1440) + 1440) % 1440;
+  const h = Math.floor(m/60), mm = m%60;
+  const hh = h % 12 === 0 ? 12 : h % 12;
+  return `${hh}:${pad(mm)}`;
+}
+function fmtTime(m){
+  m = ((m % 1440) + 1440) % 1440;
+  const h = Math.floor(m/60), mm = m%60;
+  const ap = h >= 12 ? 'PM' : 'AM';
+  const hh = h % 12 === 0 ? 12 : h % 12;
+  return `${hh}:${pad(mm)} ${ap}`;
+}
+function hourLabel(m){
+  const h = Math.floor(m/60) % 24;
+  const hh = h % 12 === 0 ? 12 : h % 12;
+  return `${hh}${h >= 12 ? 'p' : 'a'}`;
+}
+const maxDur = type => type === 'fixed' ? MAX_FIXED : MAX_DUR;
+const minDur = type => type === 'fixed' ? MIN_FIXED : MIN_DUR;
+
+function haptic(ms = 8){
+  try {
+    if (NATIVE){ NATIVE.haptic(Array.isArray(ms) ? 30 : ms); return; }
+    if (navigator.vibrate) navigator.vibrate(ms);
+  } catch(_){}
+}
+
+/* ============================================================
+   STATE + PERSISTENCE
+============================================================ */
+let state, drag = null;
+const sheetCtx = { mode:null, id:null, recurringId:null, draft:null };
+let lastUndo = null;
+
+function defaultState(){
+  return {
+    version: 2,
+    date: iso(new Date()),
+    settings: { wake: 390, sleep: 1380, notif: { ...DEFAULT_NOTIF } },
+    subjects: [],
+    materials: [],
+    tasks: {},
+    recurring: [],
+    history: []
+  };
+}
+
+function load(){
+  try {
+    let raw = null;
+    if (NATIVE){
+      try { raw = NATIVE.getState(); } catch(_){}
+      if (!raw) raw = localStorage.getItem(STORAGE_KEY);   // one-time migration path
+    } else {
+      raw = localStorage.getItem(STORAGE_KEY);
+    }
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data.version !== 2) return null;
+    return data;
+  } catch(e){ return null; }
+}
+
+let persistAsked = false;
+function save(){
+  try {
+    const trimmed = Object.assign({}, state);
+    trimmed.history = (state.history || []).slice(-2000);
+    if (NATIVE){
+      NATIVE.saveState(JSON.stringify(trimmed));
+    } else {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+      if (!persistAsked){
+        persistAsked = true;
+        if (navigator.storage && navigator.storage.persist){
+          navigator.storage.persist().catch(()=>{});
+        }
+      }
+    }
+  } catch(e){ console.warn('save failed', e); }
+}
+
+function normalizeState(){
+  if (!state.recurring) state.recurring = [];
+  if (!state.history) state.history = [];
+  if (!state.tasks) state.tasks = {};
+  if (!state.subjects) state.subjects = [];
+  if (!state.materials) state.materials = [];
+  if (!state.settings) state.settings = { wake: 390, sleep: 1380 };
+  state.settings.notif = Object.assign({}, DEFAULT_NOTIF, state.settings.notif || {});
+}
+function initState(){
+  state = load() || defaultState();
+  normalizeState();
+  state.date = iso(new Date());      // an app opens on today
+}
+
+const tasksOn = d => (state.tasks[d] || (state.tasks[d] = []));
+
+function allTasksOn(dateKey){
+  const concrete = [...(state.tasks[dateKey] || [])];
+  const dow = ((new Date(dateKey + 'T00:00:00').getDay() + 6) % 7) + 1;
+  const recurring = (state.recurring || [])
+    .filter(r => r.days && r.days.includes(dow) && (!r.until || dateKey <= r.until))
+    .map(r => ({
+      id: 'rec:' + r.id + ':' + dateKey,
+      recurringId: r.id,
+      type: 'fixed',
+      title: r.title,
+      start: r.start,
+      dur: r.dur,
+      virtual: true
+    }));
+  return [...concrete, ...recurring];
+}
+
+function findTask(id){
+  if (typeof id === 'string' && id.startsWith('rec:')){
+    const parts = id.split(':');
+    const tpl = state.recurring.find(x => x.id === parts[1]);
+    if (!tpl) return null;
+    return {
+      id, recurringId: tpl.id, type: 'fixed',
+      title: tpl.title, start: tpl.start, dur: tpl.dur, virtual: true
+    };
+  }
+  for (const k in state.tasks){
+    const t = state.tasks[k].find(x => x.id === id);
+    if (t) return t;
+  }
+  return null;
+}
+
+function colorForTask(t){
+  if (t.matId){
+    const m = state.materials.find(x => x.id === t.matId);
+    if (m) return m.color;
+  }
+  if (t.subjectId){
+    const s = state.subjects.find(x => x.id === t.subjectId);
+    if (s) return s.color || '#7a8194';
+  }
+  return '#7a8194';
+}
+function subjectOfMat(m){
+  return m && m.subjectId ? state.subjects.find(s => s.id === m.subjectId) : null;
+}
+
+/* ============================================================
+   TIME WINDOW
+============================================================ */
+function dayWindow(){
+  const w = state.settings.wake;
+  let s = state.settings.sleep;
+  if (s <= w) s = 1440;
+  return [w, s];
+}
+
+/* ============================================================
+   OVERLAP / PLACEMENT
+============================================================ */
+function overlaps(placed, s, dur){
+  return placed.some(p => s < p.start + p.dur && s + dur > p.start);
+}
+function placeBlock(t, placed, lo, hi, pref){
+  const maxStart = hi - t.dur;
+  let s = clamp(pref, lo, Math.max(lo, maxStart));
+  if (!overlaps(placed, s, t.dur)) return s;
+  const span = Math.max(60, maxStart - lo);
+  for (let d = 5; d <= span; d += 5){
+    if (s + d <= maxStart && !overlaps(placed, s+d, t.dur)) return s+d;
+    if (s - d >= lo && !overlaps(placed, s-d, t.dur)) return s-d;
+  }
+  return s;
+}
+function resolve(list){
+  const [lo, hi] = dayWindow();
+  const fixed = list.filter(t => t.type === 'fixed').sort((a,b) => a.start - b.start);
+  const movable = list.filter(t => t.type !== 'fixed').sort((a,b) => a.start - b.start);
+  const placed = [...fixed];
+  for (const t of movable){
+    t.start = placeBlock(t, placed, lo, hi, t.start);
+    placed.push(t);
+    placed.sort((a,b) => a.start - b.start);
+  }
+}
+function freeIntervals(busy, start, end){
+  const b = [...busy].sort((a,x) => a.start - x.start);
+  const out = [];
+  let cur = start;
+  for (const x of b){
+    const s = Math.max(x.start, start), e = Math.min(x.start + x.dur, end);
+    if (s > cur) out.push([cur, s]);
+    cur = Math.max(cur, e);
+  }
+  if (cur < end) out.push([cur, end]);
+  return out.filter(([s,e]) => e - s >= 20);
+}
+
+/* ============================================================
+   LEARNING
+============================================================ */
+function nearestBucket(d){
+  const B = [30,45,60,80];
+  return B.reduce((a,b) => Math.abs(b-d) < Math.abs(a-d) ? b : a, 45);
+}
+function priorScore(h){
+  const t = h + 0.5;
+  const g = (x,c,w) => Math.exp(-((x-c)*(x-c))/(2*w*w));
+  return 0.25 + 0.75 * Math.max(g(t,10,2.2), g(t,16,2.2), 0.6*g(t,20,1.6));
+}
+let _profCache = null, _profDirty = true;
+function hourProfile(){
+  if (_profCache && !_profDirty) return _profCache;
+  const S = new Array(24).fill(0), W = new Array(24).fill(0);
+  const now = Date.now();
+  for (const r of state.history){
+    const age = (now - r.ts) / 86400000;
+    const wt = Math.exp(-age / 5);
+    const h = clamp(Math.floor(r.start / 60), 0, 23);
+    S[h] += wt * r.eff;
+    W[h] += wt;
+  }
+  const raw = [];
+  for (let h = 0; h < 24; h++){
+    const prior = 2 + 3 * priorScore(h);
+    if (W[h] < 0.01){
+      raw[h] = prior;
+    } else {
+      const obs = (S[h] + 3 * 0.5) / (W[h] + 0.5);
+      const conf = Math.min(1, W[h] / 2);
+      raw[h] = conf * obs + (1 - conf) * prior;
+    }
+  }
+  _profCache = raw.map((v,h) => (raw[(h+23)%24] + 2*v + raw[(h+1)%24]) / 4);
+  _profDirty = false;
+  return _profCache;
+}
+function preferredDur(){
+  const B = [30,45,60,80];
+  const S = {}, W = {};
+  const now = Date.now();
+  for (const r of state.history){
+    const age = (now - r.ts) / 86400000;
+    const wt = Math.exp(-age / 5);
+    const b = nearestBucket(r.dur);
+    S[b] = (S[b]||0) + wt * r.eff;
+    W[b] = (W[b]||0) + wt;
+  }
+  let best = 45, bestV = 3;
+  for (const b of B){
+    const v = W[b] ? (S[b] + 3*0.5) / (W[b] + 0.5) : 3;
+    if (v > bestV + 0.08){ bestV = v; best = b; }
+  }
+  return best;
+}
+function slotScore(prof, start, dur){
+  const h0 = Math.floor(start/60), h1 = Math.floor((start + dur - 1)/60);
+  let s = 0, n = 0;
+  for (let h = h0; h <= h1; h++){ s += prof[((h % 24) + 24) % 24]; n++; }
+  return s / Math.max(1,n);
+}
+function logFeedback(t){
+  state.history = state.history.filter(r => r.blockId !== t.id);
+  state.history.push({
+    blockId: t.id, ts: Date.now(), date: state.date,
+    matId: t.matId || null, subjectId: t.subjectId || null,
+    start: t.start, dur: t.dur,
+    pct: t.pct || 0, eff: t.eff || 3
+  });
+  _profDirty = true;
+  save();
+}
+
+/* ============================================================
+   DEMAND
+============================================================ */
+function ratio(r){
+  if (r.kind === 'material') return r.mat.done / r.mat.total;
+  return 0.5;
+}
+function computeDemand(){
+  const matDemand = [];
+  for (const m of state.materials){
+    const rem = Math.max(0, (m.total - m.done) * m.unitMin);
+    if (rem <= 0) continue;
+    matDemand.push({ kind:'material', mat:m, rem, need:0, sid: m.subjectId || null });
+  }
+  const bySubj = {};
+  for (const r of matDemand){
+    if (!r.sid) continue;
+    (bySubj[r.sid] = bySubj[r.sid] || []).push(r);
+  }
+  const subjAlloc = {};
+  for (const sid in bySubj){
+    const recs = bySubj[sid];
+    const subj = state.subjects.find(s => s.id === sid);
+    const goal = subj ? (subj.dailyGoalMin || 0) : 0;
+    const totalRem = recs.reduce((a,r) => a + r.rem, 0);
+    for (const r of recs){
+      const share = totalRem > 0 ? goal * (r.rem / totalRem) : 0;
+      r.need = Math.min(r.rem, Math.max(share, r.mat.dailyGoalMin || 0));
+      subjAlloc[sid] = (subjAlloc[sid] || 0) + r.need;
+    }
+  }
+  for (const r of matDemand){
+    if (!r.sid) r.need = Math.min(r.rem, r.mat.dailyGoalMin || 0);
+  }
+  const out = matDemand.filter(r => r.need >= MIN_DUR);
+  for (const s of state.subjects){
+    const goal = s.dailyGoalMin || 0;
+    if (goal < MIN_DUR) continue;
+    const residual = goal - (subjAlloc[s.id] || 0);
+    if (residual >= MIN_DUR){
+      out.push({ kind:'subject', subj:s, rem: residual, need: residual, sid: s.id });
+    }
+  }
+  out.sort((a,b) => ratio(a) - ratio(b));
+  return out;
+}
+
+/* ============================================================
+   AUTO PLANNER
+============================================================ */
+function autoPlan(){
+  const [lo, hi] = dayWindow();
+  const concrete = tasksOn(state.date);
+  const all = allTasksOn(state.date);
+  const concreteFixed = concrete.filter(t => t.type === 'fixed');
+  const completedStudy = concrete.filter(t => t.type === 'study' && t.done);
+  const recurring = all.filter(t => t.virtual);
+
+  const demand = computeDemand();
+  if (!demand.length){
+    if (!state.subjects.length && !state.materials.length) toast('Add a subject or material first');
+    else toast('Set a daily goal in settings first');
+    return;
+  }
+
+  for (const b of completedStudy){
+    let d = b.matId ? demand.find(x => x.kind==='material' && x.mat.id===b.matId) : null;
+    if (!d && b.subjectId) d = demand.find(x => x.kind==='subject' && x.subj.id===b.subjectId);
+    if (d) d.need -= b.dur;
+  }
+  const queue = demand.filter(d => d.need >= MIN_DUR);
+  if (!queue.length){ toast('Daily goals already met'); return; }
+
+  const occupied = [...concreteFixed, ...recurring, ...completedStudy];
+  const free = freeIntervals(occupied, lo, hi);
+  if (!free.length){ toast('No free time in your day window'); return; }
+
+  const prof = hourProfile();
+  const pdur = preferredDur();
+  const hasHistory = state.history.length >= 3;
+
+  const slots = [];
+  for (const [s,e] of free){
+    let cur = s, guard = 0;
+    while (e - cur >= MIN_DUR && guard++ < 80){
+      let dur = Math.min(pdur, e - cur);
+      dur = Math.floor(dur / 5) * 5;
+      if (dur < MIN_DUR) break;
+      slots.push({ start: cur, dur, used: false, score: slotScore(prof, cur, dur) });
+      cur += dur + BREAK;
+    }
+  }
+  if (!slots.length){ toast('No usable slots today'); return; }
+
+  const SEG = 120;
+  const segs = [];
+  for (let m = lo; m < hi; m += SEG) segs.push({ start:m, end:Math.min(m+SEG,hi), load:0 });
+  const segOf = m => clamp(Math.floor((m - lo) / SEG), 0, segs.length - 1);
+
+  const wSpread = hasHistory ? 0.8 : 1.6;
+  const wScore  = hasHistory ? 1.8 : 0.9;
+  const wDiv    = hasHistory ? 0.5 : 1.0;
+  const span    = Math.max(60, hi - lo);
+
+  const created = [];
+  const MAX_BLOCKS = 10;
+  const before = [...concrete];
+
+  while (queue.length && created.length < MAX_BLOCKS){
+    queue.sort((a,b) => ratio(a) - ratio(b) || b.need - a.need);
+    let best = null;
+    for (const d of queue){
+      for (const slot of slots){
+        if (slot.used) continue;
+        let dur = Math.min(slot.dur, d.need);
+        dur = Math.floor(dur / 5) * 5;
+        if (dur < MIN_DUR) continue;
+        const si = segOf(slot.start);
+        const loadNorm = segs[si].load / SEG;
+        const scoreNorm = clamp(slot.score / 5, 0, 1);
+        let div = 1;
+        if (created.length){
+          let near = Infinity;
+          for (const c of created) near = Math.min(near, Math.abs(slot.start - c.start));
+          div = clamp(near / span, 0, 1);
+        }
+        const val = wSpread * (1 - Math.min(1, loadNorm))
+                  + wScore  * scoreNorm
+                  + wDiv    * div;
+        if (!best || val > best.val + 1e-9) best = { d, slot, dur, si, val };
+      }
+    }
+    if (!best) break;
+    const { d, slot, dur, si } = best;
+    slot.used = true;
+    segs[si].load += dur;
+    created.push({
+      id: uid(), type: 'study',
+      matId: d.kind === 'material' ? d.mat.id : null,
+      subjectId: d.kind === 'material' ? (d.mat.subjectId || null) : d.subj.id,
+      title: d.kind === 'material' ? d.mat.title : d.subj.name,
+      start: slot.start, dur, done: false, pct: 0, eff: 0
+    });
+    d.need -= dur;
+    if (d.need < MIN_DUR) queue.splice(queue.indexOf(d), 1);
+  }
+
+  if (!created.length){ toast('Not enough free time for a block'); return; }
+
+  state.tasks[state.date] = [...concreteFixed, ...completedStudy, ...created];
+  resolve(state.tasks[state.date]);
+  save();
+  render();
+  scrollToTime(Math.min(...created.map(c => c.start)));
+  haptic([10, 30, 10]);
+
+  const n = created.length;
+  pushUndo(`${n} block${n>1?'s':''} planned`, () => {
+    state.tasks[state.date] = before;
+    save();
+    render();
+  });
+}
+
+/* ============================================================
+   UNDO
+============================================================ */
+function pushUndo(desc, fn){
+  lastUndo = { desc, fn };
+  toast(desc, { duration: 4200, action: { label: 'Undo', fn: () => {
+    if (!lastUndo) return;
+    const f = lastUndo.fn;
+    lastUndo = null;
+    try { f(); } catch(e){ console.warn(e); }
+    toast('Restored');
+  }}});
+}
+function deleteTaskObj(t){
+  const list = tasksOn(state.date);
+  const i = list.findIndex(x => x.id === t.id);
+  if (i < 0) return;
+  const copy = { ...t };
+  list.splice(i, 1);
+  save();
+  render();
+  haptic(15);
+  pushUndo('Block deleted', () => {
+    list.splice(i, 0, copy);
+    save();
+    render();
+  });
+}
+function deleteRecurring(id){
+  const i = state.recurring.findIndex(r => r.id === id);
+  if (i < 0) return;
+  const copy = state.recurring[i];
+  state.recurring.splice(i, 1);
+  save();
+  render();
+  haptic(15);
+  pushUndo('Recurring class removed', () => {
+    state.recurring.splice(i, 0, copy);
+    save();
+    render();
+  });
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+function weekDates(){
+  const d = new Date(state.date + 'T00:00:00');
+  const dow = (d.getDay() + 6) % 7;
+  const mon = new Date(d); mon.setDate(d.getDate() - dow);
+  return Array.from({ length: 7 }, (_, i) => {
+    const x = new Date(mon); x.setDate(mon.getDate() + i); return x;
+  });
+}
+function dayProgress(key){
+  const ts = state.tasks[key] || [];
+  const total = ts.filter(t => t.type === 'study').reduce((a,t) => a + t.dur, 0);
+  const done = ts.filter(t => t.type === 'study')
+                 .reduce((a,t) => a + t.dur * ((t.pct||0)/100), 0);
+  return total ? done / total : 0;
+}
+function renderWeek(){
+  const todayKey = iso(new Date());
+  $('#week').innerHTML = weekDates().map(d => {
+    const key = iso(d);
+    const p = dayProgress(key);
+    return `<button class="day-chip ${key === state.date ? 'active' : ''} ${key === todayKey ? 'today' : ''}" data-date="${key}">
+      <span class="dow">${'MTWTFSS'[(d.getDay()+6)%7]}</span>
+      <span class="dnum">${d.getDate()}</span>
+      <span class="dbar"><i style="width:${(p*100).toFixed(0)}%"></i></span>
+    </button>`;
+  }).join('');
+}
+function renderMats(){
+  if (!state.materials.length){
+    $('#mats').innerHTML = `<div class="mats-empty">No materials yet</div>
+      <button class="mat add" id="addMat"><span>+</span>Material</button>`;
+    return;
+  }
+  const cards = state.materials.map(m => {
+    const pct = Math.round((m.done / m.total) * 100);
+    const sj = subjectOfMat(m);
+    return `<div class="mat" style="--c:${m.color}">
+      <div class="mat-hd">
+        <span class="mat-title">${esc(m.title)}</span>
+        <span class="pct">${pct}%</span>
+      </div>
+      <div class="bar" data-id="${m.id}"><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>
+      <div class="units">${sj ? esc(sj.name) + ' · ' : ''}${m.done} / ${m.total} units</div>
+    </div>`;
+  }).join('');
+  $('#mats').innerHTML = cards + `<button class="mat add" id="addMat"><span>+</span>Material</button>`;
+}
+function renderTimeline(){
+  const tl = $('#tl');
+  const [lo, hi] = dayWindow();
+  const totalH = (hi - lo) * PXPM;
+  const list = allTasksOn(state.date);
+  let html = '';
+  for (let m = Math.ceil(lo/60)*60; m <= hi; m += 60){
+    const y = (m - lo) * PXPM;
+    html += `<div class="hour" style="top:${y}px"><span>${hourLabel(m)}</span></div>`;
+  }
+  const now = new Date();
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  if (state.date === iso(now) && nowMin >= lo && nowMin <= hi){
+    html += `<div class="now-line" style="top:${(nowMin-lo)*PXPM}px"></div>`;
+  }
+  for (const t of list){
+    const c = colorForTask(t);
+    const top = (t.start - lo) * PXPM;
+    const h = Math.max(t.dur * PXPM, 24);
+    const isFixed = t.type === 'fixed';
+    const pctTag = (!isFixed && t.pct > 0) ? ` · ${t.pct}%` : '';
+    const recTag = t.virtual ? ' ↻' : '';
+    html += `<div class="blk ${t.done ? 'done' : ''} ${isFixed ? 'fixed' : ''} ${t.dur <= 30 ? 'sm' : ''}"
+      data-id="${t.id}" style="top:${top}px;height:${h}px;--c:${c}">
+      ${isFixed ? '<div class="lock">▮</div>' : '<div class="grip"></div>'}
+      <div class="blk-body">
+        <div class="blk-time">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)}${pctTag}${recTag}</div>
+        <div class="blk-title">${esc(t.title)}</div>
+      </div>
+      ${isFixed ? '' : '<button class="chk" aria-label="toggle done">✓</button>'}
+    </div>`;
+  }
+  if (!list.length){
+    html += `<div class="empty"><b>Nothing scheduled</b>Add fixed blocks like classes, then let Auto plan your study time.</div>`;
+  }
+  tl.style.height = (totalH + 26) + 'px';
+  tl.innerHTML = html;
+}
+function renderStats(){
+  const list = tasksOn(state.date).filter(t => t.type === 'study');
+  const planned = list.reduce((a,t) => a + t.dur, 0);
+  const doneMin = list.reduce((a,t) => a + t.dur * ((t.pct||0)/100), 0);
+  $('#statPlanned').textContent = (planned/60).toFixed(1).replace(/\.0$/, '') + 'h';
+  $('#statDone').textContent = planned ? Math.round(doneMin/planned*100) + '%' : '0%';
+  const d = new Date(state.date + 'T00:00:00');
+  const todayKey = iso(new Date());
+  $('#datePill').textContent = (state.date === todayKey ? 'Today · ' : '') +
+    d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+}
+function render(){
+  renderWeek();
+  renderMats();
+  renderTimeline();
+  renderStats();
+}
+
+/* ============================================================
+   DRAG (grip, 8px threshold)
+============================================================ */
+const tlEl = $('#tl');
+let dragRaf = null;
+let dragPendingY = null;
+
+tlEl.addEventListener('pointerdown', e => {
+  const grip = e.target.closest('.grip');
+  if (!grip) return;
+  const blk = grip.closest('.blk');
+  const t = findTask(blk.dataset.id);
+  if (!t || t.type === 'fixed') return;
+  const [lo, hi] = dayWindow();
+  drag = {
+    id: t.id, el: blk, y0: e.clientY, x0: e.clientX,
+    s0: t.start, ns: t.start, moved: false, started: false,
+    dur: t.dur, lo, hi, pointerId: e.pointerId
+  };
+});
+
+window.addEventListener('pointermove', e => {
+  if (!drag) return;
+  if (!drag.started){
+    const dy = Math.abs(e.clientY - drag.y0);
+    const dx = Math.abs(e.clientX - drag.x0);
+    if (dy < 8 && dx < 8) return;
+    drag.started = true;
+    try { drag.el.setPointerCapture(drag.pointerId); } catch(_){}
+    drag.el.classList.add('dragging');
+    haptic(8);
+  }
+  const dy = e.clientY - drag.y0;
+  drag.moved = true;
+  let ns = Math.round((drag.s0 + dy / PXPM) / SNAP) * SNAP;
+  ns = clamp(ns, drag.lo, Math.max(drag.lo, drag.hi - drag.dur));
+  drag.ns = ns;
+  dragPendingY = (ns - drag.s0) * PXPM;
+  if (dragRaf === null){
+    dragRaf = requestAnimationFrame(() => {
+      if (drag && dragPendingY !== null){
+        drag.el.style.transform = `translate3d(0, ${dragPendingY}px, 0)`;
+      }
+      dragRaf = null;
+    });
+  }
+  e.preventDefault();
+}, { passive: false });
+
+function endDrag(commit){
+  if (!drag) return;
+  const d = drag; drag = null;
+  if (dragRaf){ cancelAnimationFrame(dragRaf); dragRaf = null; }
+  dragPendingY = null;
+  d.el.classList.remove('dragging');
+  d.el.style.transform = '';
+  if (commit && d.started && d.moved){
+    const t = findTask(d.id);
+    if (t){
+      t.start = d.ns;
+      resolve(tasksOn(state.date));
+      save();
+      render();
+      haptic(6);
+    }
+  }
+}
+window.addEventListener('pointerup', () => endDrag(true));
+window.addEventListener('pointercancel', () => endDrag(false));
+
+tlEl.addEventListener('click', e => {
+  const chk = e.target.closest('.chk');
+  if (chk){
+    const t = findTask(chk.closest('.blk').dataset.id);
+    if (t){
+      t.done = !t.done;
+      if (t.done) t.pct = 100;
+      save();
+      haptic(6);
+      render();
+    }
+    return;
+  }
+  const body = e.target.closest('.blk-body');
+  if (body){
+    const id = body.closest('.blk').dataset.id;
+    if (id.startsWith('rec:')){
+      const parts = id.split(':');
+      openSheet('recurring', { recurringId: parts[1] });
+    } else {
+      openBlockSheet(id);
+    }
+  }
+});
+
+/* ============================================================
+   WEEK NAV
+============================================================ */
+$('#week').addEventListener('click', e => {
+  const chip = e.target.closest('.day-chip');
+  if (!chip) return;
+  state.date = chip.dataset.date;
+  save();
+  render();
+  const list = allTasksOn(state.date);
+  const [lo] = dayWindow();
+  const target = list.length ? Math.min(...list.map(t => t.start)) : lo;
+  scrollToTime(target);
+  haptic(4);
+});
+function scrollToTime(min, instant){
+  const [lo] = dayWindow();
+  const el = $('#tlWrap');
+  const target = Math.max(0, (min - lo) * PXPM - 50);
+  el.scrollTo({ top: target, behavior: instant ? 'auto' : 'smooth' });
+}
+
+/* ============================================================
+   MATERIAL PROGRESS DRAG
+============================================================ */
+function updateBarFromX(bar, x){
+  const r = bar._rect || bar.getBoundingClientRect();
+  const p = clamp((x - r.left) / r.width, 0, 1);
+  const m = state.materials.find(v => v.id === bar.dataset.id);
+  if (!m) return;
+  m.done = Math.round(p * m.total);
+  const card = bar.closest('.mat');
+  card.querySelector('.fill').style.width = (p * 100) + '%';
+  card.querySelector('.pct').textContent = Math.round(p * 100) + '%';
+  const sj = subjectOfMat(m);
+  card.querySelector('.units').textContent = `${sj ? sj.name + ' · ' : ''}${m.done} / ${m.total} units`;
+}
+$('#mats').addEventListener('pointerdown', e => {
+  const bar = e.target.closest('.bar');
+  if (!bar) return;
+  bar.dataset.drag = '1';
+  bar._rect = bar.getBoundingClientRect();
+  try { bar.setPointerCapture(e.pointerId); } catch(_){}
+  updateBarFromX(bar, e.clientX);
+  e.preventDefault();
+});
+window.addEventListener('pointermove', e => {
+  const bar = document.querySelector('.bar[data-drag="1"]');
+  if (bar) updateBarFromX(bar, e.clientX);
+});
+function endBarDrag(){
+  const bars = document.querySelectorAll('.bar[data-drag]');
+  if (!bars.length) return;
+  bars.forEach(b => { delete b.dataset.drag; delete b._rect; });
+  save();
+  renderWeek();
+}
+window.addEventListener('pointerup', endBarDrag);
+window.addEventListener('pointercancel', endBarDrag);
+
+/* ============================================================
+   SHEET
+============================================================ */
+const sheet = $('#sheet');
+const backdrop = $('#backdrop');
+function showSheet(){ backdrop.classList.add('show'); sheet.classList.add('show'); sheet.scrollTop = 0; if (NATIVE){ try { NATIVE.setSheetOpen(true); } catch(_){} } }
+function hideSheet(){ backdrop.classList.remove('show'); sheet.classList.remove('show'); sheetCtx.mode = null; if (NATIVE){ try { NATIVE.setSheetOpen(false); } catch(_){} } }
+backdrop.addEventListener('click', hideSheet);
+
+function openSheet(mode, payload){
+  sheetCtx.mode = mode;
+  sheetCtx.id = payload && payload.id || null;
+  sheetCtx.recurringId = payload && payload.recurringId || null;
+  sheetCtx.draft = payload && payload.draft || null;
+  renderSheet();
+  showSheet();
+  haptic(4);
+}
+function renderSheet(){
+  switch (sheetCtx.mode){
+    case 'block':     return renderBlockSheet();
+    case 'recurring': return renderRecurringSheet();
+    case 'newblock':  return renderNewBlockSheet();
+    case 'settings':  return renderSettingsSheet();
+    case 'newmat':    return renderNewMatSheet();
+    case 'newsubj':   return renderNewSubjSheet();
+    case 'review':    return renderReviewSheet();
+    case 'share':     return renderShareSheet();
+  }
+}
+function openBlockSheet(id){ openSheet('block', { id }); }
+
+/* ---------- block sheet ---------- */
+function renderBlockSheet(){
+  const t = findTask(sheetCtx.id);
+  if (!t){ hideSheet(); return; }
+  const isFixed = t.type === 'fixed';
+  const c = colorForTask(t);
+  const mat = t.matId ? state.materials.find(m => m.id === t.matId) : null;
+  const subj = t.subjectId ? state.subjects.find(s => s.id === t.subjectId) : null;
+  const subLine = isFixed ? 'Fixed · locked'
+    : (mat ? (subj ? subj.name : 'Study') + ' · study block'
+           : (subj ? subj.name + ' · subject block' : 'Study block'));
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-hd">
+      <div class="dot" style="background:${c}"></div>
+      <div style="min-width:0">
+        <div class="sheet-title">${esc(t.title)}</div>
+        <div class="sheet-sub">${esc(subLine)} · ${fmtTime(t.start)} – ${fmtTime(t.start + t.dur)}</div>
+      </div>
+    </div>
+    <div class="ctl-row"><span>Start</span>
+      <div class="stepper"><button data-a="s-">−</button><b>${fmtShort(t.start)}</b><button data-a="s+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Duration</span>
+      <div class="stepper"><button data-a="d-">−</button><b>${t.dur} min</b><button data-a="d+">+</button></div>
+    </div>
+    ${isFixed ? `<div class="note">This block is <b>locked</b> — Auto planning always works around it.</div>` : `
+      <div class="sec">Outcome</div>
+      <div class="ctl-row"><span>Completed</span>
+        <div class="stepper"><button data-a="p-">−</button><b>${t.pct || 0}%</b><button data-a="p+">+</button></div>
+      </div>
+      <div class="ctl-row"><span>Efficiency</span>
+        <div class="stars">${[1,2,3,4,5].map(i =>
+          `<button class="star ${(t.eff||0) >= i ? 'on' : ''}" data-a="e${i}">★</button>`).join('')}</div>
+      </div>
+    `}
+    <div class="sheet-actions">
+      <button class="btn danger" data-a="del">Delete</button>
+      ${isFixed ? `<button class="btn primary" data-a="close">Done</button>`
+                : `<button class="btn primary" data-a="log">Save log</button>`}
+    </div>`;
+}
+
+/* ---------- recurring sheet ---------- */
+function renderRecurringSheet(){
+  const r = state.recurring.find(x => x.id === sheetCtx.recurringId);
+  if (!r){ hideSheet(); return; }
+  const dnames = ['M','T','W','T','F','S','S'];
+  const days = r.days || [1];
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-hd">
+      <div class="dot" style="background:#8a95a8"></div>
+      <div style="min-width:0">
+        <div class="sheet-title">${esc(r.title)}</div>
+        <div class="sheet-sub">Recurring · ${days.map(d => dnames[d-1]).join(' ')} · ${fmtTime(r.start)} – ${fmtTime(r.start + r.dur)}</div>
+      </div>
+    </div>
+    <div class="sec">Repeat on</div>
+    <div class="chiprow">
+      ${[1,2,3,4,5,6,7].map(n =>
+        `<button class="day-mini ${days.includes(n) ? 'on' : ''}" data-a="rd${n}">${dnames[n-1]}</button>`
+      ).join('')}
+    </div>
+    <div class="ctl-row"><span>Start</span>
+      <div class="stepper"><button data-a="rs-">−</button><b>${fmtShort(r.start)}</b><button data-a="rs+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Duration</span>
+      <div class="stepper"><button data-a="rd-">−</button><b>${r.dur} min</b><button data-a="rd+">+</button></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn danger" data-a="rdel">Delete class</button>
+      <button class="btn primary" data-a="rclose">Done</button>
+    </div>`;
+}
+
+/* ---------- new block sheet ---------- */
+function nextFreeStart(dur = 45){
+  const [lo, hi] = dayWindow();
+  const list = allTasksOn(state.date);
+  const now = new Date();
+  let from = state.date === iso(now) ? now.getHours()*60 + now.getMinutes() : lo;
+  from = Math.max(lo, Math.round(from / 15) * 15);
+  for (let s = from; s + dur <= hi; s += 15){
+    if (!overlaps(list, s, dur)) return s;
+  }
+  return lo;
+}
+function renderNewBlockSheet(){
+  const d = sheetCtx.draft;
+  const isFixed = d.type === 'fixed';
+  const subjChips = state.subjects.length
+    ? state.subjects.map(s => `<button class="mchip ${d.subjectId === s.id ? 'sel' : ''}" data-a="subj:${s.id}">
+        <span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join('')
+    : `<div class="note">No subjects yet — add one in settings.</div>`;
+  const matChips = state.materials.length
+    ? `<button class="mchip ${!d.matId ? 'sel' : ''}" data-a="mat:">Subject only</button>` +
+      state.materials.map(m => `<button class="mchip ${d.matId === m.id ? 'sel' : ''}" data-a="mat:${m.id}">
+        <span class="cdot" style="background:${m.color}"></span>${esc(m.title)}</button>`).join('')
+    : `<div class="note">No materials yet — the subject alone is enough.</div>`;
+  const dayNames = ['M','T','W','T','F','S','S'];
+
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-title" style="margin-bottom:12px">New block</div>
+    <div class="chiprow" style="padding-top:0">
+      <button class="mchip ${isFixed ? 'sel' : ''}" data-a="type:fixed">Fixed (class, work)</button>
+      <button class="mchip ${!isFixed ? 'sel' : ''}" data-a="type:study">Study</button>
+    </div>
+    ${isFixed
+      ? `<input id="title" class="inp" style="margin-top:12px" placeholder="e.g. Physics lecture" value="${esc(d.title || '')}" enterkeyhint="done" />
+         <div class="ctl-row"><span>Repeat weekly</span>
+           <div class="stepper"><button data-a="repeat:toggle" style="width:auto;padding:0 14px">${d.repeat ? 'On' : 'Off'}</button></div>
+         </div>
+         ${d.repeat ? `<div class="sec">Repeat on</div>
+           <div class="chiprow">
+             ${[1,2,3,4,5,6,7].map(n =>
+               `<button class="day-mini ${(d.days||[]).includes(n) ? 'on' : ''}" data-a="day${n}">${dayNames[n-1]}</button>`
+             ).join('')}
+           </div>` : ''}`
+      : `<div class="sec">Subject</div>
+         <div class="chiprow">${subjChips}</div>
+         <div class="sec">Material <span style="text-transform:none;letter-spacing:0;color:#545a6b">(optional)</span></div>
+         <div class="chiprow">${matChips}</div>`}
+    <div class="ctl-row"><span>Start</span>
+      <div class="stepper"><button data-a="s-">−</button><b>${fmtShort(d.start)}</b><button data-a="s+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Duration</span>
+      <div class="stepper"><button data-a="d-">−</button><b>${d.dur} min</b><button data-a="d+">+</button></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" data-a="close">Cancel</button>
+      <button class="btn primary" data-a="create">Add block</button>
+    </div>`;
+}
+
+/* ---------- settings ---------- */
+function renderSettingsSheet(){
+  const s = state.settings;
+  const hist = state.history.length;
+  const prof = hourProfile();
+  const best = prof.map((v,h) => ({v,h})).sort((a,b) => b.v - a.v).slice(0,3).sort((a,b) => a.h - b.h);
+  const pdur = preferredDur();
+  nativeStatusRefresh();
+  const nf = s.notif || DEFAULT_NOTIF;
+  const tog = (a, v) => `<div class="stepper"><button data-a="${a}" style="width:auto;padding:0 14px">${v ? 'On' : 'Off'}</button></div>`;
+  const notifHtml = NATIVE ? `
+    <div class="sec">Notifications</div>
+    <div class="ctl-row"><span>Block starts</span>${tog('n:start', nf.start)}</div>
+    <div class="ctl-row"><span>Block ends</span>${tog('n:end', nf.end)}</div>
+    <div class="ctl-row"><span>Heads-up before</span>
+      <div class="stepper"><button data-a="n:lead-">−</button><b>${nf.lead ? nf.lead + ' min' : 'Off'}</b><button data-a="n:lead+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Include fixed blocks</span>${tog('n:fixed', nf.fixed)}</div>
+    ${!nativeStatus.notif ? `<div class="ctl-row"><span>Notifications are off</span><button class="btn ghost tiny" data-a="n:perm">Allow</button></div>` : ''}
+    ${!nativeStatus.exact ? `<div class="ctl-row"><span>Exact timing is off</span><button class="btn ghost tiny" data-a="n:exact">Allow</button></div>` : ''}
+    <button class="btn ghost tiny" style="margin-top:8px;width:100%" data-a="n:test">Send test notification</button>
+    <div class="note">Alerts fire when a block starts or ends, even with the app closed. Blocks you've already completed stay quiet.</div>` : '';
+  const dataHtml = NATIVE ? `
+    <div class="sec">Backup</div>
+    <div class="ctl-row"><span>Your data</span>
+      <div style="display:flex;gap:6px"><button class="btn ghost tiny" data-a="data:export">Export</button><button class="btn ghost tiny" data-a="data:import">Import</button></div>
+    </div>
+    <div class="note">Everything stays on this phone. Export a JSON backup any time.</div>` : '';
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-title" style="margin-bottom:14px">Settings</div>
+    <div class="sec" style="margin-top:0">Sleep schedule</div>
+    <div class="ctl-row"><span>Wake up</span>
+      <div class="stepper"><button data-a="w-">−</button><b>${fmtShort(s.wake)}</b><button data-a="w+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Bedtime</span>
+      <div class="stepper"><button data-a="z-">−</button><b>${fmtShort(s.sleep)}</b><button data-a="z+">+</button></div>
+    </div>
+    ${notifHtml}
+    <div class="sec">Subjects &amp; daily goals</div>
+    ${state.subjects.length ? state.subjects.map(sj => `
+      <div class="row">
+        <div style="min-width:0">
+          <div class="nm"><span class="cdot" style="background:${sj.color}"></span>${esc(sj.name)}</div>
+          <div class="sub">${sj.dailyGoalMin} min / day</div>
+        </div>
+        <div class="right">
+          <div class="stepper"><button data-a="sj-:${sj.id}">−</button><b>${sj.dailyGoalMin}m</b><button data-a="sj+:${sj.id}">+</button></div>
+          <button class="xbtn" data-a="sjx:${sj.id}">×</button>
+        </div>
+      </div>`).join('') : `<div class="note">No subjects yet. A subject alone can be auto-planned.</div>`}
+    <button class="btn ghost tiny" style="margin-top:8px;width:100%" data-a="newsubj">+ Add subject</button>
+    <div class="sec">Materials &amp; daily goals</div>
+    ${state.materials.length ? state.materials.map(m => {
+      const sj = subjectOfMat(m);
+      return `<div class="row">
+        <div style="min-width:0">
+          <div class="nm"><span class="cdot" style="background:${m.color}"></span>${esc(m.title)}</div>
+          <div class="sub">${sj ? esc(sj.name) + ' · ' : ''}${m.done}/${m.total} units · ${m.dailyGoalMin}m/day</div>
+        </div>
+        <div class="right">
+          <div class="stepper"><button data-a="mg-:${m.id}">−</button><b>${m.dailyGoalMin}m</b><button data-a="mg+:${m.id}">+</button></div>
+          <button class="xbtn" data-a="mx:${m.id}">×</button>
+        </div>
+      </div>`;
+    }).join('') : `<div class="note">No materials yet.</div>`}
+    <button class="btn ghost tiny" style="margin-top:8px;width:100%" data-a="newmat">+ Add material</button>
+    <div class="sec">Recurring classes</div>
+    ${(state.recurring || []).length ? state.recurring.map(r => {
+      const dnames = ['M','T','W','T','F','S','S'];
+      const days = (r.days || []).map(d => dnames[d-1]).join(' ');
+      return `<div class="row">
+        <div style="min-width:0">
+          <div class="nm">${esc(r.title)}</div>
+          <div class="sub">${days} · ${fmtShort(r.start)} – ${fmtShort(r.start + r.dur)}</div>
+        </div>
+        <div class="right">
+          <button class="xbtn" data-a="rdel-t:${r.id}">×</button>
+        </div>
+      </div>`;
+    }).join('') : `<div class="note">No recurring classes yet. Add one from a Fixed block.</div>`}
+    ${dataHtml}
+    <div class="sec">Learning</div>
+    <div class="note">
+      ${hist < 3
+        ? `<b>${hist}</b> session${hist===1?'':'s'} logged. Log outcomes on study blocks — after 3–4 days the planner adapts to your rhythm.`
+        : `<b>${hist}</b> sessions logged. Best hours: <b>${best.map(b => hourLabel(b.h*60)).join(', ')}</b>. Preferred block length: <b>${pdur} min</b>.`}
+    </div>
+    <div class="sheet-actions">
+      <button class="btn primary" data-a="close">Close</button>
+    </div>`;
+}
+
+/* ---------- new material ---------- */
+function renderNewMatSheet(){
+  const d = sheetCtx.draft;
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-title" style="margin-bottom:14px">New material</div>
+    <input id="title" class="inp" placeholder="e.g. Biology — Chapter 3" value="${esc(d.title || '')}" enterkeyhint="next" autocomplete="off" />
+    <div class="sec" style="margin-top:6px">Subject</div>
+    <select id="subjectId" class="inp">
+      <option value="">No subject</option>
+      ${state.subjects.map(s => `<option value="${s.id}" ${d.subjectId === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}
+    </select>
+    <div class="ctl-row"><span>Total units</span>
+      <div class="stepper"><button data-a="t-">−</button><b>${d.total}</b><button data-a="t+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Minutes per unit</span>
+      <div class="stepper"><button data-a="u-">−</button><b>${d.unitMin} min</b><button data-a="u+">+</button></div>
+    </div>
+    <div class="ctl-row"><span>Daily goal</span>
+      <div class="stepper"><button data-a="g-">−</button><b>${d.dailyGoalMin} min</b><button data-a="g+">+</button></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" data-a="close">Cancel</button>
+      <button class="btn primary" data-a="createMat">Add material</button>
+    </div>`;
+}
+
+/* ---------- new subject ---------- */
+function renderNewSubjSheet(){
+  const d = sheetCtx.draft;
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-title" style="margin-bottom:14px">New subject</div>
+    <input id="name" class="inp" placeholder="e.g. Mathematics" value="${esc(d.name || '')}" enterkeyhint="done" autocomplete="off" />
+    <div class="ctl-row"><span>Daily goal</span>
+      <div class="stepper"><button data-a="sg-">−</button><b>${d.dailyGoalMin} min</b><button data-a="sg+">+</button></div>
+    </div>
+    <div class="note">A subject can be planned on its own. Its colour is used for every block and material.</div>
+    <div class="sheet-actions">
+      <button class="btn ghost" data-a="close">Cancel</button>
+      <button class="btn primary" data-a="createSubj">Add subject</button>
+    </div>`;
+}
+
+/* ---------- review ---------- */
+function renderReviewSheet(){
+  const list = tasksOn(state.date);
+  const study = list.filter(t => t.type === 'study');
+  const planned = study.reduce((a,t) => a + t.dur, 0);
+  const doneMin = study.reduce((a,t) => a + t.dur * ((t.pct||0)/100), 0);
+  const effList = study.filter(t => t.eff > 0).map(t => t.eff);
+  const avgEff = effList.length ? (effList.reduce((a,b)=>a+b,0) / effList.length) : 0;
+  const bySubj = {};
+  for (const t of study){
+    const sid = t.subjectId || '_';
+    bySubj[sid] = (bySubj[sid] || 0) + t.dur * ((t.pct||0)/100);
+  }
+  const subjRows = state.subjects.map(s => {
+    const done = bySubj[s.id] || 0;
+    const pct = s.dailyGoalMin ? Math.min(100, (done / s.dailyGoalMin) * 100) : 0;
+    return `<div class="row" style="border:0;padding:7px 0">
+      <div style="min-width:0;flex:1">
+        <div class="nm"><span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</div>
+        <div class="goalbar"><i style="width:${pct}%"></i></div>
+      </div>
+      <div class="right"><div class="sub" style="margin:0">${Math.round(done)} / ${s.dailyGoalMin}m</div></div>
+    </div>`;
+  }).join('');
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-title" style="margin-bottom:4px">Day review</div>
+    <div class="sheet-sub" style="margin-bottom:12px">
+      ${Math.round(doneMin)} of ${planned} planned minutes · ${avgEff ? avgEff.toFixed(1) + '/5 efficiency' : 'no efficiency logged yet'}
+    </div>
+    ${state.subjects.length ? `<div class="sec" style="margin-top:0">Subject goals</div>${subjRows}`
+      : `<div class="note">Add subjects in settings to track daily goals.</div>`}
+    <div class="sec">Today's blocks</div>
+    ${study.length ? study.sort((a,b)=>a.start-b.start).map(t => `
+      <div class="row" data-a="open:${t.id}" style="cursor:pointer">
+        <div style="min-width:0">
+          <div class="nm"><span class="cdot" style="background:${colorForTask(t)}"></span>${esc(t.title)}</div>
+          <div class="sub">${fmtShort(t.start)} – ${fmtShort(t.start+t.dur)} · ${t.dur}m</div>
+        </div>
+        <div class="right">
+          <div class="sub" style="margin:0">${t.pct || 0}%</div>
+          <div class="sub" style="margin:0;color:#95a5bc">${t.eff ? '★'.repeat(t.eff) : '—'}</div>
+        </div>
+      </div>`).join('') : `<div class="note">No study blocks today.</div>`}
+    <div class="note" style="margin-top:12px">Tap any block to log completion and efficiency.</div>
+    <div class="sheet-actions">
+      <button class="btn primary" data-a="close">Close</button>
+    </div>`;
+}
+
+/* ---------- share ---------- */
+function renderShareSheet(){
+  const list = allTasksOn(state.date);
+  const planSVG = buildDayPlanSVG();
+  const reportSVG = buildDayReportSVG();
+  const enc = svg => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  const planSrc = enc(planSVG);
+  const reportSrc = enc(reportSVG);
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <div class="sheet-title" style="margin-bottom:14px">Share</div>
+    <div class="share-preview">
+      <img src="${planSrc}" alt="Day plan preview"/>
+      <div class="cap">Send this before your day starts. Let a friend know what you're committing to.</div>
+      <button class="btn primary" data-a="share:plan">Share day plan →</button>
+    </div>
+    <div class="share-preview">
+      <img src="${reportSrc}" alt="Day report preview"/>
+      <div class="cap">Send this tonight. Show how the day actually went, with your efficiency and completion.</div>
+      <button class="btn primary" data-a="share:report">Share day report →</button>
+    </div>
+    <div class="note">Image is generated in your browser. Nothing is uploaded.</div>`;
+}
+
+/* ============================================================
+   SHEET ACTIONS
+============================================================ */
+sheet.addEventListener('input', e => {
+  const d = sheetCtx.draft;
+  if (!d) return;
+  if (e.target.id) d[e.target.id] = e.target.value;
+});
+sheet.addEventListener('change', e => {
+  const d = sheetCtx.draft;
+  if (!d) return;
+  if (e.target.id) d[e.target.id] = e.target.value;
+});
+sheet.addEventListener('click', e => {
+  const btn = e.target.closest('[data-a]');
+  if (!btn) return;
+  handleAction(btn.dataset.a);
+});
+
+function handleAction(a){
+  /* ---- block ---- */
+  if (sheetCtx.mode === 'block'){
+    const t = findTask(sheetCtx.id);
+    if (!t) return;
+    const [lo, hi] = dayWindow();
+    const mx = maxDur(t.type), mn = minDur(t.type);
+    if (a === 's-'){ t.start = clamp(t.start - SNAP, lo, hi - t.dur); resolve(tasksOn(state.date)); save(); }
+    else if (a === 's+'){ t.start = clamp(t.start + SNAP, lo, hi - t.dur); resolve(tasksOn(state.date)); save(); }
+    else if (a === 'd-'){ t.dur = clamp(t.dur - 5, mn, mx); resolve(tasksOn(state.date)); save(); }
+    else if (a === 'd+'){ t.dur = clamp(t.dur + 5, mn, mx); resolve(tasksOn(state.date)); save(); }
+    else if (a === 'p-'){ t.pct = clamp((t.pct||0) - 10, 0, 100); if (t.pct === 100) t.done = true; }
+    else if (a === 'p+'){ t.pct = clamp((t.pct||0) + 10, 0, 100); if (t.pct === 100) t.done = true; }
+    else if (a[0] === 'e' && a.length === 2){ t.eff = parseInt(a[1], 10); haptic(4); }
+    else if (a === 'log'){ logFeedback(t); hideSheet(); render(); haptic(8); toast('Outcome logged'); return; }
+    else if (a === 'del'){ deleteTaskObj(t); hideSheet(); return; }
+    else if (a === 'close'){ hideSheet(); return; }
+    render();
+    renderSheet();
+    return;
+  }
+
+  /* ---- recurring ---- */
+  if (sheetCtx.mode === 'recurring'){
+    const r = state.recurring.find(x => x.id === sheetCtx.recurringId);
+    if (!r) return;
+    const days = new Set(r.days || []);
+    if (a.match(/^rd[1-7]$/)){
+      const n = parseInt(a[2], 10);
+      if (days.has(n)) days.delete(n); else days.add(n);
+      r.days = [...days].sort((x,y) => x-y);
+      if (!r.days.length) r.days = [n];
+    }
+    else if (a === 'rs-'){ r.start = clamp(r.start - SNAP, 0, 1440 - r.dur); }
+    else if (a === 'rs+'){ r.start = clamp(r.start + SNAP, 0, 1440 - r.dur); }
+    else if (a === 'rd-'){ r.dur = clamp(r.dur - 5, MIN_FIXED, MAX_FIXED); }
+    else if (a === 'rd+'){ r.dur = clamp(r.dur + 5, MIN_FIXED, MAX_FIXED); }
+    else if (a === 'rdel'){ deleteRecurring(r.id); hideSheet(); return; }
+    else if (a === 'rclose'){ hideSheet(); render(); return; }
+    save();
+    render();
+    renderSheet();
+    return;
+  }
+
+  /* ---- new block ---- */
+  if (sheetCtx.mode === 'newblock'){
+    const d = sheetCtx.draft;
+    if (a === 'type:fixed'){ d.type = 'fixed'; d.dur = clamp(d.dur, MIN_FIXED, MAX_FIXED); }
+    else if (a === 'type:study'){ d.type = 'study'; d.dur = clamp(d.dur, MIN_DUR, MAX_DUR); d.repeat = false; }
+    else if (a === 'repeat:toggle'){ d.repeat = !d.repeat; if (d.repeat && (!d.days || !d.days.length)) d.days = [((new Date(state.date + 'T00:00:00').getDay() + 6) % 7) + 1]; }
+    else if (a.match(/^day[1-7]$/)){
+      const n = parseInt(a[3], 10);
+      d.days = d.days || [];
+      if (d.days.includes(n)) d.days = d.days.filter(x => x !== n);
+      else d.days = [...d.days, n].sort((x,y) => x-y);
+    }
+    else if (a.startsWith('subj:')){ d.subjectId = a.slice(5) || null; d.matId = null; }
+    else if (a.startsWith('mat:')){
+      const id = a.slice(4);
+      if (!id) d.matId = null;
+      else {
+        d.matId = id;
+        const m = state.materials.find(x => x.id === id);
+        d.subjectId = m ? (m.subjectId || null) : d.subjectId;
+      }
+    }
+    else if (a === 's-'){ d.start = clamp(d.start - SNAP, dayWindow()[0], dayWindow()[1] - d.dur); }
+    else if (a === 's+'){ d.start = clamp(d.start + SNAP, dayWindow()[0], dayWindow()[1] - d.dur); }
+    else if (a === 'd-'){ d.dur = clamp(d.dur - 5, minDur(d.type), maxDur(d.type)); }
+    else if (a === 'd+'){ d.dur = clamp(d.dur + 5, minDur(d.type), maxDur(d.type)); }
+    else if (a === 'close'){ hideSheet(); return; }
+    else if (a === 'create'){
+      const [lo, hi] = dayWindow();
+      d.start = clamp(d.start, lo, hi - d.dur);
+      if (d.type === 'fixed' && d.repeat && d.days && d.days.length){
+        state.recurring.push({
+          id: uid(),
+          title: (d.title || '').trim() || 'Class',
+          start: d.start, dur: d.dur,
+          days: [...new Set(d.days)].sort((x,y) => x-y),
+          until: null
+        });
+      } else if (d.type === 'fixed'){
+        tasksOn(state.date).push({
+          id: uid(), type:'fixed',
+          title: (d.title || '').trim() || 'Fixed block',
+          start: d.start, dur: d.dur
+        });
+      } else {
+        const m = d.matId ? state.materials.find(x => x.id === d.matId) : null;
+        const s = d.subjectId ? state.subjects.find(x => x.id === d.subjectId) : null;
+        if (!m && !s){ toast('Pick a subject or material'); return; }
+        tasksOn(state.date).push({
+          id: uid(), type:'study',
+          matId: m ? m.id : null,
+          subjectId: m ? (m.subjectId || null) : s.id,
+          title: m ? m.title : s.name,
+          start: d.start, dur: d.dur, done:false, pct:0, eff:0
+        });
+      }
+      resolve(tasksOn(state.date));
+      save();
+      hideSheet(); render();
+      haptic(10);
+      toast('Block added');
+      return;
+    }
+    renderSheet();
+    return;
+  }
+
+  /* ---- settings ---- */
+  if (sheetCtx.mode === 'settings'){
+    const s = state.settings;
+    let changed = true;
+    if (a === 'w-') s.wake = clamp(s.wake - 15, 0, 720);
+    else if (a === 'w+') s.wake = clamp(s.wake + 15, 0, 720);
+    else if (a === 'z-') s.sleep = clamp(s.sleep - 15, 720, 1440);
+    else if (a === 'z+') s.sleep = clamp(s.sleep + 15, 720, 1440);
+    else if (a.startsWith('sj-:')){ const sj = state.subjects.find(x => x.id === a.slice(4)); if (sj) sj.dailyGoalMin = Math.max(0, sj.dailyGoalMin - 15); }
+    else if (a.startsWith('sj+:')){ const sj = state.subjects.find(x => x.id === a.slice(4)); if (sj) sj.dailyGoalMin = Math.min(600, sj.dailyGoalMin + 15); }
+    else if (a.startsWith('sjx:')) state.subjects = state.subjects.filter(x => x.id !== a.slice(4));
+    else if (a.startsWith('mg-:')){ const m = state.materials.find(x => x.id === a.slice(4)); if (m) m.dailyGoalMin = Math.max(0, m.dailyGoalMin - 15); }
+    else if (a.startsWith('mg+:')){ const m = state.materials.find(x => x.id === a.slice(4)); if (m) m.dailyGoalMin = Math.min(600, m.dailyGoalMin + 15); }
+    else if (a.startsWith('mx:')) state.materials = state.materials.filter(x => x.id !== a.slice(3));
+    else if (a.startsWith('rdel-t:')) deleteRecurring(a.slice(7));
+    else if (a === 'newsubj'){ openSheet('newsubj', { draft: { name:'', dailyGoalMin: 60 } }); return; }
+    else if (a === 'newmat'){ openSheet('newmat', { draft: { title:'', subjectId:'', total:20, unitMin:6, dailyGoalMin:30 } }); return; }
+    else if (a === 'n:start'){ s.notif.start = !s.notif.start; }
+    else if (a === 'n:end'){ s.notif.end = !s.notif.end; }
+    else if (a === 'n:fixed'){ s.notif.fixed = !s.notif.fixed; }
+    else if (a === 'n:lead-' || a === 'n:lead+'){
+      const steps = [0, 5, 10, 15, 30];
+      let i = steps.indexOf(s.notif.lead); if (i < 0) i = 0;
+      i = clamp(i + (a === 'n:lead+' ? 1 : -1), 0, steps.length - 1);
+      s.notif.lead = steps[i];
+    }
+    else if (a === 'n:perm'){ if (NATIVE) NATIVE.requestNotifPermission(); changed = false; }
+    else if (a === 'n:exact'){ if (NATIVE) NATIVE.openExactAlarmSettings(); changed = false; }
+    else if (a === 'n:test'){
+      toast(NATIVE && NATIVE.testNotification() ? 'Test notification sent' : 'Allow notifications first');
+      changed = false;
+    }
+    else if (a === 'data:export'){ exportBackup(); changed = false; }
+    else if (a === 'data:import'){ importBackup(); changed = false; }
+    else if (a === 'close'){ hideSheet(); render(); return; }
+    else changed = false;
+    if (changed){ save(); render(); }
+    renderSheet();
+    return;
+  }
+
+  /* ---- new material ---- */
+  if (sheetCtx.mode === 'newmat'){
+    const d = sheetCtx.draft;
+    if (a === 't-') d.total = Math.max(1, d.total - 1);
+    else if (a === 't+') d.total = Math.min(999, d.total + 1);
+    else if (a === 'u-') d.unitMin = Math.max(1, d.unitMin - 1);
+    else if (a === 'u+') d.unitMin = Math.min(120, d.unitMin + 1);
+    else if (a === 'g-') d.dailyGoalMin = Math.max(0, d.dailyGoalMin - 15);
+    else if (a === 'g+') d.dailyGoalMin = Math.min(600, d.dailyGoalMin + 15);
+    else if (a === 'close'){ hideSheet(); return; }
+    else if (a === 'createMat'){
+      const title = (d.title || '').trim();
+      if (!title){ toast('Name your material'); return; }
+      const subj = d.subjectId ? state.subjects.find(x => x.id === d.subjectId) : null;
+      state.materials.push({
+        id: uid(), title,
+        subjectId: subj ? subj.id : null,
+        total: Math.max(1, d.total),
+        done: 0,
+        unitMin: Math.max(1, d.unitMin),
+        dailyGoalMin: Math.max(0, d.dailyGoalMin),
+        color: subj ? subj.color : COLORS[state.materials.length % COLORS.length]
+      });
+      save();
+      hideSheet(); render();
+      haptic(10);
+      toast('Material added');
+      return;
+    }
+    renderSheet();
+    return;
+  }
+
+  /* ---- new subject ---- */
+  if (sheetCtx.mode === 'newsubj'){
+    const d = sheetCtx.draft;
+    if (a === 'sg-') d.dailyGoalMin = Math.max(0, d.dailyGoalMin - 15);
+    else if (a === 'sg+') d.dailyGoalMin = Math.min(600, d.dailyGoalMin + 15);
+    else if (a === 'close'){ hideSheet(); return; }
+    else if (a === 'createSubj'){
+      const name = (d.name || '').trim();
+      if (!name){ toast('Name your subject'); return; }
+      state.subjects.push({
+        id: uid(), name,
+        dailyGoalMin: Math.max(0, d.dailyGoalMin),
+        color: COLORS[state.subjects.length % COLORS.length]
+      });
+      save();
+      hideSheet(); render();
+      haptic(10);
+      toast('Subject added');
+      return;
+    }
+    renderSheet();
+    return;
+  }
+
+  /* ---- review ---- */
+  if (sheetCtx.mode === 'review'){
+    if (a === 'close'){ hideSheet(); return; }
+    if (a.startsWith('open:')){ openBlockSheet(a.slice(5)); return; }
+  }
+
+  /* ---- share ---- */
+  if (sheetCtx.mode === 'share'){
+    if (a === 'share:plan'){ doShare('plan'); return; }
+    if (a === 'share:report'){ doShare('report'); return; }
+  }
+}
+
+/* ============================================================
+   SHARE — SVG BUILDERS
+============================================================ */
+function cardBase(W, H){
+  return `<defs>
+    <radialGradient id="bg1" cx="15%" cy="5%" r="60%">
+      <stop offset="0%" stop-color="#3a4358" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#0a0b0e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg2" cx="90%" cy="98%" r="55%">
+      <stop offset="0%" stop-color="#2c4048" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#0a0b0e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="#0a0b0e"/>
+  <rect width="${W}" height="${H}" fill="url(#bg1)"/>
+  <rect width="${W}" height="${H}" fill="url(#bg2)"/>`;
+}
+
+function buildDayPlanSVG(){
+  const W = SHARE_W, H = SHARE_H, P = 64;
+  const list = allTasksOn(state.date);
+  const study = list.filter(t => t.type === 'study');
+  const planned = study.reduce((a,t) => a + t.dur, 0);
+  const dateStr = new Date(state.date + 'T00:00:00').toLocaleDateString(undefined,
+    { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+  let s = cardBase(W, H);
+
+  s += `<text x="${P}" y="${P+30}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="22" font-weight="700" fill="#95a0b8" letter-spacing="4">FOCUSFLOW</text>`;
+  s += `<text x="${P}" y="${P+130}" font-family="-apple-system,sans-serif" font-size="76" font-weight="700" fill="#f0f2f6" letter-spacing="-2">My Day Plan</text>`;
+  s += `<text x="${P}" y="${P+180}" font-family="-apple-system,sans-serif" font-size="26" font-weight="500" fill="#868da1">${esc(dateStr)}</text>`;
+
+  // Schedule card
+  const cardY = 300;
+  const rowH = 62;
+  const maxRows = 9;
+  const shown = list.slice(0, maxRows);
+  const cardH = 60 + Math.max(1, shown.length) * rowH + 30;
+
+  s += `<rect x="${P}" y="${cardY}" width="${W-P*2}" height="${cardH}" rx="24" fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.08"/>`;
+  s += `<text x="${P+30}" y="${cardY+40}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">SCHEDULE</text>`;
+
+  let rowY = cardY + 80;
+  if (!shown.length){
+    s += `<text x="${P+30}" y="${rowY+14}" font-family="-apple-system,sans-serif" font-size="22" font-weight="500" fill="#6a7083">Nothing scheduled today</text>`;
+  } else {
+    for (const t of shown){
+      const c = colorForTask(t);
+      const isFixed = t.type === 'fixed';
+      s += `<rect x="${P+22}" y="${rowY-32}" width="${W-P*2-44}" height="${rowH-8}" rx="12" fill="${c}" fill-opacity="${isFixed ? 0.08 : 0.14}"/>`;
+      s += `<rect x="${P+22}" y="${rowY-32}" width="4" height="${rowH-8}" rx="2" fill="${c}"/>`;
+      s += `<text x="${P+44}" y="${rowY-6}" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="${isFixed ? '#95a0b8' : '#f0f2f6'}">${esc(fmtShort(t.start))}</text>`;
+      const titleMax = 32;
+      const ttext = t.title.length > titleMax ? t.title.slice(0, titleMax-1) + '…' : t.title;
+      s += `<text x="${P+130}" y="${rowY-6}" font-family="-apple-system,sans-serif" font-size="20" font-weight="600" fill="#e8eaf0">${esc(ttext)}</text>`;
+      s += `<text x="${W-P-44}" y="${rowY-6}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="#a3aabd">${t.dur}m</text>`;
+      rowY += rowH;
+    }
+    if (list.length > maxRows){
+      s += `<text x="${W/2}" y="${cardY + cardH + 30}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="18" font-weight="600" fill="#666c80">+ ${list.length - maxRows} more</text>`;
+    }
+  }
+
+  // Subjects
+  const bySubj = {};
+  for (const t of study){
+    const sid = t.subjectId || '_';
+    if (!bySubj[sid]){
+      const sj = state.subjects.find(x => x.id === sid);
+      bySubj[sid] = { name: sj ? sj.name : 'Other', color: sj ? sj.color : '#8095c9', mins: 0 };
+    }
+    bySubj[sid].mins += t.dur;
+  }
+  const subjList = Object.values(bySubj).sort((a,b) => b.mins - a.mins).slice(0, 5);
+
+  let subjY = cardY + cardH + 60;
+  s += `<text x="${P}" y="${subjY}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">SUBJECTS</text>`;
+  subjY += 46;
+  for (const sj of subjList){
+    s += `<circle cx="${P+10}" cy="${subjY-8}" r="7" fill="${sj.color}"/>`;
+    s += `<text x="${P+32}" y="${subjY}" font-family="-apple-system,sans-serif" font-size="24" font-weight="600" fill="#dfe1e8">${esc(sj.name)}</text>`;
+    s += `<text x="${W-P}" y="${subjY}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="22" font-weight="700" fill="#a3aabd">${sj.mins} min</text>`;
+    subjY += 42;
+  }
+
+  // Summary
+  s += `<text x="${P}" y="${subjY+20}" font-family="-apple-system,sans-serif" font-size="24" font-weight="700" fill="#f0f2f6">${(planned/60).toFixed(1).replace(/\.0$/, '')}h planned · ${list.length} blocks</text>`;
+
+  // Footer
+  const footY = H - P - 20;
+  s += `<line x1="${P}" y1="${footY-72}" x2="${W-P}" y2="${footY-72}" stroke="#ffffff" stroke-opacity="0.08"/>`;
+  s += `<text x="${P}" y="${footY-28}" font-family="-apple-system,sans-serif" font-size="26" font-weight="700" fill="#dfe1e8">Hold me accountable</text>`;
+  s += `<text x="${P}" y="${footY+8}" font-family="-apple-system,sans-serif" font-size="20" font-weight="500" fill="#6a7083">Send me a nudge if you don't see a report tonight.</text>`;
+  s += `<text x="${W-P}" y="${H-P+6}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="15" font-weight="600" fill="#4e5566">focusflow · ${state.date}</text>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+}
+
+function buildDayReportSVG(){
+  const W = SHARE_W, H = SHARE_H, P = 64;
+  const list = allTasksOn(state.date);
+  const study = list.filter(t => t.type === 'study');
+  const planned = study.reduce((a,t) => a + t.dur, 0);
+  const done = study.reduce((a,t) => a + t.dur * ((t.pct||0)/100), 0);
+  const pct = planned ? Math.round(done/planned*100) : 0;
+  const effList = study.filter(t => t.eff > 0).map(t => t.eff);
+  const avgEff = effList.length ? (effList.reduce((a,b)=>a+b,0) / effList.length) : 0;
+  const dateStr = new Date(state.date + 'T00:00:00').toLocaleDateString(undefined,
+    { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+  let s = cardBase(W, H);
+
+  s += `<text x="${P}" y="${P+30}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="22" font-weight="700" fill="#95a0b8" letter-spacing="4">FOCUSFLOW</text>`;
+  s += `<text x="${P}" y="${P+130}" font-family="-apple-system,sans-serif" font-size="76" font-weight="700" fill="#f0f2f6" letter-spacing="-2">My Day Report</text>`;
+  s += `<text x="${P}" y="${P+180}" font-family="-apple-system,sans-serif" font-size="26" font-weight="500" fill="#868da1">${esc(dateStr)}</text>`;
+
+  // Big circle
+  const cx = W/2, cy = 420, r = 130;
+  const circ = 2 * Math.PI * r;
+  const off = circ * (1 - pct/100);
+  s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="14"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#a3b3c9" stroke-opacity="0.95" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${off}" transform="rotate(-90 ${cx} ${cy})"/>`;
+  s += `<text x="${cx}" y="${cy+28}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="92" font-weight="800" fill="#f0f2f6" letter-spacing="-3">${pct}%</text>`;
+  s += `<text x="${cx}" y="${cy+68}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="#868da1" letter-spacing="4">COMPLETED</text>`;
+
+  // Stats
+  const statY = cy + r + 70;
+  s += `<text x="${cx}" y="${statY}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="26" font-weight="600" fill="#dfe1e8">${Math.round(done)} of ${planned} minutes studied</text>`;
+
+  // Stars
+  const starY = statY + 56;
+  const starGap = 46;
+  const startX = cx - (5-1) * starGap / 2;
+  for (let i = 0; i < 5; i++){
+    const filled = i < Math.round(avgEff);
+    s += `<text x="${startX + i*starGap}" y="${starY}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="40" fill="${filled ? '#dde3f0' : '#2a2e3a'}">★</text>`;
+  }
+  s += `<text x="${cx}" y="${starY+40}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="18" font-weight="500" fill="#868da1">${avgEff ? avgEff.toFixed(1) + ' / 5 average efficiency' : 'no efficiency logged'}</text>`;
+
+  // Subject progress
+  const subjStartY = starY + 110;
+  s += `<text x="${P}" y="${subjStartY}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">SUBJECT GOALS</text>`;
+
+  const bySubj = {};
+  for (const t of study){
+    const sid = t.subjectId || '_';
+    bySubj[sid] = (bySubj[sid] || 0) + t.dur * ((t.pct||0)/100);
+  }
+
+  let rowY = subjStartY + 40;
+  const subjList = state.subjects.slice(0, 5);
+  if (!subjList.length){
+    s += `<text x="${P}" y="${rowY+14}" font-family="-apple-system,sans-serif" font-size="20" font-weight="500" fill="#6a7083">No subjects yet</text>`;
+  } else {
+    for (const sj of subjList){
+      const d = bySubj[sj.id] || 0;
+      const goal = sj.dailyGoalMin || 1;
+      const p = Math.min(1, d / goal);
+      const barY = rowY + 24;
+      const barW = W - P*2 - 200;
+      s += `<circle cx="${P+8}" cy="${rowY-6}" r="6" fill="${sj.color}"/>`;
+      s += `<text x="${P+26}" y="${rowY}" font-family="-apple-system,sans-serif" font-size="20" font-weight="600" fill="#dfe1e8">${esc(sj.name)}</text>`;
+      s += `<text x="${W-P}" y="${rowY}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="#a3aabd">${Math.round(d)} / ${sj.dailyGoalMin}m</text>`;
+      s += `<rect x="${P+26}" y="${barY}" width="${barW}" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/>`;
+      s += `<rect x="${P+26}" y="${barY}" width="${barW*p}" height="6" rx="3" fill="${sj.color}" fill-opacity="0.9"/>`;
+      rowY += 52;
+    }
+  }
+
+  // Completed blocks
+  const blocksStartY = rowY + 40;
+  s += `<text x="${P}" y="${blocksStartY}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">TODAY'S BLOCKS</text>`;
+
+  const blocks = [...study].sort((a,b) => b.pct - a.pct).slice(0, 4);
+  let bY = blocksStartY + 36;
+  if (!blocks.length){
+    s += `<text x="${P}" y="${bY+14}" font-family="-apple-system,sans-serif" font-size="20" font-weight="500" fill="#6a7083">No study blocks today</text>`;
+  } else {
+    for (const t of blocks){
+      const c = colorForTask(t);
+      const p = t.pct || 0;
+      const mark = p >= 100 ? '✓' : p > 0 ? '·' : '○';
+      const markColor = p >= 100 ? '#8bb59a' : p > 0 ? '#a3aabd' : '#4e5566';
+      s += `<text x="${P+6}" y="${bY+8}" font-family="-apple-system,sans-serif" font-size="22" font-weight="700" fill="${markColor}">${mark}</text>`;
+      s += `<circle cx="${P+42}" cy="${bY}" r="6" fill="${c}"/>`;
+      s += `<text x="${P+60}" y="${bY+8}" font-family="-apple-system,sans-serif" font-size="20" font-weight="600" fill="#dfe1e8">${esc(t.title)}</text>`;
+      s += `<text x="${W-P}" y="${bY+8}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="#a3aabd">${p}%</text>`;
+      bY += 40;
+    }
+  }
+
+  // Footer
+  s += `<line x1="${P}" y1="${H-P-64}" x2="${W-P}" y2="${H-P-64}" stroke="#ffffff" stroke-opacity="0.08"/>`;
+  s += `<text x="${P}" y="${H-P-24}" font-family="-apple-system,sans-serif" font-size="20" font-weight="600" fill="#868da1">Keep going. Small consistent days win.</text>`;
+  s += `<text x="${W-P}" y="${H-P+6}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="15" font-weight="600" fill="#4e5566">focusflow · ${state.date}</text>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+}
+
+/* ============================================================
+   SHARE — PNG EXPORT
+============================================================ */
+async function svgToPngBlob(svgStr, w, h, scale = 2){
+  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = new Image();
+    await new Promise((res, rej) => {
+      img.onload = res;
+      img.onerror = () => rej(new Error('SVG load failed'));
+      img.src = url;
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = w * scale;
+    canvas.height = h * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return await new Promise((res, rej) => {
+      canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png');
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+function blobToBase64(blob){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(',')[1] || '');
+    r.onerror = () => rej(r.error);
+    r.readAsDataURL(blob);
+  });
+}
+async function shareOrDownload(blob, filename, title){
+  if (NATIVE){
+    NATIVE.shareFile(await blobToBase64(blob), filename, 'image/png', title);
+    return 'shared';
+  }
+  const file = new File([blob], filename, { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })){
+    try {
+      await navigator.share({ files: [file], title });
+      return 'shared';
+    } catch(e){
+      if (e.name === 'AbortError') return 'cancelled';
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return 'downloaded';
+}
+
+async function doShare(kind){
+  const list = allTasksOn(state.date);
+  if (!list.length){ toast('Nothing to share yet'); return; }
+  const isPlan = kind === 'plan';
+  const svg = isPlan ? buildDayPlanSVG() : buildDayReportSVG();
+  const filename = `focusflow-${state.date}-${isPlan ? 'plan' : 'report'}.png`;
+  toast('Generating image…', { duration: 4000 });
+  try {
+    const blob = await svgToPngBlob(svg, SHARE_W, SHARE_H, 2);
+    const result = await shareOrDownload(blob, filename, isPlan ? 'My day plan' : 'My day report');
+    if (result === 'downloaded') toast('Image saved');
+    else if (result === 'shared') toast('Shared');
+    haptic(12);
+  } catch(e){
+    console.warn(e);
+    toast('Could not generate image');
+  }
+}
+
+/* ============================================================
+   TOP-LEVEL
+============================================================ */
+$('#addBtn').addEventListener('click', () => {
+  const firstSubj = state.subjects[0];
+  const firstMat = state.materials[0];
+  openSheet('newblock', {
+    draft: {
+      type: 'study',
+      subjectId: firstSubj ? firstSubj.id : null,
+      matId: firstMat ? firstMat.id : null,
+      title: '',
+      start: nextFreeStart(45),
+      dur: 45,
+      repeat: false,
+      days: []
+    }
+  });
+});
+$('#autoBtn').addEventListener('click', autoPlan);
+$('#mats').addEventListener('click', e => {
+  if (e.target.closest('#addMat')){
+    openSheet('newmat', { draft: { title:'', subjectId:'', total:20, unitMin:6, dailyGoalMin:30 } });
+  }
+});
+$('#setBtn').addEventListener('click', () => openSheet('settings'));
+$('#reviewBtn').addEventListener('click', () => openSheet('review'));
+$('#shareBtn').addEventListener('click', () => openSheet('share'));
+
+/* ============================================================
+   TOAST
+============================================================ */
+let toastTimer;
+function toast(msg, opts){
+  opts = opts || {};
+  const el = $('#toast');
+  const action = opts.action;
+  el.innerHTML = `<span class="tmsg">${esc(msg)}</span>${action ? `<button id="toastAction">${esc(action.label)}</button>` : ''}`;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  if (action){
+    setTimeout(() => {
+      const btn = $('#toastAction');
+      if (btn) btn.onclick = () => { clearTimeout(toastTimer); el.classList.remove('show'); action.fn(); };
+    }, 0);
+  }
+  toastTimer = setTimeout(() => el.classList.remove('show'), opts.duration || 2000);
+}
+
+/* ============================================================
+   MIDNIGHT CHECK
+============================================================ */
+let lastToday = iso(new Date());
+setInterval(() => {
+  const t = iso(new Date());
+  if (t !== lastToday){
+    if (state.date === lastToday) state.date = t;
+    lastToday = t;
+    render();
+  } else if (state.date === t){
+    renderTimeline();
+  }
+}, 30000);
+
+/* ============================================================
+   NATIVE BRIDGE (Android) — no-ops in a normal browser
+============================================================ */
+let lastSeenDay = iso(new Date());
+
+function nativeStatusRefresh(){
+  if (!NATIVE) return;
+  try { nativeStatus = JSON.parse(NATIVE.getStatus()); } catch(_){}
+}
+function reloadFromNative(){
+  if (!NATIVE || drag) return;
+  const saved = load();
+  if (!saved) return;
+  const keepDate = state.date;
+  state = saved;
+  normalizeState();
+  state.date = keepDate;
+  _profDirty = true;
+  render();
+  if (['block','recurring','settings','review'].includes(sheetCtx.mode)) renderSheet();
+}
+/* data changed natively (notification / widget action) while the UI is alive */
+window.__ffExternalChange = reloadFromNative;
+/* app returned to the foreground */
+window.__ffResume = function(){
+  nativeStatusRefresh();
+  reloadFromNative();
+  const today = iso(new Date());
+  if (today !== lastSeenDay){
+    lastSeenDay = today; lastToday = today;
+    state.date = today;
+    render();
+    const list = allTasksOn(state.date);
+    const [lo] = dayWindow();
+    scrollToTime(list.length ? Math.min(...list.map(t => t.start)) : lo, true);
+  } else if (sheetCtx.mode === 'settings'){
+    renderSheet();
+  }
+};
+window.__ffStatus = function(json){
+  try { nativeStatus = JSON.parse(json); } catch(_){}
+  if (sheetCtx.mode === 'settings') renderSheet();
+};
+/* notification / widget tap → show that block */
+window.__ffOpenBlock = function(id, date){
+  if (!id) return;
+  hideSheet();
+  if (date && date !== state.date){ state.date = date; save(); }
+  render();
+  const t = findTask(id);
+  if (!t) return;
+  scrollToTime(t.start);
+  if (String(id).startsWith('rec:')) openSheet('recurring', { recurringId: String(id).split(':')[1] });
+  else openBlockSheet(id);
+};
+window.__ffNewBlock = function(){ hideSheet(); $('#addBtn').click(); };
+/* system Back button */
+window.__ffBack = function(){
+  if (sheet.classList.contains('show')){ hideSheet(); return true; }
+  return false;
+};
+
+function exportBackup(){
+  if (!NATIVE) return;
+  const bytes = new TextEncoder().encode(JSON.stringify(state));
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000){
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  }
+  NATIVE.shareFile(btoa(bin), `focusflow-backup-${iso(new Date())}.json`, 'application/json', 'FocusFlow backup');
+}
+function importBackup(){
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.onchange = async () => {
+    const f = inp.files && inp.files[0];
+    if (!f) return;
+    try {
+      const data = JSON.parse(await f.text());
+      if (!data || data.version !== 2 || typeof data.tasks !== 'object') throw new Error('bad backup');
+      const prev = JSON.parse(JSON.stringify(state));
+      state = data;
+      normalizeState();
+      state.date = iso(new Date());
+      _profDirty = true;
+      save(); hideSheet(); render();
+      const list = allTasksOn(state.date);
+      const [lo] = dayWindow();
+      scrollToTime(list.length ? Math.min(...list.map(t => t.start)) : lo, true);
+      pushUndo('Backup imported', () => { state = prev; _profDirty = true; save(); render(); });
+    } catch(e){
+      toast('Not a valid FocusFlow backup');
+    }
+  };
+  inp.click();
+}
+/* no browser context menu on long-press (inputs keep theirs) */
+document.addEventListener('contextmenu', e => {
+  if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) e.preventDefault();
+});
+
+/* ============================================================
+   BOOT
+============================================================ */
+function boot(){
+  initState();
+  $('#reviewBtn').innerHTML = ICON_REVIEW;
+  $('#shareBtn').innerHTML = ICON_SHARE;
+  $('#setBtn').innerHTML = ICON_SET;
+  render();
+  requestAnimationFrame(() => {
+    const [lo] = dayWindow();
+    const list = allTasksOn(state.date);
+    const target = list.length ? Math.min(...list.map(t => t.start)) : lo;
+    scrollToTime(target, true);
+  });
+  if (NATIVE){ nativeStatusRefresh(); try { NATIVE.ready(); } catch(_){} }
+}
+boot();
+</script>
+</body>
+</html>

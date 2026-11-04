@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FocusFlow</string>
+
+    <!-- Notification channels -->
+    <string name="ch_start_name">Block starts</string>
+    <string name="ch_start_desc">Alerts the moment a study or fixed block begins</string>
+    <string name="ch_end_name">Block ends</string>
+    <string name="ch_end_desc">Alerts when a block finishes, with a quick Mark done action</string>
+    <string name="ch_lead_name">Heads-up</string>
+    <string name="ch_lead_desc">A short reminder shortly before a block begins</string>
+
+    <!-- Notification content -->
+    <string name="n_start_title">%1$s starts now</string>
+    <string name="n_start_text">%1$s · %2$s</string>
+    <string name="n_end_title">%1$s finished</string>
+    <string name="n_end_text_study">Mark it done or log how it went.</string>
+    <string name="n_lead_title">%1$s in %2$d min</string>
+    <string name="n_next">Up next: %1$s at %2$s</string>
+    <string name="n_last">That\'s the last block today.</string>
+    <string name="n_action_done">Mark done</string>
+    <string name="n_test_title">FocusFlow alerts are on</string>
+    <string name="n_test_text">You\'ll be notified when your blocks start and end.</string>
+
+    <!-- Widget -->
+    <string name="widget_label">FocusFlow · Day plan</string>
+    <string name="widget_description">Your day at a glance: what\'s on now, what\'s next, and one-tap completion.</string>
+    <string name="widget_now">NOW</string>
+    <string name="widget_up_next">UP NEXT</string>
+    <string name="widget_today">TODAY</string>
+    <string name="widget_all_done">ALL DONE</string>
+    <string name="widget_ends_in">ends in</string>
+    <string name="widget_starts_in">starts in</string>
+    <string name="widget_nothing_title">Nothing scheduled</string>
+    <string name="widget_nothing_sub">Tap + to add a block, or open the app to auto-plan.</string>
+    <string name="widget_wrap_title">That\'s a wrap</string>
+    <string name="widget_wrap_sub">%1$d blocks · %2$d%% completed</string>
+    <string name="widget_empty">Nothing planned today.\nTap + to add a block.</string>
+    <string name="widget_add">Add block</string>
+    <string name="widget_mark_done">Mark done</string>
+
+    <!-- Shortcuts / dialogs -->
+    <string name="shortcut_new_block">New block</string>
+    <string name="shortcut_new_block_long">Add a block to today</string>
+    <string name="exact_title">Exact reminders</string>
+    <string name="exact_message">To alert you right when a block starts or ends, FocusFlow needs the \"Alarms &amp; reminders\" permission. Without it, alerts can arrive a few minutes late.</string>
+    <string name="exact_allow">Open settings</string>
+    <string name="exact_later">Not now</string>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="6dp"
+    android:paddingEnd="2dp">
+
+    <LinearLayout
+        android:id="@+id/w_item_body"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/w_item_dot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_dot" />
+
+        <TextView
+            android:id="@+id/w_item_time"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:textColor="@color/ff_muted"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/w_item_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:textColor="@color/ff_text"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/w_item_dur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:textColor="@color/ff_muted"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/w_item_check"
+        android:layout_width="38dp"
+        android:layout_height="42dp"
+        android:contentDescription="@string/widget_mark_done"
+        android:paddingStart="8dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="9dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_check_off" />
+</LinearLayout>

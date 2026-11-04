@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ff_bg">#0A0B0E</color>
+    <color name="ff_surface">#10121A</color>
+    <color name="ff_text">#E8EAF0</color>
+    <color name="ff_text_dim">#A3AABD</color>
+    <color name="ff_muted">#7C8296</color>
+    <color name="ff_faint">#6A7083</color>
+    <color name="ff_accent">#A3B3C9</color>
+    <color name="ff_green">#8BB59A</color>
+    <color name="ff_icon_bg">#0E1015</color>
+    <color name="ff_notif">#95A0B8</color>
+</resources>

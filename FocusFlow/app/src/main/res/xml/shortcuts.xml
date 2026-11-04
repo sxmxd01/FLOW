@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_add"
+        android:shortcutId="new_block"
+        android:shortcutLongLabel="@string/shortcut_new_block_long"
+        android:shortcutShortLabel="@string/shortcut_new_block">
+        <intent
+            android:action="app.focusflow.action.NEW_BLOCK"
+            android:targetClass="app.focusflow.MainActivity"
+            android:targetPackage="app.focusflow" />
+    </shortcut>
+</shortcuts>
