@@ -34,10 +34,32 @@ data class NotifPrefs(
 )
 
 private data class SubjectInfo(val name: String, val color: Int)
-private data class MaterialInfo(val color: Int, val subjectId: String?)
+private data class MaterialInfo(val color: Int, val subjectIds: List<String>)
 
 private const val DEFAULT_COLOR = 0xFF7A8194.toInt()
-private const val FIXED_COLOR = 0xFF7A8499.toInt()
+
+/** Fixed-block categories (must match the web app): CL, Rest, Content. */
+private fun catColor(cat: String?): Int = when (cat) {
+    "rest" -> 0xFFA392C0.toInt()
+    "content" -> 0xFFC9A46A.toInt()
+    else -> 0xFF7F9FC4.toInt()
+}
+
+private fun catLabel(cat: String?): String = when (cat) {
+    "rest" -> "Rest"
+    "content" -> "Content"
+    else -> "CL"
+}
+
+private fun JSONObject.stringList(name: String): List<String> {
+    val arr = optJSONArray(name) ?: return emptyList()
+    val out = ArrayList<String>()
+    for (i in 0 until arr.length()) {
+        val v = arr.optString(i)
+        if (v.isNotEmpty()) out += v
+    }
+    return out
+}
 
 private fun parseColor(s: String?, fallback: Int): Int =
     try {
@@ -88,13 +110,13 @@ class Snapshot private constructor(
                 id = "rec:$rid:$key",
                 date = date,
                 type = BlockType.FIXED,
-                title = r.optString("title").ifEmpty { "Class" },
+                title = r.optString("title").ifEmpty { catLabel(r.strOrNull("cat")) },
                 start = r.optInt("start"),
                 dur = r.optInt("dur", 60),
                 done = false,
                 pct = 0,
-                color = FIXED_COLOR,
-                subjectName = null,
+                color = catColor(r.strOrNull("cat")),
+                subjectName = catLabel(r.strOrNull("cat")),
                 recurringId = rid,
             )
         }
@@ -106,9 +128,16 @@ class Snapshot private constructor(
         if (id.isEmpty()) return null
         val fixed = o.optString("type") == "fixed"
         val mat = o.strOrNull("matId")?.let { materials[it] }
-        val subj = (o.strOrNull("subjectId") ?: mat?.subjectId)?.let { subjects[it] }
-        val color = if (fixed) FIXED_COLOR else (mat?.color ?: subj?.color ?: DEFAULT_COLOR)
-        val title = o.optString("title").ifEmpty { if (fixed) "Fixed block" else "Study" }
+        // a material may belong to several subjects; fall back to the ids stored on the block
+        val subjIds = when {
+            fixed -> emptyList<String>()
+            mat != null && mat.subjectIds.isNotEmpty() -> mat.subjectIds
+            else -> o.stringList("subjectIds").ifEmpty { listOfNotNull(o.strOrNull("subjectId")) }
+        }
+        val subjInfos = subjIds.mapNotNull { subjects[it] }
+        val color = if (fixed) catColor(o.strOrNull("cat")) else (mat?.color ?: subjInfos.firstOrNull()?.color ?: DEFAULT_COLOR)
+        val label = if (fixed) catLabel(o.strOrNull("cat")) else subjInfos.joinToString(" · ") { it.name }.ifEmpty { null }
+        val title = o.optString("title").ifEmpty { if (fixed) catLabel(o.strOrNull("cat")) else "Study" }
         return Block(
             id = id,
             date = date,
@@ -119,7 +148,7 @@ class Snapshot private constructor(
             done = !fixed && o.optBoolean("done", false),
             pct = o.optInt("pct", 0),
             color = color,
-            subjectName = subj?.name,
+            subjectName = label,
             recurringId = null,
         )
     }
@@ -160,7 +189,7 @@ class Snapshot private constructor(
                         if (id.isNotEmpty()) {
                             materials[id] = MaterialInfo(
                                 parseColor(o.optString("color"), DEFAULT_COLOR),
-                                o.strOrNull("subjectId"),
+                                o.stringList("subjectIds").ifEmpty { listOfNotNull(o.strOrNull("subjectId")) },
                             )
                         }
                     }

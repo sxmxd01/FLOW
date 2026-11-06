@@ -5,6 +5,10 @@ Your FocusFlow study planner as a native Android app (Android 11+ / API 30+), wi
 - **Notifications** when a block **starts**, **ends** (with a one-tap *Mark done*), plus an optional *heads-up* before a block (5–30 min). Fixed blocks / recurring classes are included (toggle in Settings). Completed blocks stay quiet.
 - **Large home-screen widget** (4×4, resizable): live "NOW / UP NEXT" card with a ticking countdown and progress bar, one-tap completion, and a scrolling timeline of today's blocks. Tap a row to open that block, tap its circle to complete it.
 - Same UI as the HTML, bundled offline (`app/src/main/assets/index.html`). **No INTERNET permission.**
+- Fixed blocks have categories (**CL / Rest / Content**), each with its own colour in the timeline, alerts, widget and share image.
+- Materials can belong to **several subjects**; time on a material counts fully toward each of its subjects' daily goals.
+- Every time/number field is typable ("930", "9:30pm", "1h30") as well as +/- (hold to repeat). Material progress moves one unit per tap.
+- Undo works for deletes, moves, adds, Auto-plan and imports. Auto-plan v2 scores every 15-min slot (your best hours, subject variety, breaks, nothing in the past).
 - Extras: system Back closes sheets, native share sheet for the day plan/report images, JSON backup export/import, "New block" launcher shortcut, themed icon, splash screen, edge-to-edge layout with keyboard handling.
 
 ## Build

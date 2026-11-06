@@ -43,7 +43,10 @@ header{
 .hl{display:flex;flex-direction:column;gap:3px;min-width:0}
 .brand{font-size:16px;font-weight:700;letter-spacing:-.2px;color:#e8eaf0}
 .brand span{color:#95a0b8}
-.date-pill{font-size:10.5px;font-weight:600;color:#7c8296;letter-spacing:.2px}
+.datenav{display:flex;align-items:center;gap:1px;margin-left:-7px}
+.nv{width:28px;height:26px;border:0;border-radius:8px;background:transparent;color:#7c8296;font-size:18px;line-height:1;cursor:pointer;font-family:inherit}
+.nv:active{background:rgba(255,255,255,.09)}
+.date-pill{border:0;background:transparent;font-family:inherit;padding:4px 2px;font-size:11.5px;font-weight:600;color:#8d94a8;letter-spacing:.2px;cursor:pointer}
 .hdr-actions{display:flex;gap:6px;flex:0 0 auto}
 .ic{
   width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
@@ -77,11 +80,11 @@ header{
 /* ---------- materials ---------- */
 .mats{
   flex:0 0 auto;display:flex;gap:8px;padding:0 0 11px;
-  overflow-x:auto;scrollbar-width:none;min-height:64px;overscroll-behavior-x:contain;
+  overflow-x:auto;scrollbar-width:none;min-height:86px;overscroll-behavior-x:contain;
 }
 .mats::-webkit-scrollbar{display:none}
 .mat{
-  position:relative;flex:0 0 150px;padding:10px 12px 9px;border-radius:15px;overflow:hidden;
+  position:relative;flex:0 0 158px;padding:10px 10px 8px 12px;border-radius:15px;overflow:hidden;
   background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.075);
 }
 .mat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c);opacity:.95}
@@ -94,8 +97,13 @@ header{
 .bar{height:22px;display:flex;align-items:center;cursor:pointer;touch-action:none}
 .track{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.10);overflow:hidden}
 .fill{height:100%;border-radius:3px;background:var(--c);opacity:.95;transition:width .06s linear}
-.units{font-size:10px;color:#7a8094;margin-top:5px;font-weight:600;letter-spacing:.2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.mat{display:flex;flex-direction:column}
+.mat-ft{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:7px;gap:4px}
+.mstep{width:36px;height:27px;border:0;border-radius:8px;background:rgba(255,255,255,.07);color:#cfd4e0;font-size:16px;font-weight:600;font-family:inherit;cursor:pointer;touch-action:manipulation;transition:background .1s,transform .1s}
+.mstep:active{background:rgba(255,255,255,.17);transform:scale(.93)}
+.units{flex:1;border:0;background:transparent;font-family:inherit;color:#e0e3ec;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer;padding:4px 0;margin:0;white-space:nowrap}
+.units span{color:#6f768a;font-weight:600}
 .mat.add{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   flex:0 0 88px;color:#7f8598;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit;
@@ -148,10 +156,10 @@ header{
   background:rgba(255,255,255,.028);
   background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 5px, transparent 5px 11px);
   border-color:rgba(255,255,255,.075);
-  border-left:3px solid #596173;
+  border-left:3px solid var(--c);
 }
 .blk.fixed .blk-title{color:#aab0c0}
-.lock{flex:0 0 22px;display:flex;align-items:center;justify-content:center;color:#6a7083;font-size:9px}
+.lock{flex:0 0 8px}
 .grip{
   flex:0 0 26px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.03);cursor:grab;touch-action:none;
@@ -228,7 +236,25 @@ header{
   font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;
 }
 .stepper button:active{background:rgba(255,255,255,.12)}
+.fld{display:flex;align-items:baseline;justify-content:center;gap:3px;min-width:66px;padding:0 2px}
+.fld.wide{min-width:84px}
+.fld input.num{width:44px;border:0;background:transparent;color:#e8eaf0;font:inherit;font-size:14px;font-weight:700;text-align:right;padding:2px 3px;outline:none;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none;border-radius:6px;margin:0}
+.fld.wide input.num{width:80px;text-align:center}
+.fld input.num:focus{color:#fff;background:rgba(255,255,255,.10)}
+.fld i{font-style:normal;font-size:11px;font-weight:600;color:#7a8094}
 .stepper b{min-width:62px;text-align:center;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;color:#dfe2ea}
+.presets{display:flex;gap:6px;padding:2px 0 8px}
+.pchip{flex:1;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#a3aabd;border-radius:10px;padding:10px 0;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;touch-action:manipulation;font-variant-numeric:tabular-nums;transition:background .1s,transform .1s}
+.pchip.sel{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.27);color:#fff}
+.pchip:active{transform:scale(.95)}
+.btn.wide{width:100%;margin-top:8px}
+.tap{cursor:pointer}
+.sub.inline{display:inline;margin:0 0 0 4px}
+.splits{display:flex;flex-wrap:wrap;gap:6px 14px;padding:8px 0 2px}
+.split{font-size:11.5px;font-weight:600;color:#868da1;display:inline-flex;align-items:center;gap:6px}
+.split b{color:#cfd4e0}
+.split i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.chiprow.cats{padding:2px 0 8px}
 .sheet-actions{display:flex;gap:9px;margin-top:16px}
 .sheet-actions .btn{flex:1;padding:15px;font-size:13.5px}
 .inp{
@@ -293,7 +319,7 @@ select.inp{background-image:none}
 .share-preview .btn{width:100%;margin-top:10px}
 
 #toast{
-  position:fixed;left:50%;bottom:96px;transform:translate(-50%,14px);z-index:80;
+  position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,14px);z-index:80;
   padding:11px 18px;border-radius:100px;font-size:12.5px;font-weight:600;
   background:rgba(30,32,40,.97);border:1px solid rgba(255,255,255,.11);
   color:#d1d6e2;backdrop-filter:blur(10px);
@@ -301,10 +327,13 @@ select.inp{background-image:none}
   display:flex;align-items:center;gap:10px;
 }
 #toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.show.act{pointer-events:auto}
+#toast.top{bottom:auto;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-14px)}
+#toast.top.show{transform:translate(-50%,0)}
 #toast .tmsg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #toast button{
   border:0;background:transparent;color:#dde3f0;font-weight:800;cursor:pointer;
-  font-family:inherit;font-size:12.5px;text-decoration:underline;padding:0;flex:0 0 auto;
+  font-family:inherit;font-size:13px;text-decoration:underline;padding:8px 6px;margin:-8px -6px;flex:0 0 auto;
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -318,7 +347,7 @@ select.inp{background-image:none}
   <header>
     <div class="hl">
       <div class="brand">Focus<span>Flow</span></div>
-      <div class="date-pill" id="datePill">—</div>
+      <div class="datenav"><button class="nv" id="prevDay" aria-label="Previous day">‹</button><button class="date-pill" id="datePill">—</button><button class="nv" id="nextDay" aria-label="Next day">›</button></div>
     </div>
     <div class="hdr-actions">
       <button class="ic" id="reviewBtn" aria-label="Review"></button>
@@ -364,9 +393,17 @@ const STORAGE_KEY = 'focusflow_v2';
 const NATIVE = (typeof window.FFNative !== 'undefined') ? window.FFNative : null;
 const DEFAULT_NOTIF = { start:true, end:true, lead:0, fixed:true };
 let nativeStatus = { notif:true, exact:true };
-const SHARE_W = 1080, SHARE_H = 1350;
+const SHARE_W = 1080;
 
 const COLORS = ['#8095c9','#7fb392','#b58da8','#b8a184','#8095c0','#a58ab5','#8296a8'];
+/* Fixed (non-study) block categories */
+const CATS = {
+  cl:      { name:'CL',      color:'#7f9fc4' },
+  rest:    { name:'Rest',    color:'#a392c0' },
+  content: { name:'Content', color:'#c9a46a' }
+};
+const CAT_KEYS = ['cl','rest','content'];
+const catOf = t => CATS[t.cat] || CATS.cl;
 
 const ICON_REVIEW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg>';
 const ICON_SHARE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
@@ -381,6 +418,11 @@ const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
 const uid = () => Math.random().toString(36).slice(2,9);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const round5 = v => Math.round(v / 5) * 5;
+const trunc = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const dateObj = key => new Date(key + 'T00:00:00');
+const shiftDate = (key, n) => { const d = dateObj(key); d.setDate(d.getDate() + n); return iso(d); };
+const isoDow = key => ((dateObj(key).getDay() + 6) % 7) + 1;
 
 function fmtShort(m){
   m = ((m % 1440) + 1440) % 1440;
@@ -400,8 +442,40 @@ function hourLabel(m){
   const hh = h % 12 === 0 ? 12 : h % 12;
   return `${hh}${h >= 12 ? 'p' : 'a'}`;
 }
+function fmtDur(m){
+  m = Math.round(m);
+  if (m < 60) return m + 'm';
+  return (m % 60 === 0) ? (m / 60) + 'h' : Math.floor(m / 60) + 'h ' + (m % 60) + 'm';
+}
 const maxDur = type => type === 'fixed' ? MAX_FIXED : MAX_DUR;
 const minDur = type => type === 'fixed' ? MIN_FIXED : MIN_DUR;
+
+/* Typed input: "930", "9:30", "9.30", "9:30pm", "21:30", "9p" … ref = current value (decides AM/PM when omitted) */
+function parseTime(raw, ref){
+  const s = String(raw).trim().toLowerCase().replace(/\s+/g, '');
+  const m = s.match(/^(\d{1,2})(?:[:.h]?(\d{2}))?([ap])?m?$/);
+  if (!m) return NaN;
+  let h = parseInt(m[1], 10);
+  const mi = m[2] ? parseInt(m[2], 10) : 0;
+  if (mi > 59) return NaN;
+  if (m[3]){
+    if (h < 1 || h > 12) return NaN;
+    h = (h % 12) + (m[3] === 'p' ? 12 : 0);
+  } else if (h >= 13 || h === 0){
+    if (h > 23) return NaN;
+  } else {
+    h = (h % 12) + ((ref || 0) >= 720 ? 12 : 0);
+  }
+  return h * 60 + mi;
+}
+/* Typed input: "45", "1h30", "1.5h", "90m" */
+function parseDur(raw){
+  const s = String(raw).trim().toLowerCase();
+  let m = s.match(/^(\d+(?:\.\d+)?)\s*h(?:ours?|rs?)?\s*(\d+)?\s*(?:m|min)?$/);
+  if (m) return Math.round(parseFloat(m[1]) * 60 + (m[2] ? parseInt(m[2], 10) : 0));
+  m = s.match(/^(\d+(?:\.\d+)?)/);
+  return m ? Math.round(parseFloat(m[1])) : NaN;
+}
 
 function haptic(ms = 8){
   try {
@@ -415,7 +489,6 @@ function haptic(ms = 8){
 ============================================================ */
 let state, drag = null;
 const sheetCtx = { mode:null, id:null, recurringId:null, draft:null };
-let lastUndo = null;
 
 function defaultState(){
   return {
@@ -426,7 +499,8 @@ function defaultState(){
     materials: [],
     tasks: {},
     recurring: [],
-    history: []
+    history: [],
+    prefs: {}
   };
 }
 
@@ -471,8 +545,18 @@ function normalizeState(){
   if (!state.tasks) state.tasks = {};
   if (!state.subjects) state.subjects = [];
   if (!state.materials) state.materials = [];
+  if (!state.prefs) state.prefs = {};
   if (!state.settings) state.settings = { wake: 390, sleep: 1380 };
   state.settings.notif = Object.assign({}, DEFAULT_NOTIF, state.settings.notif || {});
+  /* materials can belong to several subjects (legacy: single subjectId) */
+  for (const m of state.materials){
+    if (!Array.isArray(m.subjectIds)) m.subjectIds = m.subjectId ? [m.subjectId] : [];
+    m.subjectIds = m.subjectIds.filter(id => state.subjects.some(s => s.id === id));
+    m.subjectId = m.subjectIds[0] || null;
+  }
+  /* fixed blocks always carry a category */
+  for (const r of state.recurring) if (!CATS[r.cat]) r.cat = 'cl';
+  for (const k in state.tasks) for (const t of state.tasks[k]) if (t.type === 'fixed' && !CATS[t.cat]) t.cat = 'cl';
 }
 function initState(){
   state = load() || defaultState();
@@ -484,13 +568,14 @@ const tasksOn = d => (state.tasks[d] || (state.tasks[d] = []));
 
 function allTasksOn(dateKey){
   const concrete = [...(state.tasks[dateKey] || [])];
-  const dow = ((new Date(dateKey + 'T00:00:00').getDay() + 6) % 7) + 1;
+  const dow = isoDow(dateKey);
   const recurring = (state.recurring || [])
     .filter(r => r.days && r.days.includes(dow) && (!r.until || dateKey <= r.until))
     .map(r => ({
       id: 'rec:' + r.id + ':' + dateKey,
       recurringId: r.id,
       type: 'fixed',
+      cat: r.cat || 'cl',
       title: r.title,
       start: r.start,
       dur: r.dur,
@@ -505,7 +590,7 @@ function findTask(id){
     const tpl = state.recurring.find(x => x.id === parts[1]);
     if (!tpl) return null;
     return {
-      id, recurringId: tpl.id, type: 'fixed',
+      id, recurringId: tpl.id, type: 'fixed', cat: tpl.cat || 'cl',
       title: tpl.title, start: tpl.start, dur: tpl.dur, virtual: true
     };
   }
@@ -517,18 +602,65 @@ function findTask(id){
 }
 
 function colorForTask(t){
+  if (t.type === 'fixed') return catOf(t).color;
   if (t.matId){
     const m = state.materials.find(x => x.id === t.matId);
     if (m) return m.color;
   }
-  if (t.subjectId){
-    const s = state.subjects.find(x => x.id === t.subjectId);
+  const sid = subjectsOfTask(t)[0];
+  if (sid){
+    const s = state.subjects.find(x => x.id === sid);
     if (s) return s.color || '#7a8194';
   }
   return '#7a8194';
 }
-function subjectOfMat(m){
-  return m && m.subjectId ? state.subjects.find(s => s.id === m.subjectId) : null;
+/* every subject a study block counts toward (a material may serve several) */
+function subjectsOfTask(t){
+  if (!t || t.type === 'fixed') return [];
+  const m = t.matId ? state.materials.find(x => x.id === t.matId) : null;
+  if (m && m.subjectIds && m.subjectIds.length) return m.subjectIds;
+  if (t.subjectIds && t.subjectIds.length) return t.subjectIds.filter(id => state.subjects.some(s => s.id === id));
+  return t.subjectId && state.subjects.some(s => s.id === t.subjectId) ? [t.subjectId] : [];
+}
+const subjectName = id => { const s = state.subjects.find(x => x.id === id); return s ? s.name : ''; };
+const subjectNames = ids => ids.map(subjectName).filter(Boolean).join(' · ');
+/* minutes per subject; completed = weighted by pct, otherwise planned */
+function subjectMinutes(list, completed){
+  const out = {};
+  for (const t of list){
+    if (t.type !== 'study') continue;
+    const mins = completed ? t.dur * ((t.pct || 0) / 100) : t.dur;
+    for (const sid of subjectsOfTask(t)) out[sid] = (out[sid] || 0) + mins;
+  }
+  return out;
+}
+
+/* ============================================================
+   UNDO — snapshot based, works for any change
+============================================================ */
+let undoSnap = null;
+function snapState(){
+  return JSON.stringify({
+    tasks: state.tasks, materials: state.materials, subjects: state.subjects,
+    recurring: state.recurring, settings: state.settings, prefs: state.prefs
+  });
+}
+function offerUndo(desc, before, duration){
+  undoSnap = before;
+  toast(desc, { duration: duration || 4500, action: { label: 'Undo', fn: () => {
+    if (undoSnap == null) return;
+    const snap = JSON.parse(undoSnap);
+    undoSnap = null;
+    Object.assign(state, snap);
+    normalizeState();
+    _profDirty = true;
+    save();
+    render();
+    if (sheetCtx.mode === 'mat' && sheetCtx.id) hideSheet();
+    else if (sheetCtx.mode) renderSheet();
+    haptic(8);
+    toast('Undone');
+  }}});
 }
 
 /* ============================================================
@@ -560,16 +692,17 @@ function placeBlock(t, placed, lo, hi, pref){
 }
 function resolve(list){
   const [lo, hi] = dayWindow();
+  const recurring = allTasksOn(state.date).filter(t => t.virtual);
   const fixed = list.filter(t => t.type === 'fixed').sort((a,b) => a.start - b.start);
   const movable = list.filter(t => t.type !== 'fixed').sort((a,b) => a.start - b.start);
-  const placed = [...fixed];
+  const placed = [...fixed, ...recurring];
   for (const t of movable){
     t.start = placeBlock(t, placed, lo, hi, t.start);
     placed.push(t);
     placed.sort((a,b) => a.start - b.start);
   }
 }
-function freeIntervals(busy, start, end){
+function freeIntervals(busy, start, end, minLen = 20){
   const b = [...busy].sort((a,x) => a.start - x.start);
   const out = [];
   let cur = start;
@@ -579,7 +712,7 @@ function freeIntervals(busy, start, end){
     cur = Math.max(cur, e);
   }
   if (cur < end) out.push([cur, end]);
-  return out.filter(([s,e]) => e - s >= 20);
+  return out.filter(([s,e]) => e - s >= minLen);
 }
 
 /* ============================================================
@@ -649,226 +782,249 @@ function logFeedback(t){
   state.history = state.history.filter(r => r.blockId !== t.id);
   state.history.push({
     blockId: t.id, ts: Date.now(), date: state.date,
-    matId: t.matId || null, subjectId: t.subjectId || null,
+    matId: t.matId || null, subjectId: subjectsOfTask(t)[0] || null,
     start: t.start, dur: t.dur,
     pct: t.pct || 0, eff: t.eff || 3
   });
   _profDirty = true;
-  save();
 }
 
 /* ============================================================
-   DEMAND
-============================================================ */
-function ratio(r){
-  if (r.kind === 'material') return r.mat.done / r.mat.total;
-  return 0.5;
-}
-function computeDemand(){
-  const matDemand = [];
-  for (const m of state.materials){
-    const rem = Math.max(0, (m.total - m.done) * m.unitMin);
-    if (rem <= 0) continue;
-    matDemand.push({ kind:'material', mat:m, rem, need:0, sid: m.subjectId || null });
-  }
-  const bySubj = {};
-  for (const r of matDemand){
-    if (!r.sid) continue;
-    (bySubj[r.sid] = bySubj[r.sid] || []).push(r);
-  }
-  const subjAlloc = {};
-  for (const sid in bySubj){
-    const recs = bySubj[sid];
-    const subj = state.subjects.find(s => s.id === sid);
-    const goal = subj ? (subj.dailyGoalMin || 0) : 0;
-    const totalRem = recs.reduce((a,r) => a + r.rem, 0);
-    for (const r of recs){
-      const share = totalRem > 0 ? goal * (r.rem / totalRem) : 0;
-      r.need = Math.min(r.rem, Math.max(share, r.mat.dailyGoalMin || 0));
-      subjAlloc[sid] = (subjAlloc[sid] || 0) + r.need;
-    }
-  }
-  for (const r of matDemand){
-    if (!r.sid) r.need = Math.min(r.rem, r.mat.dailyGoalMin || 0);
-  }
-  const out = matDemand.filter(r => r.need >= MIN_DUR);
-  for (const s of state.subjects){
-    const goal = s.dailyGoalMin || 0;
-    if (goal < MIN_DUR) continue;
-    const residual = goal - (subjAlloc[s.id] || 0);
-    if (residual >= MIN_DUR){
-      out.push({ kind:'subject', subj:s, rem: residual, need: residual, sid: s.id });
-    }
-  }
-  out.sort((a,b) => ratio(a) - ratio(b));
-  return out;
-}
-
-/* ============================================================
-   AUTO PLANNER
+   AUTO PLANNER (v2)
+   1. Needs  – per-subject goals + per-material goals, minus what is already done today.
+               A material counts fully toward every subject it belongs to, so multi-subject
+               materials are picked first when several goals are open.
+   2. Chunks – repeatedly pick the most valuable item (unmet goals, how far behind it is, a
+               round-robin penalty for variety) and cut it into blocks of your preferred length.
+   3. Placement – every start time on a 15-min grid is scored: your best hours, spread across the
+               day, never the same subject back-to-back, tight packing, no 3-in-a-row marathons,
+               nothing in the past, buffers around fixed blocks, wind-down before bed.
 ============================================================ */
 function autoPlan(){
-  const [lo, hi] = dayWindow();
+  const todayKey = iso(new Date());
+  if (state.date < todayKey){ toast('That day is over'); return; }
+  const [wake, hi] = dayWindow();
+  const now = new Date();
+  let lo = wake;
+  if (state.date === todayKey){
+    lo = Math.max(lo, Math.ceil((now.getHours() * 60 + now.getMinutes() + 5) / 15) * 15);
+  }
+  if (hi - lo < MIN_DUR){ toast('No time left today'); return; }
+  if (!state.subjects.length && !state.materials.length){ toast('Add a subject or material first'); return; }
+
+  const before = snapState();
   const concrete = tasksOn(state.date);
-  const all = allTasksOn(state.date);
-  const concreteFixed = concrete.filter(t => t.type === 'fixed');
-  const completedStudy = concrete.filter(t => t.type === 'study' && t.done);
-  const recurring = all.filter(t => t.virtual);
+  const recurring = allTasksOn(state.date).filter(t => t.virtual);
 
-  const demand = computeDemand();
-  if (!demand.length){
-    if (!state.subjects.length && !state.materials.length) toast('Add a subject or material first');
-    else toast('Set a daily goal in settings first');
-    return;
+  /* ---- what stays: fixed blocks, done blocks, past blocks with progress ---- */
+  const kept = concrete.filter(t =>
+    t.type === 'fixed' || t.done ||
+    ((t.pct || 0) > 0 && state.date === todayKey && t.start + t.dur <= lo));
+  const keptStudy = kept.filter(t => t.type === 'study');
+
+  /* ---- needs ---- */
+  const goal = {}, needS = {}, credS = {}, credM = {};
+  for (const t of keptStudy){
+    const mins = t.done ? t.dur : t.dur * ((t.pct || 0) / 100);
+    if (t.matId) credM[t.matId] = (credM[t.matId] || 0) + mins;
+    for (const sid of subjectsOfTask(t)) credS[sid] = (credS[sid] || 0) + mins;
+  }
+  for (const s of state.subjects){
+    goal[s.id] = s.dailyGoalMin || 0;
+    needS[s.id] = Math.max(0, goal[s.id] - (credS[s.id] || 0));
+  }
+  const items = [];
+  for (const m of state.materials){
+    const rem = Math.max(0, (m.total - m.done) * m.unitMin);
+    const cap = Math.max(0, rem - (credM[m.id] || 0));
+    if (cap < MIN_DUR) continue;
+    const own = m.dailyGoalMin || 0;
+    items.push({ key: 'm:' + m.id, m, cap, own, needM: Math.max(0, own - (credM[m.id] || 0)) });
   }
 
-  for (const b of completedStudy){
-    let d = b.matId ? demand.find(x => x.kind==='material' && x.mat.id===b.matId) : null;
-    if (!d && b.subjectId) d = demand.find(x => x.kind==='subject' && x.subj.id===b.subjectId);
-    if (d) d.need -= b.dur;
-  }
-  const queue = demand.filter(d => d.need >= MIN_DUR);
-  if (!queue.length){ toast('Daily goals already met'); return; }
+  /* ---- time capacity ---- */
+  const padded = [...kept, ...recurring].map(t => t.type === 'fixed'
+    ? { start: t.start - 5, dur: t.dur + 10 } : { start: t.start, dur: t.dur });
+  const free = freeIntervals(padded, lo, hi);
+  if (!free.length){ toast('No free time'); return; }
+  let capacity = free.reduce((a, [s, e]) => a + (e - s), 0);
 
-  const occupied = [...concreteFixed, ...recurring, ...completedStudy];
-  const free = freeIntervals(occupied, lo, hi);
-  if (!free.length){ toast('No free time in your day window'); return; }
-
-  const prof = hourProfile();
+  /* ---- 2. chunks ---- */
   const pdur = preferredDur();
-  const hasHistory = state.history.length >= 3;
-
-  const slots = [];
-  for (const [s,e] of free){
-    let cur = s, guard = 0;
-    while (e - cur >= MIN_DUR && guard++ < 80){
-      let dur = Math.min(pdur, e - cur);
-      dur = Math.floor(dur / 5) * 5;
-      if (dur < MIN_DUR) break;
-      slots.push({ start: cur, dur, used: false, score: slotScore(prof, cur, dur) });
-      cur += dur + BREAK;
-    }
-  }
-  if (!slots.length){ toast('No usable slots today'); return; }
-
-  const SEG = 120;
-  const segs = [];
-  for (let m = lo; m < hi; m += SEG) segs.push({ start:m, end:Math.min(m+SEG,hi), load:0 });
-  const segOf = m => clamp(Math.floor((m - lo) / SEG), 0, segs.length - 1);
-
-  const wSpread = hasHistory ? 0.8 : 1.6;
-  const wScore  = hasHistory ? 1.8 : 0.9;
-  const wDiv    = hasHistory ? 0.5 : 1.0;
-  const span    = Math.max(60, hi - lo);
-
-  const created = [];
-  const MAX_BLOCKS = 10;
-  const before = [...concrete];
-
-  while (queue.length && created.length < MAX_BLOCKS){
-    queue.sort((a,b) => ratio(a) - ratio(b) || b.need - a.need);
+  const assigned = {};
+  const chunks = [];
+  const MAX_BLOCKS = 12;
+  const MIN_NEED = 15;          // a leftover of 15+ min still earns a (minimum-length) block
+  for (let guard = 0; guard < 60 && chunks.length < MAX_BLOCKS; guard++){
     let best = null;
-    for (const d of queue){
-      for (const slot of slots){
-        if (slot.used) continue;
-        let dur = Math.min(slot.dur, d.need);
-        dur = Math.floor(dur / 5) * 5;
-        if (dur < MIN_DUR) continue;
-        const si = segOf(slot.start);
-        const loadNorm = segs[si].load / SEG;
-        const scoreNorm = clamp(slot.score / 5, 0, 1);
-        let div = 1;
-        if (created.length){
-          let near = Infinity;
-          for (const c of created) near = Math.min(near, Math.abs(slot.start - c.start));
-          div = clamp(near / span, 0, 1);
-        }
-        const val = wSpread * (1 - Math.min(1, loadNorm))
-                  + wScore  * scoreNorm
-                  + wDiv    * div;
-        if (!best || val > best.val + 1e-9) best = { d, slot, dur, si, val };
+    for (const it of items){
+      if (it.cap < MIN_DUR) continue;
+      let subNeed = 0, subNeedMin = 0;
+      for (const sid of it.m.subjectIds){
+        if (goal[sid] > 0){ subNeed += needS[sid] / goal[sid]; subNeedMin = Math.max(subNeedMin, needS[sid]); }
+      }
+      const want = Math.min(it.cap, Math.max(subNeedMin, it.needM));
+      if (want < MIN_NEED) continue;
+      const ownFrac = it.own > 0 ? it.needM / it.own : 0;
+      const behind = 1 - clamp(it.m.done / Math.max(1, it.m.total), 0, 1);
+      const pr = 0.6 * subNeed + 0.4 * ownFrac + 0.25 * behind - 0.18 * (assigned[it.key] || 0);
+      if (!best || pr > best.pr + 1e-9 || (Math.abs(pr - best.pr) <= 1e-9 && want > best.want)){
+        best = { kind:'mat', it, want, pr, key: it.key };
       }
     }
+    for (const s of state.subjects){
+      if (needS[s.id] < MIN_NEED) continue;
+      const servedByMaterial = items.some(it => it.cap >= MIN_DUR && it.m.subjectIds.includes(s.id));
+      if (servedByMaterial) continue;
+      const key = 's:' + s.id;
+      const pr = 0.6 * (needS[s.id] / Math.max(1, goal[s.id])) + 0.1 - 0.18 * (assigned[key] || 0);
+      if (!best || pr > best.pr + 1e-9){ best = { kind:'subj', s, want: needS[s.id], pr, key }; }
+    }
     if (!best) break;
-    const { d, slot, dur, si } = best;
-    slot.used = true;
-    segs[si].load += dur;
+
+    const k = Math.max(1, Math.round(best.want / pdur));
+    let dur = clamp(round5(best.want / k), MIN_DUR, MAX_DUR);
+    if (best.kind === 'mat') dur = Math.min(dur, Math.floor(best.it.cap / 5) * 5);
+    if (dur < MIN_DUR || capacity < dur){
+      /* can't use this item any more */
+      if (best.kind === 'mat') best.it.cap = 0; else needS[best.s.id] = 0;
+      continue;
+    }
+    capacity -= dur + BREAK;
+    assigned[best.key] = (assigned[best.key] || 0) + 1;
+    if (best.kind === 'mat'){
+      const subs = best.it.m.subjectIds;
+      for (const sid of subs) needS[sid] = Math.max(0, (needS[sid] || 0) - dur);
+      best.it.needM = Math.max(0, best.it.needM - dur);
+      best.it.cap -= dur;
+      chunks.push({ kind:'mat', m: best.it.m, subs, dur, title: best.it.m.title });
+    } else {
+      needS[best.s.id] = Math.max(0, needS[best.s.id] - dur);
+      chunks.push({ kind:'subj', s: best.s, subs: [best.s.id], dur, title: best.s.name });
+    }
+  }
+  if (!chunks.length){ toast('Daily goals already met'); return; }
+  chunks.forEach((c, i) => { c.rank = chunks.length > 1 ? 1 - i / (chunks.length - 1) : 1; });
+
+  /* ---- 3. placement ---- */
+  const prof = hourProfile();
+  const hasHistory = state.history.length >= 3;
+  const wE = hasHistory ? 1.8 : 1.0, wSpread = hasHistory ? 0.7 : 1.2, wVar = 0.9;
+  const placed = keptStudy.map(t => ({ start: t.start, end: t.start + t.dur, subs: subjectsOfTask(t) }));
+  const created = [];
+
+  const segLoad = s => {
+    const seg = Math.floor((s - wake) / 120);
+    return placed.reduce((a, p) => Math.floor((p.start - wake) / 120) === seg ? a + (p.end - p.start) : a, 0);
+  };
+  const chainLen = (s, e) => {
+    const all = [...placed, { start: s, end: e }].sort((a, b) => a.start - b.start);
+    let best = 1, cur = 1;
+    for (let i = 1; i < all.length; i++){
+      cur = (all[i].start - all[i-1].end <= BREAK + 5) ? cur + 1 : 1;
+      best = Math.max(best, cur);
+    }
+    return best;
+  };
+  const bestStart = (c, dur) => {
+    let best = null;
+    for (const [a, b] of free){
+      const cands = new Set([a, b - dur]);
+      for (let s = Math.ceil(a / 15) * 15; s + dur <= b; s += 15) cands.add(s);
+      for (const s of cands){
+        if (s < a || s + dur > b) continue;
+        const e = s + dur;
+        if (placed.some(p => s < p.end + BREAK && e > p.start - BREAK)) continue;
+
+        let sc = wE * clamp(slotScore(prof, s, dur) / 5, 0, 1) * (1 + 0.5 * c.rank);
+        sc += wSpread * (1 - clamp(segLoad(s) / 90, 0, 1));
+        for (const p of placed){
+          const gap = s >= p.end ? s - p.end : (p.start >= e ? p.start - e : 999);
+          if (gap > 60) continue;
+          if (p.subs.some(x => c.subs.includes(x))) sc -= wVar; else sc += 0.12;
+          if (gap <= BREAK + 5) sc += 0.2;
+        }
+        if (s === a || e === b) sc += 0.15;
+        const chain = chainLen(s, e);
+        if (chain > 2) sc -= 0.4 * (chain - 2);
+        if (e > hi - 45) sc -= 0.4;
+        if (s < wake + 20) sc -= 0.15;
+        if (s % 15 === 0) sc += 0.05;
+        if (!best || sc > best.sc + 1e-9) best = { s, sc };
+      }
+    }
+    return best;
+  };
+
+  for (const c of chunks){
+    let spot = null, dur = c.dur;
+    for (; dur >= Math.max(MIN_DUR, c.dur - 20); dur -= 5){
+      spot = bestStart(c, dur);
+      if (spot) break;
+    }
+    if (!spot) continue;
+    placed.push({ start: spot.s, end: spot.s + dur, subs: c.subs });
     created.push({
       id: uid(), type: 'study',
-      matId: d.kind === 'material' ? d.mat.id : null,
-      subjectId: d.kind === 'material' ? (d.mat.subjectId || null) : d.subj.id,
-      title: d.kind === 'material' ? d.mat.title : d.subj.name,
-      start: slot.start, dur, done: false, pct: 0, eff: 0
+      matId: c.kind === 'mat' ? c.m.id : null,
+      subjectId: c.subs[0] || null,
+      subjectIds: [...c.subs],
+      title: c.title,
+      start: spot.s, dur, done: false, pct: 0, eff: 0
     });
-    d.need -= dur;
-    if (d.need < MIN_DUR) queue.splice(queue.indexOf(d), 1);
   }
+  if (!created.length){ toast('No room for a block'); return; }
 
-  if (!created.length){ toast('Not enough free time for a block'); return; }
-
-  state.tasks[state.date] = [...concreteFixed, ...completedStudy, ...created];
+  created.sort((a, b) => a.start - b.start);
+  state.tasks[state.date] = [...kept, ...created];
   resolve(state.tasks[state.date]);
   save();
   render();
-  scrollToTime(Math.min(...created.map(c => c.start)));
+  scrollToTime(created[0].start);
   haptic([10, 30, 10]);
-
-  const n = created.length;
-  pushUndo(`${n} block${n>1?'s':''} planned`, () => {
-    state.tasks[state.date] = before;
-    save();
-    render();
-  });
+  const mins = created.reduce((a, t) => a + t.dur, 0);
+  offerUndo(`${created.length} block${created.length > 1 ? 's' : ''} · ${fmtDur(mins)}`, before);
 }
 
 /* ============================================================
-   UNDO
+   DELETE (all undoable)
 ============================================================ */
-function pushUndo(desc, fn){
-  lastUndo = { desc, fn };
-  toast(desc, { duration: 4200, action: { label: 'Undo', fn: () => {
-    if (!lastUndo) return;
-    const f = lastUndo.fn;
-    lastUndo = null;
-    try { f(); } catch(e){ console.warn(e); }
-    toast('Restored');
-  }}});
-}
 function deleteTaskObj(t){
+  const before = snapState();
   const list = tasksOn(state.date);
   const i = list.findIndex(x => x.id === t.id);
   if (i < 0) return;
-  const copy = { ...t };
   list.splice(i, 1);
-  save();
-  render();
-  haptic(15);
-  pushUndo('Block deleted', () => {
-    list.splice(i, 0, copy);
-    save();
-    render();
-  });
+  save(); render(); haptic(15);
+  offerUndo('Block deleted', before);
 }
 function deleteRecurring(id){
+  const before = snapState();
   const i = state.recurring.findIndex(r => r.id === id);
   if (i < 0) return;
-  const copy = state.recurring[i];
   state.recurring.splice(i, 1);
-  save();
-  render();
-  haptic(15);
-  pushUndo('Recurring class removed', () => {
-    state.recurring.splice(i, 0, copy);
-    save();
-    render();
-  });
+  save(); render(); haptic(15);
+  offerUndo('Class removed', before);
+}
+function deleteSubject(id){
+  const before = snapState();
+  state.subjects = state.subjects.filter(s => s.id !== id);
+  normalizeState();
+  save(); render(); haptic(15);
+  offerUndo('Subject removed', before);
+}
+function deleteMaterial(id){
+  const before = snapState();
+  state.materials = state.materials.filter(m => m.id !== id);
+  save(); render(); haptic(15);
+  offerUndo('Material removed', before);
 }
 
 /* ============================================================
    RENDER
 ============================================================ */
 function weekDates(){
-  const d = new Date(state.date + 'T00:00:00');
+  const d = dateObj(state.date);
   const dow = (d.getDay() + 6) % 7;
   const mon = new Date(d); mon.setDate(d.getDate() - dow);
   return Array.from({ length: 7 }, (_, i) => {
@@ -894,25 +1050,23 @@ function renderWeek(){
     </button>`;
   }).join('');
 }
+const matPct = m => Math.round((m.done / Math.max(1, m.total)) * 100);
 function renderMats(){
-  if (!state.materials.length){
-    $('#mats').innerHTML = `<div class="mats-empty">No materials yet</div>
-      <button class="mat add" id="addMat"><span>+</span>Material</button>`;
-    return;
-  }
-  const cards = state.materials.map(m => {
-    const pct = Math.round((m.done / m.total) * 100);
-    const sj = subjectOfMat(m);
-    return `<div class="mat" style="--c:${m.color}">
-      <div class="mat-hd">
+  const addBtn = `<button class="mat add" id="addMat"><span>+</span>Material</button>`;
+  if (!state.materials.length){ $('#mats').innerHTML = addBtn; return; }
+  $('#mats').innerHTML = state.materials.map(m => `
+    <div class="mat" style="--c:${m.color}" data-id="${m.id}">
+      <div class="mat-hd" data-edit="1">
         <span class="mat-title">${esc(m.title)}</span>
-        <span class="pct">${pct}%</span>
+        <span class="pct">${matPct(m)}%</span>
       </div>
-      <div class="bar" data-id="${m.id}"><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>
-      <div class="units">${sj ? esc(sj.name) + ' · ' : ''}${m.done} / ${m.total} units</div>
-    </div>`;
-  }).join('');
-  $('#mats').innerHTML = cards + `<button class="mat add" id="addMat"><span>+</span>Material</button>`;
+      <div class="track"><div class="fill" style="width:${matPct(m)}%"></div></div>
+      <div class="mat-ft">
+        <button class="mstep" data-mstep="-1" aria-label="one unit less">−</button>
+        <button class="units" data-edit="1">${m.done}<span>/${m.total}</span></button>
+        <button class="mstep" data-mstep="1" aria-label="one unit more">+</button>
+      </div>
+    </div>`).join('') + addBtn;
 }
 function renderTimeline(){
   const tl = $('#tl');
@@ -934,20 +1088,20 @@ function renderTimeline(){
     const top = (t.start - lo) * PXPM;
     const h = Math.max(t.dur * PXPM, 24);
     const isFixed = t.type === 'fixed';
-    const pctTag = (!isFixed && t.pct > 0) ? ` · ${t.pct}%` : '';
+    const tag = isFixed ? ` · ${catOf(t).name}` : ((t.pct > 0) ? ` · ${t.pct}%` : '');
     const recTag = t.virtual ? ' ↻' : '';
     html += `<div class="blk ${t.done ? 'done' : ''} ${isFixed ? 'fixed' : ''} ${t.dur <= 30 ? 'sm' : ''}"
       data-id="${t.id}" style="top:${top}px;height:${h}px;--c:${c}">
-      ${isFixed ? '<div class="lock">▮</div>' : '<div class="grip"></div>'}
+      ${isFixed ? '<div class="lock"></div>' : '<div class="grip"></div>'}
       <div class="blk-body">
-        <div class="blk-time">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)}${pctTag}${recTag}</div>
+        <div class="blk-time">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)}${tag}${recTag}</div>
         <div class="blk-title">${esc(t.title)}</div>
       </div>
       ${isFixed ? '' : '<button class="chk" aria-label="toggle done">✓</button>'}
     </div>`;
   }
   if (!list.length){
-    html += `<div class="empty"><b>Nothing scheduled</b>Add fixed blocks like classes, then let Auto plan your study time.</div>`;
+    html += `<div class="empty">Tap the timeline to add a block</div>`;
   }
   tl.style.height = (totalH + 26) + 'px';
   tl.innerHTML = html;
@@ -958,7 +1112,7 @@ function renderStats(){
   const doneMin = list.reduce((a,t) => a + t.dur * ((t.pct||0)/100), 0);
   $('#statPlanned').textContent = (planned/60).toFixed(1).replace(/\.0$/, '') + 'h';
   $('#statDone').textContent = planned ? Math.round(doneMin/planned*100) + '%' : '0%';
-  const d = new Date(state.date + 'T00:00:00');
+  const d = dateObj(state.date);
   const todayKey = iso(new Date());
   $('#datePill').textContent = (state.date === todayKey ? 'Today · ' : '') +
     d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
@@ -968,6 +1122,31 @@ function render(){
   renderMats();
   renderTimeline();
   renderStats();
+}
+function scrollToTime(min, instant){
+  const [lo] = dayWindow();
+  const el = $('#tlWrap');
+  const target = Math.max(0, (min - lo) * PXPM - 50);
+  el.scrollTo({ top: target, behavior: instant ? 'auto' : 'smooth' });
+}
+function scrollDefault(instant){
+  const [lo] = dayWindow();
+  const list = allTasksOn(state.date);
+  let target;
+  if (state.date === iso(new Date())){
+    const n = new Date();
+    target = Math.max(lo, n.getHours() * 60 + n.getMinutes() - 60);
+  } else {
+    target = list.length ? Math.min(...list.map(t => t.start)) : lo;
+  }
+  scrollToTime(target, instant);
+}
+function goDate(key){
+  if (key === state.date) return;
+  state.date = key;
+  render();
+  scrollDefault();
+  haptic(4);
 }
 
 /* ============================================================
@@ -987,7 +1166,7 @@ tlEl.addEventListener('pointerdown', e => {
   drag = {
     id: t.id, el: blk, y0: e.clientY, x0: e.clientX,
     s0: t.start, ns: t.start, moved: false, started: false,
-    dur: t.dur, lo, hi, pointerId: e.pointerId
+    dur: t.dur, lo, hi, pointerId: e.pointerId, before: snapState()
   };
 });
 
@@ -1006,6 +1185,7 @@ window.addEventListener('pointermove', e => {
   drag.moved = true;
   let ns = Math.round((drag.s0 + dy / PXPM) / SNAP) * SNAP;
   ns = clamp(ns, drag.lo, Math.max(drag.lo, drag.hi - drag.dur));
+  if (ns !== drag.ns) haptic(2);
   drag.ns = ns;
   dragPendingY = (ns - drag.s0) * PXPM;
   if (dragRaf === null){
@@ -1026,7 +1206,7 @@ function endDrag(commit){
   dragPendingY = null;
   d.el.classList.remove('dragging');
   d.el.style.transform = '';
-  if (commit && d.started && d.moved){
+  if (commit && d.started && d.moved && d.ns !== d.s0){
     const t = findTask(d.id);
     if (t){
       t.start = d.ns;
@@ -1034,6 +1214,7 @@ function endDrag(commit){
       save();
       render();
       haptic(6);
+      offerUndo('Moved to ' + fmtTime(t.start), d.before, 3200);
     }
   }
 }
@@ -1046,9 +1227,9 @@ tlEl.addEventListener('click', e => {
     const t = findTask(chk.closest('.blk').dataset.id);
     if (t){
       t.done = !t.done;
-      if (t.done) t.pct = 100;
+      t.pct = t.done ? 100 : 0;
       save();
-      haptic(6);
+      haptic(t.done ? 10 : 5);
       render();
     }
     return;
@@ -1057,81 +1238,92 @@ tlEl.addEventListener('click', e => {
   if (body){
     const id = body.closest('.blk').dataset.id;
     if (id.startsWith('rec:')){
-      const parts = id.split(':');
-      openSheet('recurring', { recurringId: parts[1] });
+      openSheet('recurring', { recurringId: id.split(':')[1] });
     } else {
       openBlockSheet(id);
     }
+    return;
+  }
+  /* tap on empty timeline → new block at that time */
+  if (!e.target.closest('.blk')){
+    const [lo, hi] = dayWindow();
+    const y = e.clientY - tlEl.getBoundingClientRect().top;
+    const start = clamp(Math.floor((lo + y / PXPM) / 15) * 15, lo, Math.max(lo, hi - 30));
+    openNewBlock({ start });
   }
 });
 
 /* ============================================================
-   WEEK NAV
+   WEEK / DAY NAV
 ============================================================ */
 $('#week').addEventListener('click', e => {
   const chip = e.target.closest('.day-chip');
-  if (!chip) return;
-  state.date = chip.dataset.date;
-  save();
-  render();
-  const list = allTasksOn(state.date);
-  const [lo] = dayWindow();
-  const target = list.length ? Math.min(...list.map(t => t.start)) : lo;
-  scrollToTime(target);
-  haptic(4);
+  if (chip) goDate(chip.dataset.date);
 });
-function scrollToTime(min, instant){
-  const [lo] = dayWindow();
-  const el = $('#tlWrap');
-  const target = Math.max(0, (min - lo) * PXPM - 50);
-  el.scrollTo({ top: target, behavior: instant ? 'auto' : 'smooth' });
-}
+$('#prevDay').addEventListener('click', () => goDate(shiftDate(state.date, -1)));
+$('#nextDay').addEventListener('click', () => goDate(shiftDate(state.date, 1)));
+$('#datePill').addEventListener('click', () => goDate(iso(new Date())));
 
 /* ============================================================
-   MATERIAL PROGRESS DRAG
+   MATERIAL PROGRESS — one unit per tap, hold to repeat
 ============================================================ */
-function updateBarFromX(bar, x){
-  const r = bar._rect || bar.getBoundingClientRect();
-  const p = clamp((x - r.left) / r.width, 0, 1);
-  const m = state.materials.find(v => v.id === bar.dataset.id);
-  if (!m) return;
-  m.done = Math.round(p * m.total);
-  const card = bar.closest('.mat');
-  card.querySelector('.fill').style.width = (p * 100) + '%';
-  card.querySelector('.pct').textContent = Math.round(p * 100) + '%';
-  const sj = subjectOfMat(m);
-  card.querySelector('.units').textContent = `${sj ? sj.name + ' · ' : ''}${m.done} / ${m.total} units`;
+const matsEl = $('#mats');
+const mHold = { t: null, i: null, fired: false };
+function stepMat(card, d){
+  const m = state.materials.find(v => v.id === card.dataset.id);
+  if (!m) return false;
+  const nd = clamp(m.done + d, 0, m.total);
+  if (nd === m.done) return false;
+  m.done = nd;
+  card.querySelector('.fill').style.width = matPct(m) + '%';
+  card.querySelector('.pct').textContent = matPct(m) + '%';
+  card.querySelector('.units').innerHTML = `${m.done}<span>/${m.total}</span>`;
+  return true;
 }
-$('#mats').addEventListener('pointerdown', e => {
-  const bar = e.target.closest('.bar');
-  if (!bar) return;
-  bar.dataset.drag = '1';
-  bar._rect = bar.getBoundingClientRect();
-  try { bar.setPointerCapture(e.pointerId); } catch(_){}
-  updateBarFromX(bar, e.clientX);
-  e.preventDefault();
+matsEl.addEventListener('pointerdown', e => {
+  const b = e.target.closest('.mstep');
+  if (!b) return;
+  const card = b.closest('.mat');
+  const d = parseInt(b.dataset.mstep, 10);
+  mHold.fired = false;
+  mHold.t = setTimeout(() => {
+    mHold.fired = true;
+    const tick = () => { if (stepMat(card, d)) haptic(3); };
+    tick();
+    mHold.i = setInterval(tick, 130);
+  }, 420);
 });
-window.addEventListener('pointermove', e => {
-  const bar = document.querySelector('.bar[data-drag="1"]');
-  if (bar) updateBarFromX(bar, e.clientX);
-});
-function endBarDrag(){
-  const bars = document.querySelectorAll('.bar[data-drag]');
-  if (!bars.length) return;
-  bars.forEach(b => { delete b.dataset.drag; delete b._rect; });
-  save();
-  renderWeek();
+function endMatHold(){
+  if (mHold.t === null && mHold.i === null) return;
+  clearTimeout(mHold.t); clearInterval(mHold.i);
+  mHold.t = mHold.i = null;
+  if (mHold.fired){ save(); }
 }
-window.addEventListener('pointerup', endBarDrag);
-window.addEventListener('pointercancel', endBarDrag);
+window.addEventListener('pointerup', endMatHold);
+window.addEventListener('pointercancel', endMatHold);
+matsEl.addEventListener('click', e => {
+  const b = e.target.closest('.mstep');
+  if (b){
+    if (mHold.fired){ mHold.fired = false; return; }
+    if (stepMat(b.closest('.mat'), parseInt(b.dataset.mstep, 10))){ save(); haptic(6); }
+    return;
+  }
+  if (e.target.closest('#addMat')){ openNewMat(); return; }
+  const ed = e.target.closest('[data-edit]');
+  if (ed) openSheet('mat', { id: ed.closest('.mat').dataset.id });
+});
 
 /* ============================================================
-   SHEET
+   SHEET — shell
 ============================================================ */
 const sheet = $('#sheet');
 const backdrop = $('#backdrop');
 function showSheet(){ backdrop.classList.add('show'); sheet.classList.add('show'); sheet.scrollTop = 0; if (NATIVE){ try { NATIVE.setSheetOpen(true); } catch(_){} } }
-function hideSheet(){ backdrop.classList.remove('show'); sheet.classList.remove('show'); sheetCtx.mode = null; if (NATIVE){ try { NATIVE.setSheetOpen(false); } catch(_){} } }
+function hideSheet(){
+  backdrop.classList.remove('show'); sheet.classList.remove('show'); sheetCtx.mode = null;
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  if (NATIVE){ try { NATIVE.setSheetOpen(false); } catch(_){} }
+}
 backdrop.addEventListener('click', hideSheet);
 
 function openSheet(mode, payload){
@@ -1139,6 +1331,10 @@ function openSheet(mode, payload){
   sheetCtx.id = payload && payload.id || null;
   sheetCtx.recurringId = payload && payload.recurringId || null;
   sheetCtx.draft = payload && payload.draft || null;
+  if (mode === 'mat' && sheetCtx.id){
+    sheetCtx.draft = state.materials.find(m => m.id === sheetCtx.id) || null;
+    if (!sheetCtx.draft){ sheetCtx.mode = null; return; }
+  }
   renderSheet();
   showSheet();
   haptic(4);
@@ -1149,7 +1345,7 @@ function renderSheet(){
     case 'recurring': return renderRecurringSheet();
     case 'newblock':  return renderNewBlockSheet();
     case 'settings':  return renderSettingsSheet();
-    case 'newmat':    return renderNewMatSheet();
+    case 'mat':       return renderMatSheet();
     case 'newsubj':   return renderNewSubjSheet();
     case 'review':    return renderReviewSheet();
     case 'share':     return renderShareSheet();
@@ -1157,83 +1353,174 @@ function renderSheet(){
 }
 function openBlockSheet(id){ openSheet('block', { id }); }
 
-/* ---------- block sheet ---------- */
+/* ============================================================
+   SHEET — typed + stepped fields
+   A field is addressed by a key (e.g. "b.start", "sj:abc123"); everything that edits a number
+   or a time of day goes through fieldSpec(), so +/-, hold-to-repeat, presets and typing all
+   share the same clamping rules.
+============================================================ */
+function fieldSpec(f){
+  const [key, arg] = f.split(':');
+  const [lo, hi] = dayWindow();
+  const T = () => findTask(sheetCtx.id);
+  const R = () => state.recurring.find(x => x.id === sheetCtx.recurringId);
+  const D = () => sheetCtx.draft;
+  const S = state.settings;
+  switch (key){
+    case 'b.start': if (!T()) return null; return { kind:'time', get:() => T().start,
+      set:v => { const t = T(); t.start = clamp(v, lo, Math.max(lo, hi - t.dur)); resolve(tasksOn(state.date)); } };
+    case 'b.dur': if (!T()) return null; return { kind:'dur', unit:'min', get:() => T().dur,
+      set:v => { const t = T(); t.dur = clamp(v, minDur(t.type), maxDur(t.type));
+        if (t.start + t.dur > hi) t.start = Math.max(lo, hi - t.dur); resolve(tasksOn(state.date)); } };
+    case 'b.pct': if (!T()) return null; return { kind:'num', unit:'%', get:() => T().pct || 0,
+      set:v => { const t = T(); t.pct = clamp(v, 0, 100); t.done = t.pct >= 100; if (t.eff > 0) logFeedback(t); } };
+    case 'r.start': if (!R()) return null; return { kind:'time', get:() => R().start,
+      set:v => { const r = R(); r.start = clamp(v, 0, 1440 - r.dur); } };
+    case 'r.dur': if (!R()) return null; return { kind:'dur', unit:'min', get:() => R().dur,
+      set:v => { const r = R(); r.dur = clamp(v, MIN_FIXED, MAX_FIXED); r.start = Math.min(r.start, 1440 - r.dur); } };
+    case 'n.start': if (!D()) return null; return { kind:'time', get:() => D().start,
+      set:v => { D().start = clamp(v, lo, Math.max(lo, hi - D().dur)); } };
+    case 'n.dur': if (!D()) return null; return { kind:'dur', unit:'min', get:() => D().dur,
+      set:v => { const d = D(); d.dur = clamp(v, minDur(d.type), maxDur(d.type)); d.start = clamp(d.start, lo, Math.max(lo, hi - d.dur)); } };
+    case 'w': return { kind:'time', get:() => S.wake, set:v => { S.wake = clamp(v, 0, 720); } };
+    case 'z': return { kind:'time', get:() => S.sleep, set:v => { S.sleep = clamp(v === 0 ? 1440 : v, 720, 1440); } };
+    case 'sj': { const s = state.subjects.find(x => x.id === arg); if (!s) return null;
+      return { kind:'num', unit:'m', get:() => s.dailyGoalMin || 0, set:v => { s.dailyGoalMin = clamp(v, 0, 600); } }; }
+    case 'mg': { const m = state.materials.find(x => x.id === arg); if (!m) return null;
+      return { kind:'num', unit:'m', get:() => m.dailyGoalMin || 0, set:v => { m.dailyGoalMin = clamp(v, 0, 600); } }; }
+    case 'm.total': if (!D()) return null; return { kind:'num', get:() => D().total,
+      set:v => { const m = D(); m.total = clamp(v, 1, 999); m.done = Math.min(m.done || 0, m.total); } };
+    case 'm.unit': if (!D()) return null; return { kind:'num', unit:'min', get:() => D().unitMin, set:v => { D().unitMin = clamp(v, 1, 120); } };
+    case 'm.goal': if (!D()) return null; return { kind:'num', unit:'min', get:() => D().dailyGoalMin, set:v => { D().dailyGoalMin = clamp(v, 0, 600); } };
+    case 'm.done': if (!D()) return null; return { kind:'num', get:() => D().done || 0, set:v => { D().done = clamp(v, 0, D().total); } };
+    case 'sg': if (!D()) return null; return { kind:'num', unit:'min', get:() => D().dailyGoalMin, set:v => { D().dailyGoalMin = clamp(v, 0, 600); } };
+  }
+  return null;
+}
+const fieldText = f => { const sp = fieldSpec(f); return !sp ? '' : (sp.kind === 'time' ? fmtTime(sp.get()) : String(sp.get())); };
+
+function stepField(f, delta){
+  const sp = fieldSpec(f);
+  if (!sp) return false;
+  const v = sp.get(), s = Math.abs(delta);
+  let nv = v + delta;
+  if ((sp.kind === 'time' || sp.kind === 'dur') && v % s !== 0) nv = delta > 0 ? Math.ceil(v / s) * s : Math.floor(v / s) * s;
+  sp.set(nv);
+  return sp.get() !== v;
+}
+function stp(f, step){
+  const sp = fieldSpec(f);
+  if (!sp) return '';
+  const time = sp.kind === 'time';
+  return `<div class="stepper">
+    <button data-a="step:${f}:${-step}" data-rep>−</button>
+    <label class="fld ${time ? 'wide' : ''}"><input class="num" data-f="${f}" type="text" inputmode="${time ? 'text' : 'numeric'}" enterkeyhint="done" autocomplete="off" spellcheck="false" value="${esc(fieldText(f))}">${sp.unit ? `<i>${sp.unit}</i>` : ''}</label>
+    <button data-a="step:${f}:${step}" data-rep>+</button>
+  </div>`;
+}
+const frow = (label, f, step) => `<div class="ctl-row"><span>${label}</span>${stp(f, step)}</div>`;
+const presets = (f, cur, vals, suffix) => `<div class="presets">${vals.map(v =>
+  `<button class="pchip ${cur === v ? 'sel' : ''}" data-a="set:${f}:${v}">${v}${suffix || ''}</button>`).join('')}</div>`;
+const catChips = (cur, prefix) => `<div class="chiprow cats">${CAT_KEYS.map(k =>
+  `<button class="mchip ${cur === k ? 'sel' : ''}" data-a="${prefix}:${k}"><span class="cdot" style="background:${CATS[k].color}"></span>${CATS[k].name}</button>`).join('')}</div>`;
+const tog = (a, v) => `<div class="stepper"><button data-a="${a}" style="width:auto;padding:0 16px">${v ? 'On' : 'Off'}</button></div>`;
+const dayNames = ['M','T','W','T','F','S','S'];
+const dayChips = (days, prefix) => `<div class="chiprow">${[1,2,3,4,5,6,7].map(n =>
+  `<button class="day-mini ${(days || []).includes(n) ? 'on' : ''}" data-a="${prefix}:${n}">${dayNames[n-1]}</button>`).join('')}</div>`;
+
+/* keep inputs in sync without rebuilding the sheet (used while a +/- button is held) */
+function refreshFields(){
+  sheet.querySelectorAll('input.num').forEach(i => { if (document.activeElement !== i) i.value = fieldText(i.dataset.f); });
+  const sub = sheet.querySelector('[data-live="sub"]');
+  if (sub) sub.textContent = liveSub();
+}
+function liveSub(){
+  if (sheetCtx.mode === 'block'){
+    const t = findTask(sheetCtx.id);
+    if (!t) return '';
+    const meta = t.type === 'fixed' ? catOf(t).name : (subjectNames(subjectsOfTask(t)) || 'Study');
+    return `${meta} · ${fmtTime(t.start)} – ${fmtTime(t.start + t.dur)}`;
+  }
+  if (sheetCtx.mode === 'recurring'){
+    const r = state.recurring.find(x => x.id === sheetCtx.recurringId);
+    return r ? `Weekly · ${fmtTime(r.start)} – ${fmtTime(r.start + r.dur)}` : '';
+  }
+  return '';
+}
+function afterChange(quiet){
+  const mode = sheetCtx.mode;
+  if (!mode) return;
+  if (quiet){
+    refreshFields();
+    if (mode === 'block' || mode === 'recurring') renderTimeline();
+    return;
+  }
+  const draftOnly = mode === 'newblock' || mode === 'newsubj' || (mode === 'mat' && !sheetCtx.id);
+  if (!draftOnly){ save(); render(); }
+  renderSheet();
+}
+
+/* ============================================================
+   SHEET — block
+============================================================ */
 function renderBlockSheet(){
   const t = findTask(sheetCtx.id);
   if (!t){ hideSheet(); return; }
   const isFixed = t.type === 'fixed';
-  const c = colorForTask(t);
-  const mat = t.matId ? state.materials.find(m => m.id === t.matId) : null;
-  const subj = t.subjectId ? state.subjects.find(s => s.id === t.subjectId) : null;
-  const subLine = isFixed ? 'Fixed · locked'
-    : (mat ? (subj ? subj.name : 'Study') + ' · study block'
-           : (subj ? subj.name + ' · subject block' : 'Study block'));
   sheet.innerHTML = `
     <div class="handle"></div>
     <div class="sheet-hd">
-      <div class="dot" style="background:${c}"></div>
-      <div style="min-width:0">
+      <div class="dot" style="background:${colorForTask(t)}"></div>
+      <div style="min-width:0;flex:1">
         <div class="sheet-title">${esc(t.title)}</div>
-        <div class="sheet-sub">${esc(subLine)} · ${fmtTime(t.start)} – ${fmtTime(t.start + t.dur)}</div>
+        <div class="sheet-sub" data-live="sub">${esc(liveSub())}</div>
       </div>
     </div>
-    <div class="ctl-row"><span>Start</span>
-      <div class="stepper"><button data-a="s-">−</button><b>${fmtShort(t.start)}</b><button data-a="s+">+</button></div>
-    </div>
-    <div class="ctl-row"><span>Duration</span>
-      <div class="stepper"><button data-a="d-">−</button><b>${t.dur} min</b><button data-a="d+">+</button></div>
-    </div>
-    ${isFixed ? `<div class="note">This block is <b>locked</b> — Auto planning always works around it.</div>` : `
+    ${isFixed ? `<input class="inp" data-t="b.title" value="${esc(t.title)}" placeholder="Name" enterkeyhint="done" autocomplete="off" />
+      ${catChips(t.cat, 'bcat')}` : ''}
+    ${frow('Start', 'b.start', 15)}
+    ${frow('Length', 'b.dur', 5)}
+    ${presets('b.dur', t.dur, isFixed ? [30,60,90,120] : [25,45,60,90])}
+    ${isFixed ? '' : `
       <div class="sec">Outcome</div>
-      <div class="ctl-row"><span>Completed</span>
-        <div class="stepper"><button data-a="p-">−</button><b>${t.pct || 0}%</b><button data-a="p+">+</button></div>
-      </div>
-      <div class="ctl-row"><span>Efficiency</span>
+      ${frow('Done', 'b.pct', 10)}
+      ${presets('b.pct', t.pct || 0, [0,25,50,75,100], '%')}
+      <div class="ctl-row"><span>Focus</span>
         <div class="stars">${[1,2,3,4,5].map(i =>
           `<button class="star ${(t.eff||0) >= i ? 'on' : ''}" data-a="e${i}">★</button>`).join('')}</div>
-      </div>
-    `}
+      </div>`}
     <div class="sheet-actions">
       <button class="btn danger" data-a="del">Delete</button>
-      ${isFixed ? `<button class="btn primary" data-a="close">Done</button>`
-                : `<button class="btn primary" data-a="log">Save log</button>`}
+      <button class="btn primary" data-a="close">Done</button>
     </div>`;
 }
 
-/* ---------- recurring sheet ---------- */
+/* ---------- recurring ---------- */
 function renderRecurringSheet(){
   const r = state.recurring.find(x => x.id === sheetCtx.recurringId);
   if (!r){ hideSheet(); return; }
-  const dnames = ['M','T','W','T','F','S','S'];
-  const days = r.days || [1];
   sheet.innerHTML = `
     <div class="handle"></div>
     <div class="sheet-hd">
-      <div class="dot" style="background:#8a95a8"></div>
-      <div style="min-width:0">
+      <div class="dot" style="background:${(CATS[r.cat] || CATS.cl).color}"></div>
+      <div style="min-width:0;flex:1">
         <div class="sheet-title">${esc(r.title)}</div>
-        <div class="sheet-sub">Recurring · ${days.map(d => dnames[d-1]).join(' ')} · ${fmtTime(r.start)} – ${fmtTime(r.start + r.dur)}</div>
+        <div class="sheet-sub" data-live="sub">${esc(liveSub())}</div>
       </div>
     </div>
-    <div class="sec">Repeat on</div>
-    <div class="chiprow">
-      ${[1,2,3,4,5,6,7].map(n =>
-        `<button class="day-mini ${days.includes(n) ? 'on' : ''}" data-a="rd${n}">${dnames[n-1]}</button>`
-      ).join('')}
-    </div>
-    <div class="ctl-row"><span>Start</span>
-      <div class="stepper"><button data-a="rs-">−</button><b>${fmtShort(r.start)}</b><button data-a="rs+">+</button></div>
-    </div>
-    <div class="ctl-row"><span>Duration</span>
-      <div class="stepper"><button data-a="rd-">−</button><b>${r.dur} min</b><button data-a="rd+">+</button></div>
-    </div>
+    <input class="inp" data-t="r.title" value="${esc(r.title)}" placeholder="Name" enterkeyhint="done" autocomplete="off" />
+    ${catChips(r.cat, 'rcat')}
+    ${dayChips(r.days, 'rday')}
+    ${frow('Start', 'r.start', 15)}
+    ${frow('Length', 'r.dur', 5)}
+    ${presets('r.dur', r.dur, [30,60,90,120])}
     <div class="sheet-actions">
-      <button class="btn danger" data-a="rdel">Delete class</button>
-      <button class="btn primary" data-a="rclose">Done</button>
+      <button class="btn danger" data-a="rdel">Delete</button>
+      <button class="btn primary" data-a="close">Done</button>
     </div>`;
 }
 
-/* ---------- new block sheet ---------- */
+/* ---------- new block ---------- */
 function nextFreeStart(dur = 45){
   const [lo, hi] = dayWindow();
   const list = allTasksOn(state.date);
@@ -1245,51 +1532,92 @@ function nextFreeStart(dur = 45){
   }
   return lo;
 }
+function openNewBlock(opts){
+  opts = opts || {};
+  const last = state.prefs.last || {};
+  const type = opts.type || last.type || 'study';
+  const mat = state.materials.find(m => m.id === last.matId) || null;
+  const subj = state.subjects.find(s => s.id === last.subjectId) || null;
+  let matId = null, subjectId = null;
+  if (mat) matId = mat.id;
+  else if (subj) subjectId = subj.id;
+  else if (state.materials[0]) matId = state.materials[0].id;
+  else if (state.subjects[0]) subjectId = state.subjects[0].id;
+  const dur = type === 'fixed' ? (last.fixedDur || 60) : (last.studyDur || preferredDur());
+  const [lo, hi] = dayWindow();
+  const start = opts.start != null ? clamp(opts.start, lo, Math.max(lo, hi - dur)) : nextFreeStart(dur);
+  openSheet('newblock', { draft: {
+    type, cat: CATS[last.cat] ? last.cat : 'cl', subjectId, matId,
+    title: '', start, dur, repeat: false, days: []
+  }});
+}
 function renderNewBlockSheet(){
   const d = sheetCtx.draft;
   const isFixed = d.type === 'fixed';
-  const subjChips = state.subjects.length
-    ? state.subjects.map(s => `<button class="mchip ${d.subjectId === s.id ? 'sel' : ''}" data-a="subj:${s.id}">
-        <span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join('')
-    : `<div class="note">No subjects yet — add one in settings.</div>`;
-  const matChips = state.materials.length
-    ? `<button class="mchip ${!d.matId ? 'sel' : ''}" data-a="mat:">Subject only</button>` +
-      state.materials.map(m => `<button class="mchip ${d.matId === m.id ? 'sel' : ''}" data-a="mat:${m.id}">
-        <span class="cdot" style="background:${m.color}"></span>${esc(m.title)}</button>`).join('')
-    : `<div class="note">No materials yet — the subject alone is enough.</div>`;
-  const dayNames = ['M','T','W','T','F','S','S'];
-
+  const matChips = state.materials.map(m => `<button class="mchip ${d.matId === m.id ? 'sel' : ''}" data-a="mat:${m.id}">
+      <span class="cdot" style="background:${m.color}"></span>${esc(m.title)}</button>`).join('');
+  const subjChips = state.subjects.map(s => `<button class="mchip ${!d.matId && d.subjectId === s.id ? 'sel' : ''}" data-a="subj:${s.id}">
+      <span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join('');
   sheet.innerHTML = `
     <div class="handle"></div>
-    <div class="sheet-title" style="margin-bottom:12px">New block</div>
     <div class="chiprow" style="padding-top:0">
-      <button class="mchip ${isFixed ? 'sel' : ''}" data-a="type:fixed">Fixed (class, work)</button>
       <button class="mchip ${!isFixed ? 'sel' : ''}" data-a="type:study">Study</button>
+      <button class="mchip ${isFixed ? 'sel' : ''}" data-a="type:fixed">Fixed</button>
     </div>
     ${isFixed
-      ? `<input id="title" class="inp" style="margin-top:12px" placeholder="e.g. Physics lecture" value="${esc(d.title || '')}" enterkeyhint="done" />
-         <div class="ctl-row"><span>Repeat weekly</span>
-           <div class="stepper"><button data-a="repeat:toggle" style="width:auto;padding:0 14px">${d.repeat ? 'On' : 'Off'}</button></div>
-         </div>
-         ${d.repeat ? `<div class="sec">Repeat on</div>
-           <div class="chiprow">
-             ${[1,2,3,4,5,6,7].map(n =>
-               `<button class="day-mini ${(d.days||[]).includes(n) ? 'on' : ''}" data-a="day${n}">${dayNames[n-1]}</button>`
-             ).join('')}
-           </div>` : ''}`
-      : `<div class="sec">Subject</div>
-         <div class="chiprow">${subjChips}</div>
-         <div class="sec">Material <span style="text-transform:none;letter-spacing:0;color:#545a6b">(optional)</span></div>
-         <div class="chiprow">${matChips}</div>`}
-    <div class="ctl-row"><span>Start</span>
-      <div class="stepper"><button data-a="s-">−</button><b>${fmtShort(d.start)}</b><button data-a="s+">+</button></div>
-    </div>
-    <div class="ctl-row"><span>Duration</span>
-      <div class="stepper"><button data-a="d-">−</button><b>${d.dur} min</b><button data-a="d+">+</button></div>
-    </div>
+      ? `${catChips(d.cat, 'ncat')}
+         <input class="inp" data-t="nb.title" style="margin-top:6px" placeholder="${CATS[d.cat].name}" value="${esc(d.title || '')}" enterkeyhint="done" autocomplete="off" />
+         <div class="ctl-row"><span>Repeat weekly</span>${tog('repeat:toggle', d.repeat)}</div>
+         ${d.repeat ? dayChips(d.days, 'nday') : ''}`
+      : (matChips || subjChips
+          ? `${matChips ? `<div class="sec">Material</div><div class="chiprow">${matChips}</div>` : ''}
+             ${subjChips ? `<div class="sec">Subject</div><div class="chiprow">${subjChips}</div>` : ''}`
+          : `<div class="note">Add a subject in Settings first.</div>`)}
+    ${frow('Start', 'n.start', 15)}
+    ${frow('Length', 'n.dur', 5)}
+    ${presets('n.dur', d.dur, isFixed ? [30,60,90,120] : [25,45,60,90])}
     <div class="sheet-actions">
       <button class="btn ghost" data-a="close">Cancel</button>
-      <button class="btn primary" data-a="create">Add block</button>
+      <button class="btn primary" data-a="create">Add</button>
+    </div>`;
+}
+
+/* ---------- material (new + edit) ---------- */
+function openNewMat(){
+  openSheet('mat', { draft: { title:'', subjectIds:[], total:20, unitMin:6, dailyGoalMin:30, done:0 } });
+}
+function renderMatSheet(){
+  const m = sheetCtx.draft;
+  if (!m){ hideSheet(); return; }
+  const editing = !!sheetCtx.id;
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <input class="inp" data-t="m.title" placeholder="Name" value="${esc(m.title || '')}" enterkeyhint="done" autocomplete="off" />
+    <div class="sec" style="margin-top:2px">Subjects</div>
+    ${state.subjects.length
+      ? `<div class="chiprow">${state.subjects.map(s => `<button class="mchip ${m.subjectIds.includes(s.id) ? 'sel' : ''}" data-a="msub:${s.id}">
+          <span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join('')}</div>`
+      : `<div class="note">Add subjects in Settings.</div>`}
+    ${frow('Units', 'm.total', 1)}
+    ${frow('Per unit', 'm.unit', 1)}
+    ${frow('Daily goal', 'm.goal', 15)}
+    ${editing ? frow('Progress', 'm.done', 1) : ''}
+    <div class="sheet-actions">
+      ${editing ? `<button class="btn danger" data-a="mdel">Delete</button><button class="btn primary" data-a="close">Done</button>`
+                : `<button class="btn ghost" data-a="close">Cancel</button><button class="btn primary" data-a="createMat">Add</button>`}
+    </div>`;
+}
+
+/* ---------- new subject ---------- */
+function renderNewSubjSheet(){
+  const d = sheetCtx.draft;
+  sheet.innerHTML = `
+    <div class="handle"></div>
+    <input class="inp" data-t="sj.name" placeholder="Subject name" value="${esc(d.name || '')}" enterkeyhint="done" autocomplete="off" />
+    ${frow('Daily goal', 'sg', 15)}
+    <div class="sheet-actions">
+      <button class="btn ghost" data-a="close">Cancel</button>
+      <button class="btn primary" data-a="createSubj">Add</button>
     </div>`;
 }
 
@@ -1299,359 +1627,365 @@ function renderSettingsSheet(){
   const hist = state.history.length;
   const prof = hourProfile();
   const best = prof.map((v,h) => ({v,h})).sort((a,b) => b.v - a.v).slice(0,3).sort((a,b) => a.h - b.h);
-  const pdur = preferredDur();
   nativeStatusRefresh();
   const nf = s.notif || DEFAULT_NOTIF;
-  const tog = (a, v) => `<div class="stepper"><button data-a="${a}" style="width:auto;padding:0 14px">${v ? 'On' : 'Off'}</button></div>`;
   const notifHtml = NATIVE ? `
-    <div class="sec">Notifications</div>
-    <div class="ctl-row"><span>Block starts</span>${tog('n:start', nf.start)}</div>
-    <div class="ctl-row"><span>Block ends</span>${tog('n:end', nf.end)}</div>
-    <div class="ctl-row"><span>Heads-up before</span>
+    <div class="sec">Alerts</div>
+    <div class="ctl-row"><span>Start</span>${tog('n:start', nf.start)}</div>
+    <div class="ctl-row"><span>End</span>${tog('n:end', nf.end)}</div>
+    <div class="ctl-row"><span>Heads-up</span>
       <div class="stepper"><button data-a="n:lead-">−</button><b>${nf.lead ? nf.lead + ' min' : 'Off'}</b><button data-a="n:lead+">+</button></div>
     </div>
-    <div class="ctl-row"><span>Include fixed blocks</span>${tog('n:fixed', nf.fixed)}</div>
-    ${!nativeStatus.notif ? `<div class="ctl-row"><span>Notifications are off</span><button class="btn ghost tiny" data-a="n:perm">Allow</button></div>` : ''}
-    ${!nativeStatus.exact ? `<div class="ctl-row"><span>Exact timing is off</span><button class="btn ghost tiny" data-a="n:exact">Allow</button></div>` : ''}
-    <button class="btn ghost tiny" style="margin-top:8px;width:100%" data-a="n:test">Send test notification</button>
-    <div class="note">Alerts fire when a block starts or ends, even with the app closed. Blocks you've already completed stay quiet.</div>` : '';
+    <div class="ctl-row"><span>Fixed blocks</span>${tog('n:fixed', nf.fixed)}</div>
+    ${!nativeStatus.notif ? `<div class="ctl-row"><span>Notifications off</span><button class="btn ghost tiny" data-a="n:perm">Allow</button></div>` : ''}
+    ${!nativeStatus.exact ? `<div class="ctl-row"><span>Exact timing off</span><button class="btn ghost tiny" data-a="n:exact">Allow</button></div>` : ''}
+    <div class="ctl-row"><span>Test</span><button class="btn ghost tiny" data-a="n:test">Send</button></div>` : '';
   const dataHtml = NATIVE ? `
     <div class="sec">Backup</div>
-    <div class="ctl-row"><span>Your data</span>
+    <div class="ctl-row"><span>Data</span>
       <div style="display:flex;gap:6px"><button class="btn ghost tiny" data-a="data:export">Export</button><button class="btn ghost tiny" data-a="data:import">Import</button></div>
-    </div>
-    <div class="note">Everything stays on this phone. Export a JSON backup any time.</div>` : '';
+    </div>` : '';
   sheet.innerHTML = `
     <div class="handle"></div>
-    <div class="sheet-title" style="margin-bottom:14px">Settings</div>
-    <div class="sec" style="margin-top:0">Sleep schedule</div>
-    <div class="ctl-row"><span>Wake up</span>
-      <div class="stepper"><button data-a="w-">−</button><b>${fmtShort(s.wake)}</b><button data-a="w+">+</button></div>
-    </div>
-    <div class="ctl-row"><span>Bedtime</span>
-      <div class="stepper"><button data-a="z-">−</button><b>${fmtShort(s.sleep)}</b><button data-a="z+">+</button></div>
-    </div>
+    <div class="sheet-title" style="margin-bottom:12px">Settings</div>
+    <div class="sec" style="margin-top:0">Day</div>
+    ${frow('Wake', 'w', 15)}
+    ${frow('Bedtime', 'z', 15)}
     ${notifHtml}
-    <div class="sec">Subjects &amp; daily goals</div>
-    ${state.subjects.length ? state.subjects.map(sj => `
+    <div class="sec">Subjects</div>
+    ${state.subjects.map(sj => `
       <div class="row">
-        <div style="min-width:0">
-          <div class="nm"><span class="cdot" style="background:${sj.color}"></span>${esc(sj.name)}</div>
-          <div class="sub">${sj.dailyGoalMin} min / day</div>
+        <div class="nm" style="min-width:0;flex:1"><span class="cdot" style="background:${sj.color}"></span>${esc(sj.name)}</div>
+        <div class="right">${stp('sj:' + sj.id, 15)}<button class="xbtn" data-a="sjx:${sj.id}">×</button></div>
+      </div>`).join('')}
+    <button class="btn ghost tiny wide" data-a="newsubj">+ Subject</button>
+    <div class="sec">Materials</div>
+    ${state.materials.map(m => `
+      <div class="row">
+        <div class="nm tap" style="min-width:0;flex:1" data-a="medit:${m.id}">
+          <span class="cdot" style="background:${m.color}"></span>${esc(m.title)}
+          <span class="sub inline">${m.done}/${m.total}</span>
         </div>
-        <div class="right">
-          <div class="stepper"><button data-a="sj-:${sj.id}">−</button><b>${sj.dailyGoalMin}m</b><button data-a="sj+:${sj.id}">+</button></div>
-          <button class="xbtn" data-a="sjx:${sj.id}">×</button>
+        <div class="right">${stp('mg:' + m.id, 15)}</div>
+      </div>`).join('')}
+    <button class="btn ghost tiny wide" data-a="newmat">+ Material</button>
+    ${(state.recurring || []).length ? `<div class="sec">Weekly</div>` + state.recurring.map(r => `
+      <div class="row">
+        <div class="nm tap" style="min-width:0;flex:1" data-a="redit:${r.id}">
+          <span class="cdot" style="background:${(CATS[r.cat] || CATS.cl).color}"></span>${esc(r.title)}
+          <span class="sub inline">${r.days.map(d => dayNames[d-1]).join('')} · ${fmtShort(r.start)}</span>
         </div>
-      </div>`).join('') : `<div class="note">No subjects yet. A subject alone can be auto-planned.</div>`}
-    <button class="btn ghost tiny" style="margin-top:8px;width:100%" data-a="newsubj">+ Add subject</button>
-    <div class="sec">Materials &amp; daily goals</div>
-    ${state.materials.length ? state.materials.map(m => {
-      const sj = subjectOfMat(m);
-      return `<div class="row">
-        <div style="min-width:0">
-          <div class="nm"><span class="cdot" style="background:${m.color}"></span>${esc(m.title)}</div>
-          <div class="sub">${sj ? esc(sj.name) + ' · ' : ''}${m.done}/${m.total} units · ${m.dailyGoalMin}m/day</div>
-        </div>
-        <div class="right">
-          <div class="stepper"><button data-a="mg-:${m.id}">−</button><b>${m.dailyGoalMin}m</b><button data-a="mg+:${m.id}">+</button></div>
-          <button class="xbtn" data-a="mx:${m.id}">×</button>
-        </div>
-      </div>`;
-    }).join('') : `<div class="note">No materials yet.</div>`}
-    <button class="btn ghost tiny" style="margin-top:8px;width:100%" data-a="newmat">+ Add material</button>
-    <div class="sec">Recurring classes</div>
-    ${(state.recurring || []).length ? state.recurring.map(r => {
-      const dnames = ['M','T','W','T','F','S','S'];
-      const days = (r.days || []).map(d => dnames[d-1]).join(' ');
-      return `<div class="row">
-        <div style="min-width:0">
-          <div class="nm">${esc(r.title)}</div>
-          <div class="sub">${days} · ${fmtShort(r.start)} – ${fmtShort(r.start + r.dur)}</div>
-        </div>
-        <div class="right">
-          <button class="xbtn" data-a="rdel-t:${r.id}">×</button>
-        </div>
-      </div>`;
-    }).join('') : `<div class="note">No recurring classes yet. Add one from a Fixed block.</div>`}
+        <div class="right"><button class="xbtn" data-a="rdelt:${r.id}">×</button></div>
+      </div>`).join('') : ''}
     ${dataHtml}
     <div class="sec">Learning</div>
-    <div class="note">
-      ${hist < 3
-        ? `<b>${hist}</b> session${hist===1?'':'s'} logged. Log outcomes on study blocks — after 3–4 days the planner adapts to your rhythm.`
-        : `<b>${hist}</b> sessions logged. Best hours: <b>${best.map(b => hourLabel(b.h*60)).join(', ')}</b>. Preferred block length: <b>${pdur} min</b>.`}
-    </div>
-    <div class="sheet-actions">
-      <button class="btn primary" data-a="close">Close</button>
-    </div>`;
-}
-
-/* ---------- new material ---------- */
-function renderNewMatSheet(){
-  const d = sheetCtx.draft;
-  sheet.innerHTML = `
-    <div class="handle"></div>
-    <div class="sheet-title" style="margin-bottom:14px">New material</div>
-    <input id="title" class="inp" placeholder="e.g. Biology — Chapter 3" value="${esc(d.title || '')}" enterkeyhint="next" autocomplete="off" />
-    <div class="sec" style="margin-top:6px">Subject</div>
-    <select id="subjectId" class="inp">
-      <option value="">No subject</option>
-      ${state.subjects.map(s => `<option value="${s.id}" ${d.subjectId === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}
-    </select>
-    <div class="ctl-row"><span>Total units</span>
-      <div class="stepper"><button data-a="t-">−</button><b>${d.total}</b><button data-a="t+">+</button></div>
-    </div>
-    <div class="ctl-row"><span>Minutes per unit</span>
-      <div class="stepper"><button data-a="u-">−</button><b>${d.unitMin} min</b><button data-a="u+">+</button></div>
-    </div>
-    <div class="ctl-row"><span>Daily goal</span>
-      <div class="stepper"><button data-a="g-">−</button><b>${d.dailyGoalMin} min</b><button data-a="g+">+</button></div>
-    </div>
-    <div class="sheet-actions">
-      <button class="btn ghost" data-a="close">Cancel</button>
-      <button class="btn primary" data-a="createMat">Add material</button>
-    </div>`;
-}
-
-/* ---------- new subject ---------- */
-function renderNewSubjSheet(){
-  const d = sheetCtx.draft;
-  sheet.innerHTML = `
-    <div class="handle"></div>
-    <div class="sheet-title" style="margin-bottom:14px">New subject</div>
-    <input id="name" class="inp" placeholder="e.g. Mathematics" value="${esc(d.name || '')}" enterkeyhint="done" autocomplete="off" />
-    <div class="ctl-row"><span>Daily goal</span>
-      <div class="stepper"><button data-a="sg-">−</button><b>${d.dailyGoalMin} min</b><button data-a="sg+">+</button></div>
-    </div>
-    <div class="note">A subject can be planned on its own. Its colour is used for every block and material.</div>
-    <div class="sheet-actions">
-      <button class="btn ghost" data-a="close">Cancel</button>
-      <button class="btn primary" data-a="createSubj">Add subject</button>
-    </div>`;
+    <div class="note">${hist < 3
+      ? `${hist}/3 sessions logged — rate a few blocks and Auto adapts to you.`
+      : `${hist} sessions · best <b>${best.map(b => hourLabel(b.h*60)).join(' ')}</b> · ${preferredDur()} min blocks`}</div>
+    <div class="sheet-actions"><button class="btn primary" data-a="close">Close</button></div>`;
 }
 
 /* ---------- review ---------- */
 function renderReviewSheet(){
-  const list = tasksOn(state.date);
-  const study = list.filter(t => t.type === 'study');
+  const all = allTasksOn(state.date);
+  const study = all.filter(t => t.type === 'study');
   const planned = study.reduce((a,t) => a + t.dur, 0);
   const doneMin = study.reduce((a,t) => a + t.dur * ((t.pct||0)/100), 0);
   const effList = study.filter(t => t.eff > 0).map(t => t.eff);
   const avgEff = effList.length ? (effList.reduce((a,b)=>a+b,0) / effList.length) : 0;
-  const bySubj = {};
-  for (const t of study){
-    const sid = t.subjectId || '_';
-    bySubj[sid] = (bySubj[sid] || 0) + t.dur * ((t.pct||0)/100);
-  }
-  const subjRows = state.subjects.map(s => {
+  const bySubj = subjectMinutes(study, true);
+  const cat = { study: planned };
+  for (const t of all) if (t.type === 'fixed') cat[t.cat || 'cl'] = (cat[t.cat || 'cl'] || 0) + t.dur;
+  const split = [['study','Study','#95a5bc'], ...CAT_KEYS.map(k => [k, CATS[k].name, CATS[k].color])]
+    .filter(([k]) => cat[k] > 0)
+    .map(([k, n, c]) => `<span class="split"><i style="background:${c}"></i>${n} <b>${fmtDur(cat[k])}</b></span>`).join('');
+  const subjRows = state.subjects.filter(s => s.dailyGoalMin > 0).map(s => {
     const done = bySubj[s.id] || 0;
-    const pct = s.dailyGoalMin ? Math.min(100, (done / s.dailyGoalMin) * 100) : 0;
+    const pct = Math.min(100, (done / s.dailyGoalMin) * 100);
     return `<div class="row" style="border:0;padding:7px 0">
       <div style="min-width:0;flex:1">
         <div class="nm"><span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</div>
-        <div class="goalbar"><i style="width:${pct}%"></i></div>
+        <div class="goalbar"><i style="width:${pct}%;background:${s.color}"></i></div>
       </div>
-      <div class="right"><div class="sub" style="margin:0">${Math.round(done)} / ${s.dailyGoalMin}m</div></div>
+      <div class="right"><div class="sub" style="margin:0">${Math.round(done)}/${s.dailyGoalMin}m</div></div>
     </div>`;
   }).join('');
   sheet.innerHTML = `
     <div class="handle"></div>
-    <div class="sheet-title" style="margin-bottom:4px">Day review</div>
-    <div class="sheet-sub" style="margin-bottom:12px">
-      ${Math.round(doneMin)} of ${planned} planned minutes · ${avgEff ? avgEff.toFixed(1) + '/5 efficiency' : 'no efficiency logged yet'}
-    </div>
-    ${state.subjects.length ? `<div class="sec" style="margin-top:0">Subject goals</div>${subjRows}`
-      : `<div class="note">Add subjects in settings to track daily goals.</div>`}
-    <div class="sec">Today's blocks</div>
-    ${study.length ? study.sort((a,b)=>a.start-b.start).map(t => `
-      <div class="row" data-a="open:${t.id}" style="cursor:pointer">
+    <div class="sheet-title">${Math.round(doneMin)} / ${planned} min${avgEff ? ` · ★ ${avgEff.toFixed(1)}` : ''}</div>
+    ${split ? `<div class="splits">${split}</div>` : ''}
+    ${subjRows ? `<div class="sec">Goals</div>${subjRows}` : ''}
+    ${study.length ? `<div class="sec">Blocks</div>` + [...study].sort((a,b)=>a.start-b.start).map(t => `
+      <div class="row tap" data-a="open:${t.id}">
         <div style="min-width:0">
           <div class="nm"><span class="cdot" style="background:${colorForTask(t)}"></span>${esc(t.title)}</div>
           <div class="sub">${fmtShort(t.start)} – ${fmtShort(t.start+t.dur)} · ${t.dur}m</div>
         </div>
         <div class="right">
           <div class="sub" style="margin:0">${t.pct || 0}%</div>
-          <div class="sub" style="margin:0;color:#95a5bc">${t.eff ? '★'.repeat(t.eff) : '—'}</div>
+          <div class="sub" style="margin:0;color:#95a5bc;min-width:46px;text-align:right">${t.eff ? '★'.repeat(t.eff) : '—'}</div>
         </div>
-      </div>`).join('') : `<div class="note">No study blocks today.</div>`}
-    <div class="note" style="margin-top:12px">Tap any block to log completion and efficiency.</div>
-    <div class="sheet-actions">
-      <button class="btn primary" data-a="close">Close</button>
-    </div>`;
+      </div>`).join('') : `<div class="note">No study blocks.</div>`}
+    <div class="sheet-actions"><button class="btn primary" data-a="close">Close</button></div>`;
 }
 
 /* ---------- share ---------- */
 function renderShareSheet(){
-  const list = allTasksOn(state.date);
-  const planSVG = buildDayPlanSVG();
-  const reportSVG = buildDayReportSVG();
   const enc = svg => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-  const planSrc = enc(planSVG);
-  const reportSrc = enc(reportSVG);
+  const plan = buildDayPlanSVG();
   sheet.innerHTML = `
     <div class="handle"></div>
-    <div class="sheet-title" style="margin-bottom:14px">Share</div>
     <div class="share-preview">
-      <img src="${planSrc}" alt="Day plan preview"/>
-      <div class="cap">Send this before your day starts. Let a friend know what you're committing to.</div>
-      <button class="btn primary" data-a="share:plan">Share day plan →</button>
+      <img src="${enc(plan.svg)}" alt="Plan"/>
+      <button class="btn primary" data-a="share:plan">Share plan</button>
     </div>
     <div class="share-preview">
-      <img src="${reportSrc}" alt="Day report preview"/>
-      <div class="cap">Send this tonight. Show how the day actually went, with your efficiency and completion.</div>
-      <button class="btn primary" data-a="share:report">Share day report →</button>
-    </div>
-    <div class="note">Image is generated in your browser. Nothing is uploaded.</div>`;
+      <img src="${enc(buildDayReportSVG().svg)}" alt="Report"/>
+      <button class="btn primary" data-a="share:report">Share report</button>
+    </div>`;
 }
 
 /* ============================================================
-   SHEET ACTIONS
+   SHEET — events
 ============================================================ */
-sheet.addEventListener('input', e => {
+function textSet(key, val, commit){
   const d = sheetCtx.draft;
-  if (!d) return;
-  if (e.target.id) d[e.target.id] = e.target.value;
-});
+  if (key === 'nb.title'){ d.title = val; return; }
+  if (key === 'sj.name'){ d.name = val; return; }
+  if (key === 'm.title'){
+    d.title = val;
+    if (commit && sheetCtx.id){ if (!val.trim()) d.title = 'Material'; save(); render(); }
+    return;
+  }
+  if (key === 'b.title'){
+    const t = findTask(sheetCtx.id); if (!t) return;
+    t.title = val;
+    if (commit){ if (!val.trim()) t.title = catOf(t).name; save(); render(); const h = sheet.querySelector('.sheet-title'); if (h) h.textContent = t.title; }
+    return;
+  }
+  if (key === 'r.title'){
+    const r = state.recurring.find(x => x.id === sheetCtx.recurringId); if (!r) return;
+    r.title = val;
+    if (commit){ if (!val.trim()) r.title = (CATS[r.cat] || CATS.cl).name; save(); render(); const h = sheet.querySelector('.sheet-title'); if (h) h.textContent = r.title; }
+  }
+}
+sheet.addEventListener('input', e => { if (e.target.dataset.t) textSet(e.target.dataset.t, e.target.value, false); });
 sheet.addEventListener('change', e => {
-  const d = sheetCtx.draft;
-  if (!d) return;
-  if (e.target.id) d[e.target.id] = e.target.value;
+  const el = e.target;
+  if (el.matches('input.num')){
+    const sp = fieldSpec(el.dataset.f);
+    if (!sp){ return; }
+    const v = sp.kind === 'time' ? parseTime(el.value, sp.get()) : (sp.kind === 'dur' ? parseDur(el.value) : parseDur(el.value));
+    if (Number.isNaN(v)){ el.value = fieldText(el.dataset.f); toast('Not a valid value'); return; }
+    sp.set(v);
+    const mode = sheetCtx.mode;
+    if (!(mode === 'newblock' || mode === 'newsubj' || (mode === 'mat' && !sheetCtx.id))){ save(); render(); }
+    refreshFields();
+    haptic(4);
+    return;
+  }
+  if (el.dataset.t) textSet(el.dataset.t, el.value, true);
 });
+sheet.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.matches('input')){ e.preventDefault(); e.target.blur(); }
+});
+sheet.addEventListener('focusin', e => {
+  if (e.target.matches('input.num')) setTimeout(() => { try { e.target.select(); } catch(_){} }, 0);
+});
+
+/* hold a +/- button to repeat */
+const hold = { t: null, i: null, fired: false, a: null };
+sheet.addEventListener('pointerdown', e => {
+  const b = e.target.closest('[data-rep]');
+  if (!b) return;
+  hold.fired = false; hold.a = b.dataset.a;
+  hold.t = setTimeout(() => {
+    hold.fired = true;
+    const tick = () => handleAction(hold.a, true);
+    tick();
+    hold.i = setInterval(tick, 110);
+  }, 380);
+});
+function endHold(){
+  if (hold.t === null && hold.i === null) return;
+  clearTimeout(hold.t); clearInterval(hold.i);
+  hold.t = hold.i = null;
+  if (hold.fired) afterChange(false);
+}
+window.addEventListener('pointerup', endHold);
+window.addEventListener('pointercancel', endHold);
+
 sheet.addEventListener('click', e => {
+  if (hold.fired && e.target.closest('[data-rep]')){ hold.fired = false; return; }
   const btn = e.target.closest('[data-a]');
   if (!btn) return;
   handleAction(btn.dataset.a);
 });
 
-function handleAction(a){
+function lastPrefs(patch){ state.prefs.last = Object.assign({}, state.prefs.last || {}, patch); }
+
+function handleAction(a, quiet){
+  /* ---- generic: step / preset on any field ---- */
+  if (a.startsWith('step:') || a.startsWith('set:')){
+    const p = a.split(':');
+    const n = parseInt(p[p.length - 1], 10);
+    const f = p.slice(1, -1).join(':');
+    if (a.startsWith('step:')){ if (stepField(f, n)) haptic(3); }
+    else { const sp = fieldSpec(f); if (sp){ sp.set(n); haptic(4); } }
+    afterChange(!!quiet);
+    return;
+  }
+
+  const mode = sheetCtx.mode;
+
   /* ---- block ---- */
-  if (sheetCtx.mode === 'block'){
+  if (mode === 'block'){
     const t = findTask(sheetCtx.id);
     if (!t) return;
-    const [lo, hi] = dayWindow();
-    const mx = maxDur(t.type), mn = minDur(t.type);
-    if (a === 's-'){ t.start = clamp(t.start - SNAP, lo, hi - t.dur); resolve(tasksOn(state.date)); save(); }
-    else if (a === 's+'){ t.start = clamp(t.start + SNAP, lo, hi - t.dur); resolve(tasksOn(state.date)); save(); }
-    else if (a === 'd-'){ t.dur = clamp(t.dur - 5, mn, mx); resolve(tasksOn(state.date)); save(); }
-    else if (a === 'd+'){ t.dur = clamp(t.dur + 5, mn, mx); resolve(tasksOn(state.date)); save(); }
-    else if (a === 'p-'){ t.pct = clamp((t.pct||0) - 10, 0, 100); if (t.pct === 100) t.done = true; }
-    else if (a === 'p+'){ t.pct = clamp((t.pct||0) + 10, 0, 100); if (t.pct === 100) t.done = true; }
-    else if (a[0] === 'e' && a.length === 2){ t.eff = parseInt(a[1], 10); haptic(4); }
-    else if (a === 'log'){ logFeedback(t); hideSheet(); render(); haptic(8); toast('Outcome logged'); return; }
-    else if (a === 'del'){ deleteTaskObj(t); hideSheet(); return; }
-    else if (a === 'close'){ hideSheet(); return; }
-    render();
-    renderSheet();
+    if (a.startsWith('bcat:')){ t.cat = a.slice(5); save(); render(); renderSheet(); }
+    else if (/^e[1-5]$/.test(a)){ t.eff = parseInt(a[1], 10); logFeedback(t); save(); haptic(4); renderSheet(); }
+    else if (a === 'del'){ deleteTaskObj(t); hideSheet(); }
+    else if (a === 'close'){ hideSheet(); render(); }
     return;
   }
 
   /* ---- recurring ---- */
-  if (sheetCtx.mode === 'recurring'){
+  if (mode === 'recurring'){
     const r = state.recurring.find(x => x.id === sheetCtx.recurringId);
     if (!r) return;
-    const days = new Set(r.days || []);
-    if (a.match(/^rd[1-7]$/)){
-      const n = parseInt(a[2], 10);
+    if (a.startsWith('rcat:')){ r.cat = a.slice(5); }
+    else if (a.startsWith('rday:')){
+      const n = parseInt(a.slice(5), 10);
+      const days = new Set(r.days || []);
       if (days.has(n)) days.delete(n); else days.add(n);
-      r.days = [...days].sort((x,y) => x-y);
+      r.days = [...days].sort((x, y) => x - y);
       if (!r.days.length) r.days = [n];
     }
-    else if (a === 'rs-'){ r.start = clamp(r.start - SNAP, 0, 1440 - r.dur); }
-    else if (a === 'rs+'){ r.start = clamp(r.start + SNAP, 0, 1440 - r.dur); }
-    else if (a === 'rd-'){ r.dur = clamp(r.dur - 5, MIN_FIXED, MAX_FIXED); }
-    else if (a === 'rd+'){ r.dur = clamp(r.dur + 5, MIN_FIXED, MAX_FIXED); }
     else if (a === 'rdel'){ deleteRecurring(r.id); hideSheet(); return; }
-    else if (a === 'rclose'){ hideSheet(); render(); return; }
-    save();
-    render();
-    renderSheet();
+    else if (a === 'close'){ hideSheet(); render(); return; }
+    else return;
+    save(); render(); renderSheet();
     return;
   }
 
   /* ---- new block ---- */
-  if (sheetCtx.mode === 'newblock'){
+  if (mode === 'newblock'){
     const d = sheetCtx.draft;
-    if (a === 'type:fixed'){ d.type = 'fixed'; d.dur = clamp(d.dur, MIN_FIXED, MAX_FIXED); }
-    else if (a === 'type:study'){ d.type = 'study'; d.dur = clamp(d.dur, MIN_DUR, MAX_DUR); d.repeat = false; }
-    else if (a === 'repeat:toggle'){ d.repeat = !d.repeat; if (d.repeat && (!d.days || !d.days.length)) d.days = [((new Date(state.date + 'T00:00:00').getDay() + 6) % 7) + 1]; }
-    else if (a.match(/^day[1-7]$/)){
-      const n = parseInt(a[3], 10);
+    const last = state.prefs.last || {};
+    const [lo, hi] = dayWindow();
+    if (a === 'type:fixed'){ d.type = 'fixed'; d.dur = clamp(last.fixedDur || 60, MIN_FIXED, MAX_FIXED); }
+    else if (a === 'type:study'){ d.type = 'study'; d.repeat = false; d.dur = clamp(last.studyDur || preferredDur(), MIN_DUR, MAX_DUR); }
+    else if (a.startsWith('ncat:')){ d.cat = a.slice(5); }
+    else if (a === 'repeat:toggle'){ d.repeat = !d.repeat; if (d.repeat && !(d.days || []).length) d.days = [isoDow(state.date)]; }
+    else if (a.startsWith('nday:')){
+      const n = parseInt(a.slice(5), 10);
       d.days = d.days || [];
-      if (d.days.includes(n)) d.days = d.days.filter(x => x !== n);
-      else d.days = [...d.days, n].sort((x,y) => x-y);
+      d.days = d.days.includes(n) ? d.days.filter(x => x !== n) : [...d.days, n].sort((x, y) => x - y);
     }
     else if (a.startsWith('subj:')){ d.subjectId = a.slice(5) || null; d.matId = null; }
-    else if (a.startsWith('mat:')){
-      const id = a.slice(4);
-      if (!id) d.matId = null;
-      else {
-        d.matId = id;
-        const m = state.materials.find(x => x.id === id);
-        d.subjectId = m ? (m.subjectId || null) : d.subjectId;
-      }
-    }
-    else if (a === 's-'){ d.start = clamp(d.start - SNAP, dayWindow()[0], dayWindow()[1] - d.dur); }
-    else if (a === 's+'){ d.start = clamp(d.start + SNAP, dayWindow()[0], dayWindow()[1] - d.dur); }
-    else if (a === 'd-'){ d.dur = clamp(d.dur - 5, minDur(d.type), maxDur(d.type)); }
-    else if (a === 'd+'){ d.dur = clamp(d.dur + 5, minDur(d.type), maxDur(d.type)); }
+    else if (a.startsWith('mat:')){ d.matId = a.slice(4) || null; }
     else if (a === 'close'){ hideSheet(); return; }
     else if (a === 'create'){
-      const [lo, hi] = dayWindow();
-      d.start = clamp(d.start, lo, hi - d.dur);
-      if (d.type === 'fixed' && d.repeat && d.days && d.days.length){
-        state.recurring.push({
-          id: uid(),
-          title: (d.title || '').trim() || 'Class',
-          start: d.start, dur: d.dur,
-          days: [...new Set(d.days)].sort((x,y) => x-y),
-          until: null
-        });
-      } else if (d.type === 'fixed'){
-        tasksOn(state.date).push({
-          id: uid(), type:'fixed',
-          title: (d.title || '').trim() || 'Fixed block',
-          start: d.start, dur: d.dur
-        });
+      const before = snapState();
+      d.start = clamp(d.start, lo, Math.max(lo, hi - d.dur));
+      if (d.type === 'fixed'){
+        const title = (d.title || '').trim() || CATS[d.cat].name;
+        if (d.repeat && d.days && d.days.length){
+          state.recurring.push({ id: uid(), title, cat: d.cat, start: d.start, dur: d.dur,
+            days: [...new Set(d.days)].sort((x, y) => x - y), until: null });
+        } else {
+          tasksOn(state.date).push({ id: uid(), type: 'fixed', cat: d.cat, title, start: d.start, dur: d.dur });
+        }
+        lastPrefs({ type: 'fixed', cat: d.cat, fixedDur: d.dur });
       } else {
         const m = d.matId ? state.materials.find(x => x.id === d.matId) : null;
         const s = d.subjectId ? state.subjects.find(x => x.id === d.subjectId) : null;
-        if (!m && !s){ toast('Pick a subject or material'); return; }
+        if (!m && !s){ toast('Pick a material or subject'); return; }
+        const subs = m ? [...m.subjectIds] : [s.id];
         tasksOn(state.date).push({
-          id: uid(), type:'study',
+          id: uid(), type: 'study',
           matId: m ? m.id : null,
-          subjectId: m ? (m.subjectId || null) : s.id,
+          subjectId: subs[0] || null, subjectIds: subs,
           title: m ? m.title : s.name,
-          start: d.start, dur: d.dur, done:false, pct:0, eff:0
+          start: d.start, dur: d.dur, done: false, pct: 0, eff: 0
         });
+        lastPrefs({ type: 'study', matId: m ? m.id : null, subjectId: m ? null : s.id, studyDur: d.dur });
       }
       resolve(tasksOn(state.date));
       save();
       hideSheet(); render();
       haptic(10);
-      toast('Block added');
+      offerUndo('Block added', before, 3200);
       return;
     }
+    else return;
     renderSheet();
     return;
   }
 
+  /* ---- material ---- */
+  if (mode === 'mat'){
+    const m = sheetCtx.draft;
+    const editing = !!sheetCtx.id;
+    if (a.startsWith('msub:')){
+      const id = a.slice(5);
+      const ids = new Set(m.subjectIds);
+      if (ids.has(id)) ids.delete(id); else ids.add(id);
+      m.subjectIds = state.subjects.filter(s => ids.has(s.id)).map(s => s.id);
+      m.subjectId = m.subjectIds[0] || null;
+      if (editing){ save(); render(); }
+      renderSheet();
+    }
+    else if (a === 'mdel'){ const id = sheetCtx.id; hideSheet(); deleteMaterial(id); }
+    else if (a === 'close'){ hideSheet(); if (editing) render(); }
+    else if (a === 'createMat'){
+      const title = (m.title || '').trim();
+      if (!title){ toast('Name it first'); return; }
+      const before = snapState();
+      const first = state.subjects.find(s => s.id === m.subjectIds[0]);
+      state.materials.push({
+        id: uid(), title,
+        subjectIds: [...m.subjectIds], subjectId: m.subjectIds[0] || null,
+        total: Math.max(1, m.total), done: 0,
+        unitMin: Math.max(1, m.unitMin), dailyGoalMin: Math.max(0, m.dailyGoalMin),
+        color: first ? first.color : COLORS[state.materials.length % COLORS.length]
+      });
+      save();
+      hideSheet(); render();
+      haptic(10);
+      offerUndo('Material added', before, 3200);
+    }
+    return;
+  }
+
+  /* ---- new subject ---- */
+  if (mode === 'newsubj'){
+    const d = sheetCtx.draft;
+    if (a === 'close'){ hideSheet(); return; }
+    if (a === 'createSubj'){
+      const name = (d.name || '').trim();
+      if (!name){ toast('Name it first'); return; }
+      const before = snapState();
+      state.subjects.push({ id: uid(), name, dailyGoalMin: Math.max(0, d.dailyGoalMin),
+        color: COLORS[state.subjects.length % COLORS.length] });
+      save();
+      hideSheet(); render();
+      haptic(10);
+      offerUndo('Subject added', before, 3200);
+    }
+    return;
+  }
+
   /* ---- settings ---- */
-  if (sheetCtx.mode === 'settings'){
+  if (mode === 'settings'){
     const s = state.settings;
     let changed = true;
-    if (a === 'w-') s.wake = clamp(s.wake - 15, 0, 720);
-    else if (a === 'w+') s.wake = clamp(s.wake + 15, 0, 720);
-    else if (a === 'z-') s.sleep = clamp(s.sleep - 15, 720, 1440);
-    else if (a === 'z+') s.sleep = clamp(s.sleep + 15, 720, 1440);
-    else if (a.startsWith('sj-:')){ const sj = state.subjects.find(x => x.id === a.slice(4)); if (sj) sj.dailyGoalMin = Math.max(0, sj.dailyGoalMin - 15); }
-    else if (a.startsWith('sj+:')){ const sj = state.subjects.find(x => x.id === a.slice(4)); if (sj) sj.dailyGoalMin = Math.min(600, sj.dailyGoalMin + 15); }
-    else if (a.startsWith('sjx:')) state.subjects = state.subjects.filter(x => x.id !== a.slice(4));
-    else if (a.startsWith('mg-:')){ const m = state.materials.find(x => x.id === a.slice(4)); if (m) m.dailyGoalMin = Math.max(0, m.dailyGoalMin - 15); }
-    else if (a.startsWith('mg+:')){ const m = state.materials.find(x => x.id === a.slice(4)); if (m) m.dailyGoalMin = Math.min(600, m.dailyGoalMin + 15); }
-    else if (a.startsWith('mx:')) state.materials = state.materials.filter(x => x.id !== a.slice(3));
-    else if (a.startsWith('rdel-t:')) deleteRecurring(a.slice(7));
+    if (a.startsWith('sjx:')){ deleteSubject(a.slice(4)); renderSheet(); return; }
     else if (a === 'newsubj'){ openSheet('newsubj', { draft: { name:'', dailyGoalMin: 60 } }); return; }
-    else if (a === 'newmat'){ openSheet('newmat', { draft: { title:'', subjectId:'', total:20, unitMin:6, dailyGoalMin:30 } }); return; }
+    else if (a === 'newmat'){ openNewMat(); return; }
+    else if (a.startsWith('medit:')){ openSheet('mat', { id: a.slice(6) }); return; }
+    else if (a.startsWith('redit:')){ openSheet('recurring', { recurringId: a.slice(6) }); return; }
+    else if (a.startsWith('rdelt:')){ deleteRecurring(a.slice(6)); renderSheet(); return; }
     else if (a === 'n:start'){ s.notif.start = !s.notif.start; }
     else if (a === 'n:end'){ s.notif.end = !s.notif.end; }
     else if (a === 'n:fixed'){ s.notif.fixed = !s.notif.fixed; }
@@ -1664,7 +1998,7 @@ function handleAction(a){
     else if (a === 'n:perm'){ if (NATIVE) NATIVE.requestNotifPermission(); changed = false; }
     else if (a === 'n:exact'){ if (NATIVE) NATIVE.openExactAlarmSettings(); changed = false; }
     else if (a === 'n:test'){
-      toast(NATIVE && NATIVE.testNotification() ? 'Test notification sent' : 'Allow notifications first');
+      toast(NATIVE && NATIVE.testNotification() ? 'Sent' : 'Allow notifications first');
       changed = false;
     }
     else if (a === 'data:export'){ exportBackup(); changed = false; }
@@ -1676,71 +2010,14 @@ function handleAction(a){
     return;
   }
 
-  /* ---- new material ---- */
-  if (sheetCtx.mode === 'newmat'){
-    const d = sheetCtx.draft;
-    if (a === 't-') d.total = Math.max(1, d.total - 1);
-    else if (a === 't+') d.total = Math.min(999, d.total + 1);
-    else if (a === 'u-') d.unitMin = Math.max(1, d.unitMin - 1);
-    else if (a === 'u+') d.unitMin = Math.min(120, d.unitMin + 1);
-    else if (a === 'g-') d.dailyGoalMin = Math.max(0, d.dailyGoalMin - 15);
-    else if (a === 'g+') d.dailyGoalMin = Math.min(600, d.dailyGoalMin + 15);
-    else if (a === 'close'){ hideSheet(); return; }
-    else if (a === 'createMat'){
-      const title = (d.title || '').trim();
-      if (!title){ toast('Name your material'); return; }
-      const subj = d.subjectId ? state.subjects.find(x => x.id === d.subjectId) : null;
-      state.materials.push({
-        id: uid(), title,
-        subjectId: subj ? subj.id : null,
-        total: Math.max(1, d.total),
-        done: 0,
-        unitMin: Math.max(1, d.unitMin),
-        dailyGoalMin: Math.max(0, d.dailyGoalMin),
-        color: subj ? subj.color : COLORS[state.materials.length % COLORS.length]
-      });
-      save();
-      hideSheet(); render();
-      haptic(10);
-      toast('Material added');
-      return;
-    }
-    renderSheet();
-    return;
-  }
-
-  /* ---- new subject ---- */
-  if (sheetCtx.mode === 'newsubj'){
-    const d = sheetCtx.draft;
-    if (a === 'sg-') d.dailyGoalMin = Math.max(0, d.dailyGoalMin - 15);
-    else if (a === 'sg+') d.dailyGoalMin = Math.min(600, d.dailyGoalMin + 15);
-    else if (a === 'close'){ hideSheet(); return; }
-    else if (a === 'createSubj'){
-      const name = (d.name || '').trim();
-      if (!name){ toast('Name your subject'); return; }
-      state.subjects.push({
-        id: uid(), name,
-        dailyGoalMin: Math.max(0, d.dailyGoalMin),
-        color: COLORS[state.subjects.length % COLORS.length]
-      });
-      save();
-      hideSheet(); render();
-      haptic(10);
-      toast('Subject added');
-      return;
-    }
-    renderSheet();
-    return;
-  }
-
   /* ---- review ---- */
-  if (sheetCtx.mode === 'review'){
+  if (mode === 'review'){
     if (a === 'close'){ hideSheet(); return; }
     if (a.startsWith('open:')){ openBlockSheet(a.slice(5)); return; }
   }
 
   /* ---- share ---- */
-  if (sheetCtx.mode === 'share'){
+  if (mode === 'share'){
     if (a === 'share:plan'){ doShare('plan'); return; }
     if (a === 'share:report'){ doShare('report'); return; }
   }
@@ -1749,6 +2026,7 @@ function handleAction(a){
 /* ============================================================
    SHARE — SVG BUILDERS
 ============================================================ */
+const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif";
 function cardBase(W, H){
   return `<defs>
     <radialGradient id="bg1" cx="15%" cy="5%" r="60%">
@@ -1765,88 +2043,77 @@ function cardBase(W, H){
   <rect width="${W}" height="${H}" fill="url(#bg2)"/>`;
 }
 
+/* Day plan: always a chronological vertical timeline (earliest → latest) */
 function buildDayPlanSVG(){
-  const W = SHARE_W, H = SHARE_H, P = 64;
-  const list = allTasksOn(state.date);
+  const W = SHARE_W, P = 64;
+  const list = allTasksOn(state.date).slice().sort((a, b) => a.start - b.start || a.dur - b.dur);
   const study = list.filter(t => t.type === 'study');
-  const planned = study.reduce((a,t) => a + t.dur, 0);
-  const dateStr = new Date(state.date + 'T00:00:00').toLocaleDateString(undefined,
+  const planned = study.reduce((a, t) => a + t.dur, 0);
+  const dateStr = dateObj(state.date).toLocaleDateString(undefined,
     { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 
+  const n = list.length;
+  const rowH = n <= 8 ? 100 : n <= 12 ? 84 : 70;
+  const big = rowH >= 84;
+  const lineX = P + 214, cardX = P + 258, cardW = W - P - cardX;
+  const y0 = 372;
+
+  let body = '';
+  let y = y0;
+  let prevEnd = null, firstCy = null, lastCy = null;
+  if (!n){
+    body += `<text x="${P}" y="${y + 30}" font-family="${FONT}" font-size="26" font-weight="500" fill="#6a7083">Nothing scheduled</text>`;
+    y += 80;
+  }
+  for (const t of list){
+    if (prevEnd !== null && t.start - prevEnd >= 45){
+      body += `<text x="${cardX + 4}" y="${y + 30}" font-family="${FONT}" font-size="20" font-weight="500" font-style="italic" fill="#555c70">${fmtDur(t.start - prevEnd)} free</text>`;
+      y += 44;
+    }
+    const c = colorForTask(t);
+    const fixed = t.type === 'fixed';
+    const cy = y + rowH / 2;
+    if (firstCy === null) firstCy = cy;
+    lastCy = cy;
+    body += `<text x="${lineX - 30}" y="${cy - 2}" text-anchor="end" font-family="${FONT}" font-size="${big ? 27 : 24}" font-weight="700" fill="${fixed ? '#9aa3b8' : '#e8eaf0'}">${esc(fmtTime(t.start))}</text>`;
+    body += `<text x="${lineX - 30}" y="${cy + (big ? 28 : 24)}" text-anchor="end" font-family="${FONT}" font-size="19" font-weight="600" fill="#6a7083">${fmtDur(t.dur)}</text>`;
+    body += `<rect x="${cardX}" y="${y + 6}" width="${cardW}" height="${rowH - 12}" rx="18" fill="${c}" fill-opacity="${fixed ? 0.07 : 0.14}" stroke="${c}" stroke-opacity="${fixed ? 0.4 : 0.25}" ${fixed ? 'stroke-dasharray="7 6"' : ''}/>`;
+    body += `<rect x="${cardX}" y="${y + 6}" width="7" height="${rowH - 12}" rx="3.5" fill="${c}"/>`;
+    body += `<text x="${cardX + 32}" y="${cy - (big ? 1 : 0)}" font-family="${FONT}" font-size="${big ? 30 : 26}" font-weight="700" fill="${fixed ? '#c3c8d6' : '#f0f2f6'}">${esc(trunc(t.title, big ? 34 : 38))}</text>`;
+    const sub = fixed ? catOf(t).name : (subjectNames(subjectsOfTask(t)) || 'Study');
+    body += `<text x="${cardX + 32}" y="${cy + (big ? 32 : 28)}" font-family="${FONT}" font-size="${big ? 22 : 20}" font-weight="600" fill="#868da1">${esc(trunc(sub, 44))}</text>`;
+    prevEnd = t.start + t.dur;
+    y += rowH;
+  }
+  if (firstCy !== null){
+    /* spine + nodes (drawn last so nodes sit on top of the line) */
+    let spine = `<line x1="${lineX}" y1="${firstCy}" x2="${lineX}" y2="${lastCy}" stroke="#ffffff" stroke-opacity="0.14" stroke-width="3"/>`;
+    let yy = y0, pe = null;
+    for (const t of list){
+      if (pe !== null && t.start - pe >= 45) yy += 44;
+      spine += `<circle cx="${lineX}" cy="${yy + rowH / 2}" r="11" fill="#0a0b0e" stroke="${colorForTask(t)}" stroke-width="4"/>`;
+      pe = t.start + t.dur;
+      yy += rowH;
+    }
+    body = spine + body;
+  }
+
+  const footTop = y + 50;
+  const H = Math.max(1350, footTop + 170);
   let s = cardBase(W, H);
-
-  s += `<text x="${P}" y="${P+30}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="22" font-weight="700" fill="#95a0b8" letter-spacing="4">FOCUSFLOW</text>`;
-  s += `<text x="${P}" y="${P+130}" font-family="-apple-system,sans-serif" font-size="76" font-weight="700" fill="#f0f2f6" letter-spacing="-2">My Day Plan</text>`;
-  s += `<text x="${P}" y="${P+180}" font-family="-apple-system,sans-serif" font-size="26" font-weight="500" fill="#868da1">${esc(dateStr)}</text>`;
-
-  // Schedule card
-  const cardY = 300;
-  const rowH = 62;
-  const maxRows = 9;
-  const shown = list.slice(0, maxRows);
-  const cardH = 60 + Math.max(1, shown.length) * rowH + 30;
-
-  s += `<rect x="${P}" y="${cardY}" width="${W-P*2}" height="${cardH}" rx="24" fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.08"/>`;
-  s += `<text x="${P+30}" y="${cardY+40}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">SCHEDULE</text>`;
-
-  let rowY = cardY + 80;
-  if (!shown.length){
-    s += `<text x="${P+30}" y="${rowY+14}" font-family="-apple-system,sans-serif" font-size="22" font-weight="500" fill="#6a7083">Nothing scheduled today</text>`;
-  } else {
-    for (const t of shown){
-      const c = colorForTask(t);
-      const isFixed = t.type === 'fixed';
-      s += `<rect x="${P+22}" y="${rowY-32}" width="${W-P*2-44}" height="${rowH-8}" rx="12" fill="${c}" fill-opacity="${isFixed ? 0.08 : 0.14}"/>`;
-      s += `<rect x="${P+22}" y="${rowY-32}" width="4" height="${rowH-8}" rx="2" fill="${c}"/>`;
-      s += `<text x="${P+44}" y="${rowY-6}" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="${isFixed ? '#95a0b8' : '#f0f2f6'}">${esc(fmtShort(t.start))}</text>`;
-      const titleMax = 32;
-      const ttext = t.title.length > titleMax ? t.title.slice(0, titleMax-1) + '…' : t.title;
-      s += `<text x="${P+130}" y="${rowY-6}" font-family="-apple-system,sans-serif" font-size="20" font-weight="600" fill="#e8eaf0">${esc(ttext)}</text>`;
-      s += `<text x="${W-P-44}" y="${rowY-6}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="18" font-weight="700" fill="#a3aabd">${t.dur}m</text>`;
-      rowY += rowH;
-    }
-    if (list.length > maxRows){
-      s += `<text x="${W/2}" y="${cardY + cardH + 30}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="18" font-weight="600" fill="#666c80">+ ${list.length - maxRows} more</text>`;
-    }
-  }
-
-  // Subjects
-  const bySubj = {};
-  for (const t of study){
-    const sid = t.subjectId || '_';
-    if (!bySubj[sid]){
-      const sj = state.subjects.find(x => x.id === sid);
-      bySubj[sid] = { name: sj ? sj.name : 'Other', color: sj ? sj.color : '#8095c9', mins: 0 };
-    }
-    bySubj[sid].mins += t.dur;
-  }
-  const subjList = Object.values(bySubj).sort((a,b) => b.mins - a.mins).slice(0, 5);
-
-  let subjY = cardY + cardH + 60;
-  s += `<text x="${P}" y="${subjY}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">SUBJECTS</text>`;
-  subjY += 46;
-  for (const sj of subjList){
-    s += `<circle cx="${P+10}" cy="${subjY-8}" r="7" fill="${sj.color}"/>`;
-    s += `<text x="${P+32}" y="${subjY}" font-family="-apple-system,sans-serif" font-size="24" font-weight="600" fill="#dfe1e8">${esc(sj.name)}</text>`;
-    s += `<text x="${W-P}" y="${subjY}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="22" font-weight="700" fill="#a3aabd">${sj.mins} min</text>`;
-    subjY += 42;
-  }
-
-  // Summary
-  s += `<text x="${P}" y="${subjY+20}" font-family="-apple-system,sans-serif" font-size="24" font-weight="700" fill="#f0f2f6">${(planned/60).toFixed(1).replace(/\.0$/, '')}h planned · ${list.length} blocks</text>`;
-
-  // Footer
-  const footY = H - P - 20;
-  s += `<line x1="${P}" y1="${footY-72}" x2="${W-P}" y2="${footY-72}" stroke="#ffffff" stroke-opacity="0.08"/>`;
-  s += `<text x="${P}" y="${footY-28}" font-family="-apple-system,sans-serif" font-size="26" font-weight="700" fill="#dfe1e8">Hold me accountable</text>`;
-  s += `<text x="${P}" y="${footY+8}" font-family="-apple-system,sans-serif" font-size="20" font-weight="500" fill="#6a7083">Send me a nudge if you don't see a report tonight.</text>`;
-  s += `<text x="${W-P}" y="${H-P+6}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="15" font-weight="600" fill="#4e5566">focusflow · ${state.date}</text>`;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+  s += `<text x="${P}" y="${P + 30}" font-family="${FONT}" font-size="22" font-weight="700" fill="#95a0b8" letter-spacing="4">FOCUSFLOW</text>`;
+  s += `<text x="${P}" y="${P + 130}" font-family="${FONT}" font-size="76" font-weight="700" fill="#f0f2f6" letter-spacing="-2">My Day Plan</text>`;
+  s += `<text x="${P}" y="${P + 180}" font-family="${FONT}" font-size="26" font-weight="500" fill="#868da1">${esc(dateStr)}</text>`;
+  s += `<text x="${P}" y="${P + 246}" font-family="${FONT}" font-size="26" font-weight="700" fill="#dfe1e8">${study.length} study block${study.length === 1 ? '' : 's'} · ${fmtDur(planned)}</text>`;
+  s += body;
+  s += `<line x1="${P}" y1="${footTop}" x2="${W - P}" y2="${footTop}" stroke="#ffffff" stroke-opacity="0.08"/>`;
+  s += `<text x="${P}" y="${footTop + 62}" font-family="${FONT}" font-size="28" font-weight="700" fill="#dfe1e8">Hold me accountable</text>`;
+  s += `<text x="${W - P}" y="${H - P + 6}" text-anchor="end" font-family="${FONT}" font-size="15" font-weight="600" fill="#4e5566">focusflow · ${state.date}</text>`;
+  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`, w: W, h: H };
 }
 
 function buildDayReportSVG(){
-  const W = SHARE_W, H = SHARE_H, P = 64;
+  const W = SHARE_W, P = 64;
   const list = allTasksOn(state.date);
   const study = list.filter(t => t.type === 'study');
   const planned = study.reduce((a,t) => a + t.dur, 0);
@@ -1854,9 +2121,12 @@ function buildDayReportSVG(){
   const pct = planned ? Math.round(done/planned*100) : 0;
   const effList = study.filter(t => t.eff > 0).map(t => t.eff);
   const avgEff = effList.length ? (effList.reduce((a,b)=>a+b,0) / effList.length) : 0;
-  const dateStr = new Date(state.date + 'T00:00:00').toLocaleDateString(undefined,
+  const dateStr = dateObj(state.date).toLocaleDateString(undefined,
     { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 
+  const nSubj = Math.min(5, state.subjects.filter(x => x.dailyGoalMin > 0).length);
+  const nBlk = Math.min(6, study.length);
+  const H = Math.max(1350, 786 + 40 + Math.max(1, nSubj) * 52 + 40 + 36 + Math.max(1, nBlk) * 40 + 150);
   let s = cardBase(W, H);
 
   s += `<text x="${P}" y="${P+30}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="22" font-weight="700" fill="#95a0b8" letter-spacing="4">FOCUSFLOW</text>`;
@@ -1890,14 +2160,10 @@ function buildDayReportSVG(){
   const subjStartY = starY + 110;
   s += `<text x="${P}" y="${subjStartY}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">SUBJECT GOALS</text>`;
 
-  const bySubj = {};
-  for (const t of study){
-    const sid = t.subjectId || '_';
-    bySubj[sid] = (bySubj[sid] || 0) + t.dur * ((t.pct||0)/100);
-  }
+  const bySubj = subjectMinutes(study, true);
 
   let rowY = subjStartY + 40;
-  const subjList = state.subjects.slice(0, 5);
+  const subjList = state.subjects.filter(x => x.dailyGoalMin > 0).slice(0, 5);
   if (!subjList.length){
     s += `<text x="${P}" y="${rowY+14}" font-family="-apple-system,sans-serif" font-size="20" font-weight="500" fill="#6a7083">No subjects yet</text>`;
   } else {
@@ -1920,7 +2186,7 @@ function buildDayReportSVG(){
   const blocksStartY = rowY + 40;
   s += `<text x="${P}" y="${blocksStartY}" font-family="-apple-system,sans-serif" font-size="16" font-weight="700" fill="#666c80" letter-spacing="3">TODAY'S BLOCKS</text>`;
 
-  const blocks = [...study].sort((a,b) => b.pct - a.pct).slice(0, 4);
+  const blocks = [...study].sort((a,b) => a.start - b.start).slice(0, 6);
   let bY = blocksStartY + 36;
   if (!blocks.length){
     s += `<text x="${P}" y="${bY+14}" font-family="-apple-system,sans-serif" font-size="20" font-weight="500" fill="#6a7083">No study blocks today</text>`;
@@ -1943,7 +2209,7 @@ function buildDayReportSVG(){
   s += `<text x="${P}" y="${H-P-24}" font-family="-apple-system,sans-serif" font-size="20" font-weight="600" fill="#868da1">Keep going. Small consistent days win.</text>`;
   s += `<text x="${W-P}" y="${H-P+6}" text-anchor="end" font-family="-apple-system,sans-serif" font-size="15" font-weight="600" fill="#4e5566">focusflow · ${state.date}</text>`;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`, w: W, h: H };
 }
 
 /* ============================================================
@@ -2010,11 +2276,11 @@ async function doShare(kind){
   const list = allTasksOn(state.date);
   if (!list.length){ toast('Nothing to share yet'); return; }
   const isPlan = kind === 'plan';
-  const svg = isPlan ? buildDayPlanSVG() : buildDayReportSVG();
+  const built = isPlan ? buildDayPlanSVG() : buildDayReportSVG();
   const filename = `focusflow-${state.date}-${isPlan ? 'plan' : 'report'}.png`;
   toast('Generating image…', { duration: 4000 });
   try {
-    const blob = await svgToPngBlob(svg, SHARE_W, SHARE_H, 2);
+    const blob = await svgToPngBlob(built.svg, built.w, built.h, 2);
     const result = await shareOrDownload(blob, filename, isPlan ? 'My day plan' : 'My day report');
     if (result === 'downloaded') toast('Image saved');
     else if (result === 'shared') toast('Shared');
@@ -2025,54 +2291,39 @@ async function doShare(kind){
   }
 }
 
+
 /* ============================================================
    TOP-LEVEL
 ============================================================ */
-$('#addBtn').addEventListener('click', () => {
-  const firstSubj = state.subjects[0];
-  const firstMat = state.materials[0];
-  openSheet('newblock', {
-    draft: {
-      type: 'study',
-      subjectId: firstSubj ? firstSubj.id : null,
-      matId: firstMat ? firstMat.id : null,
-      title: '',
-      start: nextFreeStart(45),
-      dur: 45,
-      repeat: false,
-      days: []
-    }
-  });
-});
+$('#addBtn').addEventListener('click', () => openNewBlock());
 $('#autoBtn').addEventListener('click', autoPlan);
-$('#mats').addEventListener('click', e => {
-  if (e.target.closest('#addMat')){
-    openSheet('newmat', { draft: { title:'', subjectId:'', total:20, unitMin:6, dailyGoalMin:30 } });
-  }
-});
 $('#setBtn').addEventListener('click', () => openSheet('settings'));
 $('#reviewBtn').addEventListener('click', () => openSheet('review'));
 $('#shareBtn').addEventListener('click', () => openSheet('share'));
 
 /* ============================================================
-   TOAST
+   TOAST (with tappable action, e.g. Undo)
 ============================================================ */
-let toastTimer;
+let toastTimer, toastAction = null;
 function toast(msg, opts){
   opts = opts || {};
   const el = $('#toast');
-  const action = opts.action;
-  el.innerHTML = `<span class="tmsg">${esc(msg)}</span>${action ? `<button id="toastAction">${esc(action.label)}</button>` : ''}`;
+  toastAction = opts.action || null;
+  el.innerHTML = `<span class="tmsg">${esc(msg)}</span>${toastAction ? `<button id="toastAction">${esc(toastAction.label)}</button>` : ''}`;
+  el.classList.toggle('act', !!toastAction);
+  el.classList.toggle('top', sheet.classList.contains('show'));
   el.classList.add('show');
   clearTimeout(toastTimer);
-  if (action){
-    setTimeout(() => {
-      const btn = $('#toastAction');
-      if (btn) btn.onclick = () => { clearTimeout(toastTimer); el.classList.remove('show'); action.fn(); };
-    }, 0);
-  }
-  toastTimer = setTimeout(() => el.classList.remove('show'), opts.duration || 2000);
+  toastTimer = setTimeout(() => el.classList.remove('show'), opts.duration || 1800);
 }
+$('#toast').addEventListener('click', e => {
+  if (!e.target.closest('#toastAction') || !toastAction) return;
+  const a = toastAction;
+  toastAction = null;
+  clearTimeout(toastTimer);
+  $('#toast').classList.remove('show');
+  a.fn();
+});
 
 /* ============================================================
    MIDNIGHT CHECK
@@ -2084,7 +2335,7 @@ setInterval(() => {
     if (state.date === lastToday) state.date = t;
     lastToday = t;
     render();
-  } else if (state.date === t){
+  } else if (state.date === t && !drag){
     renderTimeline();
   }
 }, 30000);
@@ -2108,7 +2359,8 @@ function reloadFromNative(){
   state.date = keepDate;
   _profDirty = true;
   render();
-  if (['block','recurring','settings','review'].includes(sheetCtx.mode)) renderSheet();
+  if (sheetCtx.mode === 'mat' && sheetCtx.id) hideSheet();
+  else if (['block','recurring','settings','review'].includes(sheetCtx.mode)) renderSheet();
 }
 /* data changed natively (notification / widget action) while the UI is alive */
 window.__ffExternalChange = reloadFromNative;
@@ -2121,9 +2373,7 @@ window.__ffResume = function(){
     lastSeenDay = today; lastToday = today;
     state.date = today;
     render();
-    const list = allTasksOn(state.date);
-    const [lo] = dayWindow();
-    scrollToTime(list.length ? Math.min(...list.map(t => t.start)) : lo, true);
+    scrollDefault(true);
   } else if (sheetCtx.mode === 'settings'){
     renderSheet();
   }
@@ -2136,7 +2386,7 @@ window.__ffStatus = function(json){
 window.__ffOpenBlock = function(id, date){
   if (!id) return;
   hideSheet();
-  if (date && date !== state.date){ state.date = date; save(); }
+  if (date && date !== state.date) state.date = date;
   render();
   const t = findTask(id);
   if (!t) return;
@@ -2144,7 +2394,7 @@ window.__ffOpenBlock = function(id, date){
   if (String(id).startsWith('rec:')) openSheet('recurring', { recurringId: String(id).split(':')[1] });
   else openBlockSheet(id);
 };
-window.__ffNewBlock = function(){ hideSheet(); $('#addBtn').click(); };
+window.__ffNewBlock = function(){ hideSheet(); openNewBlock(); };
 /* system Back button */
 window.__ffBack = function(){
   if (sheet.classList.contains('show')){ hideSheet(); return true; }
@@ -2169,18 +2419,16 @@ function importBackup(){
     try {
       const data = JSON.parse(await f.text());
       if (!data || data.version !== 2 || typeof data.tasks !== 'object') throw new Error('bad backup');
-      const prev = JSON.parse(JSON.stringify(state));
+      const before = snapState();
       state = data;
       normalizeState();
       state.date = iso(new Date());
       _profDirty = true;
       save(); hideSheet(); render();
-      const list = allTasksOn(state.date);
-      const [lo] = dayWindow();
-      scrollToTime(list.length ? Math.min(...list.map(t => t.start)) : lo, true);
-      pushUndo('Backup imported', () => { state = prev; _profDirty = true; save(); render(); });
+      scrollDefault(true);
+      offerUndo('Backup imported', before, 5000);
     } catch(e){
-      toast('Not a valid FocusFlow backup');
+      toast('Not a FocusFlow backup');
     }
   };
   inp.click();
@@ -2199,12 +2447,7 @@ function boot(){
   $('#shareBtn').innerHTML = ICON_SHARE;
   $('#setBtn').innerHTML = ICON_SET;
   render();
-  requestAnimationFrame(() => {
-    const [lo] = dayWindow();
-    const list = allTasksOn(state.date);
-    const target = list.length ? Math.min(...list.map(t => t.start)) : lo;
-    scrollToTime(target, true);
-  });
+  requestAnimationFrame(() => scrollDefault(true));
   if (NATIVE){ nativeStatusRefresh(); try { NATIVE.ready(); } catch(_){} }
 }
 boot();
