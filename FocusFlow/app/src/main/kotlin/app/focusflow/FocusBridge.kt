@@ -8,6 +8,7 @@ import android.webkit.JavascriptInterface
 import androidx.core.content.FileProvider
 import app.focusflow.data.StateStore
 import app.focusflow.notify.Notifier
+import app.focusflow.notify.Sound
 import app.focusflow.util.Bg
 import android.os.Handler
 import android.os.Looper
@@ -53,6 +54,22 @@ class FocusBridge(private val activity: MainActivity) {
 
     @JavascriptInterface
     fun testNotification(): Boolean = Notifier.postTest(app)
+
+    // ------------------------------------------------------------------ sound
+    @JavascriptInterface
+    fun getSound(): String = activity.soundJson()
+
+    @JavascriptInterface
+    fun pickSound() { activity.runOnUiThread { activity.pickSound() } }
+
+    @JavascriptInterface
+    fun previewSound() { Sound.play(app, preview = true) }
+
+    @JavascriptInterface
+    fun clearSound() { Sound.clear(app); activity.runOnUiThread { activity.soundChanged() } }
+
+    @JavascriptInterface
+    fun setSoundForce(force: Boolean) { Sound.setForce(app, force); activity.runOnUiThread { activity.soundChanged() } }
 
     // --------------------------------------------------------------------- UI
     @JavascriptInterface

@@ -10,6 +10,9 @@
     <string name="ch_lead_name">Heads-up</string>
     <string name="ch_lead_desc">A short reminder shortly before a block begins</string>
 
+    <string name="ch_day_name">Day rituals</string>
+    <string name="ch_day_desc">Start-of-day and wrap-up reminders</string>
+
     <!-- Notification content -->
     <string name="n_start_title">%1$s starts now</string>
     <string name="n_start_text">%1$s · %2$s</string>
@@ -21,6 +24,18 @@
     <string name="n_action_done">Mark done</string>
     <string name="n_test_title">FocusFlow alerts are on</string>
     <string name="n_test_text">You\'ll be notified when your blocks start and end.</string>
+
+    <string name="n_daystart_title">Start your day</string>
+    <string name="n_daystart_text">%1$d blocks · %2$s planned</string>
+    <string name="n_daystart_empty">Nothing planned yet — tap to set up your day.</string>
+    <string name="n_dayend_title">Wrap up your day</string>
+    <string name="n_dayend_text">%1$d of %2$d blocks done. Close the day and share your report.</string>
+    <string name="n_action_start_day">Start day</string>
+    <string name="n_action_end_day">End day</string>
+    <string name="sound_title">Alert sound</string>
+    <string name="sound_system">System sounds</string>
+    <string name="sound_file">Audio file…</string>
+    <string name="sound_default">Default</string>
 
     <!-- Widget -->
     <string name="widget_label">FocusFlow · Day plan</string>
@@ -42,6 +57,8 @@
     <!-- Shortcuts / dialogs -->
     <string name="shortcut_new_block">New block</string>
     <string name="shortcut_new_block_long">Add a block to today</string>
+    <string name="shortcut_start_day">Start day</string>
+    <string name="shortcut_start_day_long">Start your day</string>
     <string name="exact_title">Exact reminders</string>
     <string name="exact_message">To alert you right when a block starts or ends, FocusFlow needs the \"Alarms &amp; reminders\" permission. Without it, alerts can arrive a few minutes late.</string>
     <string name="exact_allow">Open settings</string>

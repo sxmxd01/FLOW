@@ -6,6 +6,8 @@ object Actions {
     const val NEW_BLOCK = "app.focusflow.action.NEW_BLOCK"
     const val MARK_DONE = "app.focusflow.action.MARK_DONE"
     const val ROUTE = "app.focusflow.action.ROUTE"
+    const val START_DAY = "app.focusflow.action.START_DAY"
+    const val END_DAY = "app.focusflow.action.END_DAY"
 
     const val EXTRA_BLOCK_ID = "block_id"
     const val EXTRA_DATE = "date"

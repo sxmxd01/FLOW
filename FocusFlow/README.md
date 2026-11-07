@@ -1,19 +1,14 @@
 # FocusFlow for Android
 
-Your FocusFlow study planner as a native Android app (Android 11+ / API 30+), with:
+A time-management system (not a to-do list) for Android 11–16+, built from your FocusFlow planner.
 
-- **Notifications** when a block **starts**, **ends** (with a one-tap *Mark done*), plus an optional *heads-up* before a block (5–30 min). Fixed blocks / recurring classes are included (toggle in Settings). Completed blocks stay quiet.
-- **Large home-screen widget** (4×4, resizable): live "NOW / UP NEXT" card with a ticking countdown and progress bar, one-tap completion, and a scrolling timeline of today's blocks. Tap a row to open that block, tap its circle to complete it.
-- Same UI as the HTML, bundled offline (`app/src/main/assets/index.html`). **No INTERNET permission.**
-- Fixed blocks have categories (**CL / Rest / Content**), each with its own colour in the timeline, alerts, widget and share image.
-- Materials can belong to **several subjects**; time on a material counts fully toward each of its subjects' daily goals.
-- Every time/number field is typable ("930", "9:30pm", "1h30") as well as +/- (hold to repeat). Material progress moves one unit per tap.
-- Undo works for deletes, moves, adds, Auto-plan and imports. Auto-plan v2 scores every 15-min slot (your best hours, subject variety, breaks, nothing in the past).
-- Extras: system Back closes sheets, native share sheet for the day plan/report images, JSON backup export/import, "New block" launcher shortcut, themed icon, splash screen, edge-to-edge layout with keyboard handling.
+**Day flow:** Start day → (live block bar, +10, done, Re-fit when behind) → End day → share the report.
+**Planner:** scores every 15-min slot with what it has learned about you; learns from *every* block (rated or not), adapts to your real wake-up / bedtime, re-fits a late start into gaps and breaks, tightens breaks, shortens blocks, and only then slides bedtime (limit is yours) — leftovers roll to tomorrow.
+**Also:** home-screen widget, start/end/heads-up alerts + day reminders, custom alert sound (system sound or any audio file, with "force" for phones that ignore channel sounds), typed fields everywhere, undo, backup/restore.
 
 ## Build
 
-1. Open this folder in **Android Studio** (Ladybug / 2024.2 or newer) and let Gradle sync (it downloads Gradle 8.9 and AGP 8.7.3 automatically).
+1. Open this folder in **Android Studio** (Meerkat / 2024.3.1 or newer; the project targets Android 16 / API 36) and let Gradle sync (it downloads Gradle 8.9 and AGP 8.7.3 automatically).
 2. Run on a device or emulator running Android 11+.
    Or from a terminal (after Studio generated the wrapper, or with a local Gradle): `gradle assembleDebug`.
 3. Long-press the home screen → **Widgets** → **FocusFlow · Day plan**.

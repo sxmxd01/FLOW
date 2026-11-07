@@ -11,4 +11,15 @@
             android:targetClass="app.focusflow.MainActivity"
             android:targetPackage="app.focusflow" />
     </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_add"
+        android:shortcutId="start_day"
+        android:shortcutLongLabel="@string/shortcut_start_day_long"
+        android:shortcutShortLabel="@string/shortcut_start_day">
+        <intent
+            android:action="app.focusflow.action.START_DAY"
+            android:targetClass="app.focusflow.MainActivity"
+            android:targetPackage="app.focusflow" />
+    </shortcut>
 </shortcuts>

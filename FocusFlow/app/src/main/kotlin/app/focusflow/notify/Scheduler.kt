@@ -22,9 +22,9 @@ import java.time.ZoneId
  * and never leaves hundreds of stale alarms behind.
  */
 object Scheduler {
-    enum class Kind { LEAD, START, END, ROLLOVER }
+    enum class Kind { LEAD, START, END, DAY_START, DAY_END, ROLLOVER }
 
-    data class Event(val time: Long, val kind: Kind, val block: Block?)
+    data class Event(val time: Long, val kind: Kind, val block: Block?, val date: LocalDate)
 
     private const val PREFS = "ff_sched"
     private const val KEY_LAST = "last_processed"
@@ -52,11 +52,13 @@ object Scheduler {
             for (b in snap.blocksOn(d)) {
                 val s = epoch(d, b.start, zone)
                 val e = epoch(d, b.end, zone)
-                if (lead > 0) out += Event(s - lead * 60_000L, Kind.LEAD, b)
-                out += Event(s, Kind.START, b)
-                out += Event(e, Kind.END, b)
+                if (lead > 0) out += Event(s - lead * 60_000L, Kind.LEAD, b, d)
+                out += Event(s, Kind.START, b, d)
+                out += Event(e, Kind.END, b, d)
             }
-            out += Event(epoch(d.plusDays(1), 0, zone) + 2_000L, Kind.ROLLOVER, null)
+            if (snap.notif.dayStart) out += Event(epoch(d, snap.wake, zone), Kind.DAY_START, null, d)
+            if (snap.notif.dayEnd) out += Event(epoch(d, snap.sleep - 30, zone), Kind.DAY_END, null, d)
+            out += Event(epoch(d.plusDays(1), 0, zone) + 2_000L, Kind.ROLLOVER, null, d)
             d = d.plusDays(1)
         }
         return out.filter { it.time > from && it.time <= to }.sortedBy { it.time }
@@ -79,12 +81,17 @@ object Scheduler {
         prefs(ctx.applicationContext).edit().putLong(KEY_LAST, System.currentTimeMillis()).commit()
     }
 
-    private fun alarmIntent(ctx: Context): PendingIntent =
+    private fun alarmIntent(ctx: Context, create: Boolean = true): PendingIntent? =
         PendingIntent.getBroadcast(
             ctx, REQ_ALARM,
             Intent(ctx, AlarmReceiver::class.java).setAction("app.focusflow.action.ALARM"),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            (if (create) PendingIntent.FLAG_UPDATE_CURRENT else PendingIntent.FLAG_NO_CREATE) or PendingIntent.FLAG_IMMUTABLE,
         )
+
+    /** Cheap check used on app open: only (re)arm when no alarm is pending (e.g. after a force-stop). */
+    fun ensureArmed(ctx: Context) {
+        if (alarmIntent(ctx.applicationContext, create = false) == null) reschedule(ctx)
+    }
 
     fun canScheduleExact(ctx: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return true
@@ -95,7 +102,7 @@ object Scheduler {
     fun reschedule(ctx: Context) {
         val app = ctx.applicationContext
         val am = app.getSystemService(AlarmManager::class.java)
-        val pi = alarmIntent(app)
+        val pi = alarmIntent(app)!!
         val now = System.currentTimeMillis()
         val last = lastProcessed(app, now)
         val snap = StateStore.snapshot(app)

@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,6 +31,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.IntentCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -39,8 +41,8 @@ import androidx.webkit.WebViewFeature
 import app.focusflow.data.StateStore
 import app.focusflow.notify.Notifier
 import app.focusflow.notify.Scheduler
+import app.focusflow.notify.Sound
 import app.focusflow.util.Bg
-import app.focusflow.widget.FocusWidgetProvider
 import org.json.JSONObject
 import java.io.File
 
@@ -57,8 +59,7 @@ class MainActivity : ComponentActivity() {
 
     @Volatile
     private var pageReady = false
-    private var pendingBlock: Pair<String, String?>? = null
-    private var pendingNewBlock = false
+    private val pendingJs = ArrayList<String>()
     private var fileCallback: ValueCallback<Array<Uri>>? = null
 
     private val backCallback = object : OnBackPressedCallback(false) {
@@ -84,6 +85,23 @@ class MainActivity : ComponentActivity() {
             pushStatus()
             Bg.run { Scheduler.reschedule(this) }
             maybeAskExactAlarm()
+        }
+
+    private val ringtoneLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
+            val uri = res.data?.let { IntentCompat.getParcelableExtra(it, RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java) }
+            if (uri != null) {
+                val title = try { RingtoneManager.getRingtone(this, uri)?.getTitle(this) } catch (e: Exception) { null }
+                saveSound(uri, title ?: "Custom", force = false)
+            }
+        }
+
+    private val audioFileLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) {
+                try { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) } catch (e: SecurityException) { }
+                saveSound(uri, displayName(uri) ?: "Audio file", force = true)   // arbitrary files need "force"
+            }
         }
 
     private val fileChooserLauncher =
@@ -153,10 +171,7 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         webView.onResume()
         if (pageReady) js("window.__ffResume&&window.__ffResume()")
-        Bg.run {
-            Scheduler.reschedule(this)
-            FocusWidgetProvider.refreshAll(this)
-        }
+        Bg.run { Scheduler.ensureArmed(this) }
     }
 
     override fun onPause() {
@@ -289,24 +304,22 @@ class MainActivity : ComponentActivity() {
         when (i?.action) {
             Actions.OPEN_BLOCK -> {
                 val id = i.getStringExtra(Actions.EXTRA_BLOCK_ID)
-                if (id != null) pendingBlock = id to i.getStringExtra(Actions.EXTRA_DATE)
+                if (id != null) {
+                    val date = i.getStringExtra(Actions.EXTRA_DATE)
+                    pendingJs += "window.__ffOpenBlock&&window.__ffOpenBlock(${JSONObject.quote(id)}, ${if (date != null) JSONObject.quote(date) else "null"})"
+                }
             }
-            Actions.NEW_BLOCK -> pendingNewBlock = true
+            Actions.NEW_BLOCK -> pendingJs += "window.__ffNewBlock&&window.__ffNewBlock()"
+            Actions.START_DAY -> pendingJs += "window.__ffStartDay&&window.__ffStartDay()"
+            Actions.END_DAY -> pendingJs += "window.__ffEndDay&&window.__ffEndDay()"
         }
         flushPending()
     }
 
     private fun flushPending() {
-        if (!pageReady) return
-        pendingBlock?.let { (id, date) ->
-            pendingBlock = null
-            val d = if (date != null) JSONObject.quote(date) else "null"
-            js("window.__ffOpenBlock&&window.__ffOpenBlock(${JSONObject.quote(id)}, $d)")
-        }
-        if (pendingNewBlock) {
-            pendingNewBlock = false
-            js("window.__ffNewBlock&&window.__ffNewBlock()")
-        }
+        if (!pageReady || pendingJs.isEmpty()) return
+        pendingJs.forEach { js(it) }
+        pendingJs.clear()
     }
 
     // ============================================================ permissions
@@ -369,6 +382,44 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
+
+    // ================================================================== sound
+    internal fun soundJson(): String = JSONObject()
+        .put("title", Sound.title(this)).put("custom", Sound.uri(this) != null).put("force", Sound.force(this)).toString()
+
+    internal fun pickSound() {
+        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setTitle(R.string.sound_title)
+            .setItems(arrayOf(getString(R.string.sound_system), getString(R.string.sound_file), getString(R.string.sound_default))) { _, which ->
+                when (which) {
+                    0 -> ringtoneLauncher.launch(
+                        Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+                            .putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
+                            .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+                            .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+                            .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Sound.uri(this))
+                    )
+                    1 -> audioFileLauncher.launch(arrayOf("audio/*"))
+                    else -> { Sound.clear(this); soundChanged() }
+                }
+            }.show()
+    }
+
+    internal fun soundChanged() {
+        Bg.run { Notifier.ensureChannels(this) }
+        js("window.__ffSoundChanged&&window.__ffSoundChanged()")
+    }
+
+    private fun saveSound(uri: Uri, title: String, force: Boolean) {
+        Sound.set(this, uri, title, force)
+        soundChanged()
+    }
+
+    private fun displayName(uri: Uri): String? = try {
+        contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+            if (c.moveToFirst()) c.getString(0) else null
+        }
+    } catch (e: Exception) { null }
 
     private fun cleanSharedCache() {
         val dir = File(cacheDir, "shared")

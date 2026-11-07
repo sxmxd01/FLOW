@@ -16,11 +16,9 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.RemoteViews
 import app.focusflow.Actions
-import app.focusflow.MainActivity
+import app.focusflow.Intents
 import app.focusflow.R
-import app.focusflow.data.Block
 import app.focusflow.data.StateStore
-import app.focusflow.notify.ActionReceiver
 import app.focusflow.notify.Scheduler
 import app.focusflow.util.TimeFmt
 import java.time.LocalDateTime
@@ -80,35 +78,6 @@ class FocusWidgetProvider : AppWidgetProvider() {
         private fun mutableFlag(): Int =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
 
-        private fun openApp(ctx: Context, requestCode: Int, action: String, block: Block?): PendingIntent {
-            val i = Intent(ctx, MainActivity::class.java).apply {
-                this.action = action
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                if (block != null) {
-                    putExtra(Actions.EXTRA_BLOCK_ID, block.id)
-                    putExtra(Actions.EXTRA_DATE, block.date.toString())
-                    data = Uri.parse("focusflow://block/${block.date}/${Uri.encode(block.id)}")
-                }
-            }
-            return PendingIntent.getActivity(
-                ctx, requestCode, i,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-        private fun markDone(ctx: Context, block: Block): PendingIntent {
-            val i = Intent(ctx, ActionReceiver::class.java).apply {
-                action = Actions.MARK_DONE
-                data = Uri.parse("focusflow://widget-done/${block.date}/${Uri.encode(block.id)}")
-                putExtra(Actions.EXTRA_BLOCK_ID, block.id)
-                putExtra(Actions.EXTRA_DATE, block.date.toString())
-            }
-            return PendingIntent.getBroadcast(
-                ctx, REQ_HERO_DONE, i,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
         fun buildViews(ctx: Context, widgetId: Int, options: Bundle?): RemoteViews {
             val snap = StateStore.snapshot(ctx)
             val fmt = TimeFmt(ctx)
@@ -148,8 +117,8 @@ class FocusWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.w_stats, if (planned > 0) "${hours}h · $pct%" else "")
             views.setProgressBar(R.id.w_day_progress, 100, pct.coerceIn(0, 100), false)
 
-            views.setOnClickPendingIntent(R.id.w_header_left, openApp(ctx, REQ_OPEN_HEADER, Intent.ACTION_MAIN, null))
-            views.setOnClickPendingIntent(R.id.w_add, openApp(ctx, REQ_NEW, Actions.NEW_BLOCK, null))
+            views.setOnClickPendingIntent(R.id.w_header_left, Intents.openApp(ctx, REQ_OPEN_HEADER))
+            views.setOnClickPendingIntent(R.id.w_add, Intents.openApp(ctx, REQ_NEW, Actions.NEW_BLOCK))
 
             // ---------- hero ----------
             val live = blocks.filter { !it.done && nowMin >= it.start && nowMin < it.end }
@@ -188,11 +157,11 @@ class FocusWidgetProvider : AppWidgetProvider() {
 
                 if (current != null && !current.isFixed) {
                     views.setViewVisibility(R.id.w_hero_check, View.VISIBLE)
-                    views.setOnClickPendingIntent(R.id.w_hero_check, markDone(ctx, current))
+                    views.setOnClickPendingIntent(R.id.w_hero_check, Intents.markDone(ctx, REQ_HERO_DONE, current.id, current.date.toString()))
                 } else {
                     views.setViewVisibility(R.id.w_hero_check, View.GONE)
                 }
-                views.setOnClickPendingIntent(R.id.w_hero, openApp(ctx, REQ_OPEN_HERO, Actions.OPEN_BLOCK, focus))
+                views.setOnClickPendingIntent(R.id.w_hero, Intents.openApp(ctx, REQ_OPEN_HERO, Actions.OPEN_BLOCK, focus))
             } else {
                 views.setInt(R.id.w_hero_strip, "setBackgroundColor", 0xFF596173.toInt())
                 views.setViewVisibility(R.id.w_hero_cd_row, View.GONE)
@@ -207,7 +176,7 @@ class FocusWidgetProvider : AppWidgetProvider() {
                     views.setTextViewText(R.id.w_hero_title, ctx.getString(R.string.widget_wrap_title))
                     views.setTextViewText(R.id.w_hero_time, ctx.getString(R.string.widget_wrap_sub, blocks.size, pct))
                 }
-                views.setOnClickPendingIntent(R.id.w_hero, openApp(ctx, REQ_OPEN_HERO, Intent.ACTION_MAIN, null))
+                views.setOnClickPendingIntent(R.id.w_hero, Intents.openApp(ctx, REQ_OPEN_HERO))
             }
 
             // ---------- timeline list ----------

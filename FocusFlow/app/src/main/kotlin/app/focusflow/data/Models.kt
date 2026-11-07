@@ -31,7 +31,12 @@ data class NotifPrefs(
     val end: Boolean = true,
     val leadMin: Int = 0,
     val fixed: Boolean = true,
+    val dayStart: Boolean = true,
+    val dayEnd: Boolean = true,
 )
+
+/** Start day / End day ritual state for one date (minutes from midnight, null = not happened). */
+data class DayInfo(val startedAt: Int?, val endedAt: Int?)
 
 private data class SubjectInfo(val name: String, val color: Int)
 private data class MaterialInfo(val color: Int, val subjectIds: List<String>)
@@ -78,11 +83,20 @@ private fun JSONObject.strOrNull(name: String): String? =
  */
 class Snapshot private constructor(
     val notif: NotifPrefs,
+    val wake: Int,
+    val sleep: Int,
+    private val days: JSONObject,
     private val tasks: JSONObject,
     private val recurring: JSONArray,
     private val subjects: Map<String, SubjectInfo>,
     private val materials: Map<String, MaterialInfo>,
 ) {
+
+    fun dayInfo(date: LocalDate): DayInfo {
+        val o = days.optJSONObject(date.toString()) ?: return DayInfo(null, null)
+        return DayInfo(if (o.isNull("startedAt")) null else o.optInt("startedAt"),
+                       if (o.isNull("endedAt")) null else o.optInt("endedAt"))
+    }
 
     fun blocksOn(date: LocalDate): List<Block> {
         val key = date.toString() // yyyy-MM-dd, same as the web `iso()`
@@ -129,10 +143,11 @@ class Snapshot private constructor(
         val fixed = o.optString("type") == "fixed"
         val mat = o.strOrNull("matId")?.let { materials[it] }
         // a material may belong to several subjects; fall back to the ids stored on the block
+        val own = o.stringList("subjectIds").ifEmpty { listOfNotNull(o.strOrNull("subjectId")) }.filter { subjects.containsKey(it) }
         val subjIds = when {
             fixed -> emptyList<String>()
-            mat != null && mat.subjectIds.isNotEmpty() -> mat.subjectIds
-            else -> o.stringList("subjectIds").ifEmpty { listOfNotNull(o.strOrNull("subjectId")) }
+            own.isNotEmpty() -> own
+            else -> mat?.subjectIds ?: emptyList()
         }
         val subjInfos = subjIds.mapNotNull { subjects[it] }
         val color = if (fixed) catColor(o.strOrNull("cat")) else (mat?.color ?: subjInfos.firstOrNull()?.color ?: DEFAULT_COLOR)
@@ -154,18 +169,21 @@ class Snapshot private constructor(
     }
 
     companion object {
-        val EMPTY = Snapshot(NotifPrefs(), JSONObject(), JSONArray(), emptyMap(), emptyMap())
+        val EMPTY = Snapshot(NotifPrefs(), 390, 1380, JSONObject(), JSONObject(), JSONArray(), emptyMap(), emptyMap())
 
         fun parse(json: String?): Snapshot {
             if (json.isNullOrBlank()) return EMPTY
             return try {
                 val root = JSONObject(json)
-                val n = root.optJSONObject("settings")?.optJSONObject("notif")
+                val settings = root.optJSONObject("settings")
+                val n = settings?.optJSONObject("notif")
                 val notif = NotifPrefs(
                     start = n?.optBoolean("start", true) ?: true,
                     end = n?.optBoolean("end", true) ?: true,
                     leadMin = (n?.optInt("lead", 0) ?: 0).coerceIn(0, 120),
                     fixed = n?.optBoolean("fixed", true) ?: true,
+                    dayStart = n?.optBoolean("dayStart", true) ?: true,
+                    dayEnd = n?.optBoolean("dayEnd", true) ?: true,
                 )
 
                 val subjects = HashMap<String, SubjectInfo>()
@@ -197,6 +215,9 @@ class Snapshot private constructor(
 
                 Snapshot(
                     notif = notif,
+                    wake = settings?.optInt("wake", 390) ?: 390,
+                    sleep = settings?.optInt("sleep", 1380) ?: 1380,
+                    days = root.optJSONObject("days") ?: JSONObject(),
                     tasks = root.optJSONObject("tasks") ?: JSONObject(),
                     recurring = root.optJSONArray("recurring") ?: JSONArray(),
                     subjects = subjects,
