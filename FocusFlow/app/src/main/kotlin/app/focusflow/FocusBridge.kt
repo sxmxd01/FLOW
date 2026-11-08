@@ -9,6 +9,7 @@ import androidx.core.content.FileProvider
 import app.focusflow.data.StateStore
 import app.focusflow.notify.Notifier
 import app.focusflow.notify.Sound
+import app.focusflow.notify.SoundKind
 import app.focusflow.util.Bg
 import android.os.Handler
 import android.os.Looper
@@ -57,19 +58,19 @@ class FocusBridge(private val activity: MainActivity) {
 
     // ------------------------------------------------------------------ sound
     @JavascriptInterface
-    fun getSound(): String = activity.soundJson()
+    fun getSounds(): String = activity.soundsJson()
 
     @JavascriptInterface
-    fun pickSound() { activity.runOnUiThread { activity.pickSound() } }
+    fun pickSound(kind: String) { activity.runOnUiThread { activity.pickSound(SoundKind.of(kind)) } }
 
     @JavascriptInterface
-    fun previewSound() { Sound.play(app, preview = true) }
+    fun previewSound(kind: String) { Sound.play(app, SoundKind.of(kind), preview = true) }
 
     @JavascriptInterface
-    fun clearSound() { Sound.clear(app); activity.runOnUiThread { activity.soundChanged() } }
+    fun clearSound(kind: String) { Sound.clear(app, SoundKind.of(kind)); activity.runOnUiThread { activity.soundChanged() } }
 
     @JavascriptInterface
-    fun setSoundForce(force: Boolean) { Sound.setForce(app, force); activity.runOnUiThread { activity.soundChanged() } }
+    fun setSoundForce(kind: String, force: Boolean) { Sound.setForce(app, SoundKind.of(kind), force); activity.runOnUiThread { activity.soundChanged() } }
 
     // --------------------------------------------------------------------- UI
     @JavascriptInterface

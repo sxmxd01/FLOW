@@ -21,6 +21,7 @@ data class Block(
     val color: Int,
     val subjectName: String?,
     val recurringId: String?,
+    val note: String = "",
 ) {
     val end: Int get() = start + dur
     val isFixed: Boolean get() = type == BlockType.FIXED
@@ -165,6 +166,7 @@ class Snapshot private constructor(
             color = color,
             subjectName = label,
             recurringId = null,
+            note = o.optString("note").trim(),
         )
     }
 

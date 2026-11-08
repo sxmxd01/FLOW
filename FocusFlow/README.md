@@ -2,9 +2,10 @@
 
 A time-management system (not a to-do list) for Android 11–16+, built from your FocusFlow planner.
 
+**Subjects first:** every block belongs to ONE subject (and optionally a material: “AR – FinalLap”). Subject cards show planned vs done vs the daily goal; partial progress counts proportionally. Add a block in 3 short steps: subject → time → material & note.
 **Day flow:** Start day → (live block bar, +10, done, Re-fit when behind) → End day → share the report.
 **Planner:** scores every 15-min slot with what it has learned about you; learns from *every* block (rated or not), adapts to your real wake-up / bedtime, re-fits a late start into gaps and breaks, tightens breaks, shortens blocks, and only then slides bedtime (limit is yours) — leftovers roll to tomorrow.
-**Also:** home-screen widget, start/end/heads-up alerts + day reminders, custom alert sound (system sound or any audio file, with "force" for phones that ignore channel sounds), typed fields everywhere, undo, backup/restore.
+**Also:** home-screen widget, start/end/heads-up alerts + day reminders, separate custom start / end alert sounds (system sound or any audio file, with "force" for phones that ignore channel sounds), typed fields everywhere, undo, backup/restore.
 
 ## Build
 

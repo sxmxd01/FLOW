@@ -443,6 +443,125 @@ button{touch-action:manipulation}
 .done-s{font-size:12.5px;color:#868da1;font-weight:600;margin-top:4px}
 .now-line{z-index:0;pointer-events:none}
 .blk{z-index:1}
+
+/* ===== v4: subject-first goals, 3-step add, completion review ===== */
+.sheet{max-height:90dvh;overflow-y:auto;overscroll-behavior:contain}
+.sheet-actions{position:sticky;bottom:-1px;margin:12px -20px 0;padding:12px 20px calc(2px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(22,24,30,1) 72%,rgba(22,24,30,0));z-index:3}
+.sheet-actions .btn{flex:1;padding:14px 10px;font-size:14px}
+.btn.primary{background:#d6dae6;color:#0a0b0e}
+
+/* compact top so the timeline gets the room */
+header{padding-bottom:6px!important}
+.week{padding:0 0 8px!important;gap:5px!important}
+.day-chip{padding:6px 2px 6px!important;border-radius:11px!important;gap:2px!important}
+.day-chip .dnum{font-size:14px}
+.goals{flex:0 0 auto;margin:0 0 8px}
+.gp-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 6px}
+.seg.mini{margin:0;padding:2px;border-radius:9px}
+.seg.mini button{padding:6px 12px;font-size:11.5px;border-radius:7px}
+.gp-toggle{width:30px;height:28px;border:0;border-radius:8px;background:transparent;color:#6a7083;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .25s var(--ease)}
+.goals.off .gp-toggle{transform:rotate(180deg)}
+.goals.off .mats{display:none}
+.goals .mats{padding:0!important;min-height:0!important}
+
+/* subject cards: planned (light) vs done (solid) against the daily goal */
+.sg{position:relative;flex:0 0 138px;text-align:left;padding:10px 11px 9px 13px;border-radius:14px;overflow:hidden;cursor:pointer;font-family:inherit;color:inherit;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.075);transition:transform .12s var(--ease),background .15s}
+.sg::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c)}
+.sg:active{transform:scale(.97)}
+.sg-hd{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:7px}
+.sg-n{font-size:13px;font-weight:700;color:#e8eaf0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sg-v{font-size:11.5px;font-weight:700;color:#cfd4e0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sg-v i{font-style:normal;color:#6f768a}
+.track.two{position:relative}
+.track.two i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;transition:width .5s var(--ease)}
+.track.two .pl{background:var(--c);opacity:.28}
+.track.two .dn{background:var(--c)}
+.track.big{height:10px;border-radius:5px;margin:10px 0 6px}
+.sg-f{margin-top:7px;font-size:10.5px;font-weight:600;color:#6f768a}
+.sg-f.gap{color:#e0b57c}
+.sg-f.ok{color:#8bb59a}
+.sg.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-style:dashed;color:#6f768a;font-size:11px;font-weight:600;flex:0 0 96px}
+.sg.add span{font-size:20px;line-height:1}
+.gapline{font-size:12px;font-weight:600;margin:0 0 4px}
+.gapline.gap{color:#e0b57c}.gapline.ok{color:#8bb59a}.gapline:not(.gap):not(.ok){color:#6f768a}
+.title-in{margin:0!important;font-size:18px;font-weight:700;background:transparent!important;border:0!important;padding:4px 2px!important;flex:1}
+
+/* timeline blocks: progress fill, partial ring, notes */
+.blk{overflow:hidden}
+.pfill{position:absolute;left:0;top:0;bottom:0;background:var(--c);opacity:.16;pointer-events:none;border-radius:inherit;transition:width .4s var(--ease)}
+.blk-note{font-size:10.5px;font-weight:500;color:#8d94a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blk.sm .blk-note{display:none}
+.blk-time{font-size:10.5px}
+.blk-title{font-size:13.5px}
+.hour span{font-size:10.5px}
+.chk.part{position:relative;color:#e0b57c}
+.chk.part::before{content:"";position:absolute;width:24px;height:24px;border-radius:50%;background:conic-gradient(#e0b57c calc(var(--p) * 1%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 8px,#000 9px);mask:radial-gradient(circle,transparent 8px,#000 9px)}
+.chk.part b{position:relative;font-size:8.5px;font-weight:800;letter-spacing:-.3px}
+
+/* add flow */
+.step-hd{display:flex;align-items:center;gap:8px;margin:2px 0 12px}
+.step-t{flex:1;font-size:17px;font-weight:700;letter-spacing:-.2px;color:#f0f2f6}
+.back-ic{width:34px;height:34px;margin-left:-8px;border:0;border-radius:10px;background:transparent;color:#95a5bc;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.steps{display:flex;gap:5px}
+.steps i{width:18px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);transition:background .25s,width .25s var(--ease)}
+.steps i.past{background:rgba(163,179,201,.5)}
+.steps i.on{background:#d1d6e2;width:26px}
+.subgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sub-chip{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:13px 12px 11px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:inherit;font-family:inherit;cursor:pointer;overflow:hidden;transition:transform .12s var(--ease),background .15s}
+.sub-chip i{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.sub-chip:active{transform:scale(.97);background:rgba(255,255,255,.09)}
+.sub-chip .n{font-size:14px;font-weight:700;color:#e8eaf0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-chip small{font-size:11px;font-weight:600;color:#6f768a;font-variant-numeric:tabular-nums}
+.sub-chip small.gap{color:#e0b57c}
+.sub-chip.add{justify-content:center;align-items:center;border-style:dashed;color:#7c8296}
+.pickrow{display:flex;gap:8px;margin:0 0 10px}
+.pick{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.07);font-size:12.5px;font-weight:700;color:#e8eaf0}
+.pick i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.pick.plain{background:transparent;color:#868da1;font-weight:600;border:1px solid rgba(255,255,255,.08)}
+.mstrip{position:relative;height:14px;border-radius:7px;background:rgba(255,255,255,.06);overflow:hidden;margin:4px 0 2px}
+.mstrip i{position:absolute;top:0;bottom:0;border-radius:3px}
+.mstrip i.new{background:#fff;opacity:.95;box-shadow:0 0 0 2px rgba(255,255,255,.25);transition:left .2s var(--ease),width .2s var(--ease)}
+.conflict{min-height:16px;font-size:11px;font-weight:600;color:#e0b57c;margin-bottom:2px}
+
+/* block sheet */
+.prog{padding:2px 0 4px}
+.prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+.prog-top b{font-size:28px;letter-spacing:-.8px;color:#f0f2f6;font-variant-numeric:tabular-nums}
+.prog-top span{font-size:11.5px;color:#868da1;font-weight:600;text-align:right}
+.range{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;margin:0 0 4px;touch-action:pan-y}
+.range::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(to right,#a3b3c9 var(--v,0%),rgba(255,255,255,.1) var(--v,0%))}
+.range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-9px;border-radius:50%;background:#f0f2f6;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.note-in{width:100%;resize:none;padding:12px 14px;border-radius:12px;font-family:inherit;font-size:14px;line-height:1.45;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:#e8eaf0;outline:none;margin:6px 0 4px;-webkit-appearance:none}
+.note-in::placeholder{color:#5f6579}
+.acc{display:flex;align-items:center;gap:10px;width:100%;margin-top:8px;padding:12px 4px;border:0;border-top:1px solid rgba(255,255,255,.06);background:transparent;color:#a3aabd;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left}
+.acc b{flex:1;text-align:right;color:#e8eaf0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc span{white-space:nowrap}
+.acc svg{transition:transform .25s var(--ease);flex:0 0 auto}
+.acc.open svg{transform:rotate(90deg)}
+.done-sum{padding:4px 0 6px}
+.ds-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ds-top>div{flex:1;min-width:0}
+.ds-top b{display:block;font-size:15px;color:#f0f2f6}
+.ds-top small{font-size:11.5px;color:#868da1;font-weight:600}
+.ds-ic{width:38px;height:38px;border-radius:50%;background:rgba(139,181,154,.16);color:#9fd0b0;display:flex;align-items:center;justify-content:center;flex:0 0 auto;animation:pop .45s var(--spring) both}
+.ds-link{border:0;background:transparent;color:#95a5bc;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer;padding:8px}
+.ds-goal{font-size:11.5px;font-weight:600;color:#9aa3b8;margin-top:6px}
+.sub-row{padding-top:2px!important;border-top:0!important}
+
+/* completion review card */
+.bcard{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translate(-50%,16px);width:min(92vw,400px);z-index:75;padding:12px 14px;border-radius:18px;background:rgba(28,31,40,.97);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s,transform .35s var(--spring)}
+.bcard.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.bc-top{display:flex;align-items:center;gap:11px}
+.bc-ic{width:32px;height:32px;border-radius:50%;background:rgba(139,181,154,.18);color:#9fd0b0;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.bc-t{flex:1;min-width:0}
+.bc-t b{display:block;font-size:13.5px;color:#f0f2f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-t small{font-size:11.5px;font-weight:600;color:#9fd0b0}
+.bc-btn{border:0;background:rgba(255,255,255,.07);color:#cfd4e0;border-radius:9px;padding:8px 11px;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer}
+.bc-row{display:flex;align-items:center;gap:4px;margin-top:8px}
+.bc-q{font-size:11.5px;font-weight:600;color:#868da1;margin-right:4px;flex:1}
+.bc-row .star{width:34px;height:34px}
+.bc-row .bc-btn{margin-left:6px}
 </style>
 </head>
 <body>
@@ -462,7 +581,7 @@ button{touch-action:manipulation}
 
   <div class="week" id="week"></div>
   <div class="daybar hide" id="dayBar"></div>
-  <div class="mats" id="mats"></div>
+  <div class="goals" id="goalsPanel"><div class="gp-head"><div class="seg mini" id="gpTabs"><button data-gp="subjects">Subjects</button><button data-gp="materials">Materials</button></div><button class="gp-toggle" id="gpToggle" aria-label="Collapse goals"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button></div><div class="mats" id="mats"></div></div>
 
   <div class="tl-wrap" id="tlWrap">
     <div class="tl" id="tl"></div>
@@ -479,6 +598,7 @@ button{touch-action:manipulation}
 
 <div class="backdrop" id="backdrop"></div>
 <div class="sheet" id="sheet"></div>
+<div class="bcard" id="bcard"></div>
 <div id="toast"></div>
 
 <script>
@@ -682,13 +802,17 @@ function normalizeState(){
   }
   for (const r of S.recurring) if (!CATS[r.cat]) r.cat = 'cl';
   for (const k in S.tasks) for (const t of S.tasks[k]){
-    if (t.type === 'fixed'){ if (!CATS[t.cat]) t.cat = 'cl'; continue; }
-    if (!Array.isArray(t.subjectIds)){
-      const m = t.matId && S.materials.find(x => x.id === t.matId);
-      t.subjectIds = t.subjectId ? [t.subjectId] : (m ? [...m.subjectIds] : []);
-    }
-    t.subjectIds = t.subjectIds.filter(id => S.subjects.some(s => s.id === id));
-    t.subjectId = t.subjectIds[0] || null;
+    if (t.type === 'fixed'){ if (!CATS[t.cat]) t.cat = 'cl'; t.note = t.note || ''; continue; }
+    if (t.matId && !S.materials.some(m => m.id === t.matId)) t.matId = null;
+    const m = t.matId && S.materials.find(x => x.id === t.matId);
+    if (!t.subjectId || !S.subjects.some(s => s.id === t.subjectId))
+      t.subjectId = (t.subjectIds || []).find(id => S.subjects.some(s => s.id === id)) || (m && m.subjectIds[0]) || null;
+    t.subjectIds = t.subjectId ? [t.subjectId] : [];
+    t.note = t.note || '';
+    if (t.done && !(t.pct > 0)) t.pct = 100;
+    t.pct = clamp(t.pct || 0, 0, 100);
+    t.done = t.pct >= 100;
+    if (t.subjectId){ const s = S.subjects.find(x => x.id === t.subjectId); t.title = m ? `${s.name} – ${m.title}` : s.name; }
   }
   for (const r of S.history){ if (!r.subs) r.subs = r.subjectId ? [r.subjectId] : []; if (r.w == null) r.w = 1; }
   const cutoff = shiftDate(todayKey(), -120);
@@ -730,20 +854,20 @@ const subjectById = id => state.subjects.find(s => s.id === id);
 const materialById = id => state.materials.find(m => m.id === id);
 const subjectName = id => { const s = subjectById(id); return s ? s.name : ''; };
 const subjectNames = ids => ids.map(subjectName).filter(Boolean).join(' · ');
-/* A study block may reference a material AND any subjects. Credit goes to the block's subjects. */
+/* Subject comes first: every study block belongs to exactly ONE subject, optionally studied from a material.
+   Time (weighted by completion) counts toward that subject's daily goal. */
 function subjectsOfTask(t){
   if (!t || t.type === 'fixed') return [];
-  const own = (t.subjectIds || []).filter(id => subjectById(id));
-  if (own.length) return own;
+  if (t.subjectId && subjectById(t.subjectId)) return [t.subjectId];
   const m = t.matId && materialById(t.matId);
-  return m ? m.subjectIds : [];
+  return m && m.subjectIds[0] ? [m.subjectIds[0]] : [];
 }
 function colorForTask(t){
   if (t.type === 'fixed') return catOf(t).color;
-  const m = t.matId && materialById(t.matId);
-  if (m) return m.color;
   const s = subjectById(subjectsOfTask(t)[0]);
-  return s ? (s.color || '#7a8194') : '#7a8194';
+  if (s) return s.color || '#7a8194';
+  const m = t.matId && materialById(t.matId);
+  return m ? m.color : '#7a8194';
 }
 function subjectMinutes(list, completed){
   const out = {};
@@ -754,9 +878,20 @@ function subjectMinutes(list, completed){
   }
   return out;
 }
-function studyTitle(matId, subIds){
-  const m = matId && materialById(matId);
-  return m ? m.title : (subjectNames(subIds) || 'Study').replace(/ · /g, ' + ');
+/* "AR – FinalLap" (subject – material) or just "AR" */
+function blockTitle(sid, matId){
+  const s = subjectById(sid), m = matId && materialById(matId);
+  return s ? (m ? `${s.name} – ${m.title}` : s.name) : (m ? m.title : 'Study');
+}
+/* per-subject planned / done minutes for a day, vs the daily goal */
+function subjectStats(key){
+  const out = {};
+  for (const s of state.subjects) out[s.id] = { planned:0, done:0, goal:s.dailyGoalMin || 0 };
+  for (const t of (state.tasks[key] || [])){
+    const o = t.type === 'study' && out[t.subjectId];
+    if (o){ o.planned += t.dur; o.done += t.dur * ((t.pct || 0) / 100); }
+  }
+  return out;
 }
 
 /* ============================================================
@@ -797,7 +932,7 @@ function dayWindow(key){
   const S = state.settings;
   let lo = S.wake, hi = dayGet(key).bed || S.sleep;
   for (const t of allTasksOn(key)){
-    lo = Math.min(lo, Math.floor(t.start / 30) * 30);
+    lo = Math.min(lo, Math.floor((t.start - 20) / 30) * 30);
     hi = Math.max(hi, Math.ceil((t.start + t.dur) / 30) * 30);
   }
   return [Math.max(0, lo), Math.min(MAX_BED, hi)];
@@ -986,75 +1121,69 @@ function plannerWindow(key){
    PLANNER ENGINE
    Needs → chunks → scored placement.  Used by Auto-plan, Re-fit and carry-over.
 ============================================================ */
-function buildChunks(key, kept, capacityLeft){
-  const P = plan();
-  const keptStudy = kept.filter(t => t.type === 'study');
+function buildChunks(key, kept, capacityLeft, o){
+  o = o || {};
+  const P = plan(), keptStudy = kept.filter(t => t.type === 'study');
   const goal = {}, needS = {}, credS = {}, credM = {};
   for (const t of keptStudy){
-    const mins = t.done ? t.dur : t.dur * ((t.pct || 0) / 100);
+    /* finished / partly finished time counts in proportion; blocks that are only planned count in full */
+    const mins = (t.done || t.pct > 0) ? t.dur * ((t.pct || 0) / 100) : (o.countPlanned ? t.dur : 0);
     if (t.matId) credM[t.matId] = (credM[t.matId] || 0) + mins;
-    for (const sid of subjectsOfTask(t)) credS[sid] = (credS[sid] || 0) + mins;
+    if (t.subjectId) credS[t.subjectId] = (credS[t.subjectId] || 0) + mins;
   }
-  for (const s of state.subjects){
-    goal[s.id] = s.dailyGoalMin || 0;
-    needS[s.id] = Math.max(0, goal[s.id] - (credS[s.id] || 0));
-  }
+  for (const s of state.subjects){ goal[s.id] = s.dailyGoalMin || 0; needS[s.id] = Math.max(0, goal[s.id] - (credS[s.id] || 0)); }
+  const pdur = preferredDur(), minB = P.minBlock, maxB = Math.max(P.maxBlock, minB), MIN_NEED = 15;
   const items = [];
   for (const m of state.materials){
     const cap = Math.max(0, (m.total - m.done) * m.unitMin - (credM[m.id] || 0));
-    if (cap < P.minBlock) continue;
-    const own = m.dailyGoalMin || 0;
-    items.push({ key:'m:' + m.id, m, cap, own, needM: Math.max(0, own - (credM[m.id] || 0)) });
+    if (cap >= minB) items.push({ key:'m:' + m.id, m, cap, own:m.dailyGoalMin || 0, needM:Math.max(0, (m.dailyGoalMin || 0) - (credM[m.id] || 0)) });
   }
-  const pdur = preferredDur(), minB = P.minBlock, maxB = Math.max(P.maxBlock, minB), MIN_NEED = 15;
   const assigned = {}, chunks = [];
   let total = keptStudy.reduce((a, t) => a + t.dur, 0), capacity = capacityLeft;
   for (let guard = 0; guard < 80 && chunks.length < 14; guard++){
     let best = null;
-    for (const it of items){
-      if (it.cap < minB) continue;
-      let subNeed = 0, subNeedMin = 0;
-      for (const sid of it.m.subjectIds){
-        if (goal[sid] > 0){ subNeed += needS[sid] / goal[sid]; subNeedMin = Math.max(subNeedMin, needS[sid]); }
-      }
-      const want = Math.min(it.cap, Math.max(subNeedMin, it.needM));
-      if (want < MIN_NEED) continue;
-      const ownFrac = it.own > 0 ? it.needM / it.own : 0;
-      const behind = 1 - clamp(it.m.done / Math.max(1, it.m.total), 0, 1);
-      const pr = 0.6 * subNeed + 0.4 * ownFrac + 0.25 * behind - 0.18 * (assigned[it.key] || 0);
-      if (!best || pr > best.pr + 1e-9 || (Math.abs(pr - best.pr) <= 1e-9 && want > best.want)) best = { kind:'mat', it, want, pr, key:it.key };
-    }
+    /* subject first: the subject furthest from its goal */
     for (const s of state.subjects){
-      if (needS[s.id] < MIN_NEED) continue;
-      if (items.some(it => it.cap >= minB && it.m.subjectIds.includes(s.id))) continue;
-      const key2 = 's:' + s.id;
-      const pr = 0.6 * (needS[s.id] / Math.max(1, goal[s.id])) + 0.1 - 0.18 * (assigned[key2] || 0);
-      if (!best || pr > best.pr + 1e-9) best = { kind:'subj', s, want:needS[s.id], pr, key:key2 };
+      if ((o.only && s.id !== o.only) || needS[s.id] < MIN_NEED) continue;
+      const pr = 0.7 * (needS[s.id] / Math.max(1, goal[s.id])) + 0.1 - 0.18 * (assigned['s:' + s.id] || 0);
+      if (!best || pr > best.pr + 1e-9) best = { sid:s.id, pr, want:needS[s.id], it:null };
+    }
+    /* a material with its own daily target can pull in time even when the subject goal is met */
+    for (const it of items){
+      if (it.needM < MIN_NEED || (o.only && !it.m.subjectIds.includes(o.only))) continue;
+      const sid = (o.only && it.m.subjectIds.includes(o.only)) ? o.only : (it.m.subjectIds.find(x => needS[x] >= MIN_NEED) || it.m.subjectIds[0]);
+      if (!sid) continue;
+      const pr = 0.4 * (it.needM / Math.max(1, it.own)) + 0.1 - 0.18 * (assigned[it.key] || 0);
+      if (!best || pr > best.pr + 1e-9) best = { sid, pr, want:it.needM, it };
     }
     if (!best) break;
-    const k = Math.max(1, Math.round(best.want / pdur));
-    let dur = clamp(roundTo(best.want / k, 5), minB, maxB);
-    if (best.kind === 'mat') dur = Math.min(dur, Math.floor(best.it.cap / 5) * 5);
+    if (!best.it){   /* pick which material to study this subject from (or none) */
+      let top = null;
+      for (const it of items){
+        if (it.cap < minB || !it.m.subjectIds.includes(best.sid)) continue;
+        const sc = 0.4 * (it.own > 0 ? it.needM / it.own : 0) + 0.25 * (1 - clamp(it.m.done / Math.max(1, it.m.total), 0, 1)) - 0.18 * (assigned[it.key] || 0);
+        if (!top || sc > top.sc) top = { it, sc };
+      }
+      best.it = top ? top.it : null;
+    }
+    const want = best.it ? Math.min(best.want, best.it.cap) : best.want;
+    const k = Math.max(1, Math.round(want / pdur));
+    let dur = clamp(roundTo(want / k, 5), minB, maxB);
+    if (best.it) dur = Math.min(dur, Math.floor(best.it.cap / 5) * 5);
     const overCap = P.maxDay > 0 && total + dur > P.maxDay;
     if (dur < minB || capacity < dur || overCap){
-      if (best.kind === 'mat') best.it.cap = 0; else needS[best.s.id] = 0;
+      if (best.it && best.it.needM >= MIN_NEED && needS[best.sid] < MIN_NEED) best.it.needM = 0; else needS[best.sid] = 0;
       continue;
     }
     capacity -= dur + P.breakLen; total += dur;
-    assigned[best.key] = (assigned[best.key] || 0) + 1;
-    if (best.kind === 'mat'){
-      const subs = best.it.m.subjectIds;
-      for (const sid of subs) needS[sid] = Math.max(0, (needS[sid] || 0) - dur);
-      best.it.needM = Math.max(0, best.it.needM - dur); best.it.cap -= dur;
-      chunks.push({ matId:best.it.m.id, subs:[...subs], dur, title:best.it.m.title });
-    } else {
-      needS[best.s.id] = Math.max(0, needS[best.s.id] - dur);
-      chunks.push({ matId:null, subs:[best.s.id], dur, title:best.s.name });
-    }
+    assigned['s:' + best.sid] = (assigned['s:' + best.sid] || 0) + 1;
+    needS[best.sid] = Math.max(0, needS[best.sid] - dur);
+    if (best.it){ assigned[best.it.key] = (assigned[best.it.key] || 0) + 1; best.it.needM = Math.max(0, best.it.needM - dur); best.it.cap -= dur; }
+    const matId = best.it ? best.it.m.id : null;
+    chunks.push({ matId, subjectId:best.sid, subs:[best.sid], dur, title:blockTitle(best.sid, matId) });
   }
   chunks.forEach((c, i) => { c.rank = (P.hardFirst && chunks.length > 1) ? 1 - i / (chunks.length - 1) : 0.5; });
-  const unmet = Object.keys(needS).reduce((a, k) => a + needS[k], 0);
-  return { chunks, unmet };
+  return { chunks, unmet:Object.keys(needS).reduce((a, k) => a + needS[k], 0) };
 }
 
 /* score every 15-min start in the free intervals, place chunks one by one (most important first) */
@@ -1118,10 +1247,11 @@ function placeEngine(chunks, free, placed, o){
 /* ============================================================
    AUTO-PLAN
 ============================================================ */
-function autoPlan(){
+function autoPlan(opts){
+  opts = opts || {};
   const key = state.date, P = plan();
   if (key < todayKey()){ toast('That day is over'); return; }
-  if (!state.subjects.length && !state.materials.length){ toast('Add a subject first'); return; }
+  if (!state.subjects.length){ toast('Add a subject first'); return; }
   const info = dayGet(key);
   let [lo, hi] = plannerWindow(key);
   const ramp = info.startedAt == null;
@@ -1134,21 +1264,22 @@ function autoPlan(){
   const before = snapState();
   const concrete = tasksOn(key);
   const rec = allTasksOn(key).filter(t => t.virtual);
-  const kept = concrete.filter(t => t.type === 'fixed' || t.done || ((t.pct || 0) > 0 && key === todayKey() && t.start + t.dur <= lo));
+  const kept = opts.only ? [...concrete]
+    : concrete.filter(t => t.type === 'fixed' || t.done || ((t.pct || 0) > 0 && key === todayKey() && t.start + t.dur <= lo));
   const buf = P.fixedBuffer;
   const busy = [...kept, ...rec].map(t => t.type === 'fixed' ? { start:t.start - buf, dur:t.dur + 2 * buf } : { start:t.start, dur:t.dur });
   const free = freeIntervals(busy, lo, hi, P.minBlock);
   if (!free.length){ toast('No free time'); return; }
   const capacity = free.reduce((a, [s, e]) => a + (e - s), 0);
-  const { chunks, unmet } = buildChunks(key, kept, capacity);
+  const { chunks, unmet } = buildChunks(key, kept, capacity, { only:opts.only, countPlanned:!!opts.only });
   if (!chunks.length){ toast('Goals already met'); return; }
 
   const placed = kept.filter(t => t.type === 'study').map(t => ({ start:t.start, end:t.start + t.dur, subs:subjectsOfTask(t) }));
   const { out } = placeEngine(chunks, free, placed, { key, lo, hi, brk:P.breakLen, shrinkFrac:0.3, ramp });
   if (!out.length){ toast('No room for a block'); return; }
   const created = out.map(p => ({
-    id:uid(), type:'study', matId:p.chunk.matId, subjectId:p.chunk.subs[0] || null, subjectIds:[...p.chunk.subs],
-    title:p.chunk.title, start:p.start, dur:p.dur, done:false, pct:0, eff:0
+    id:uid(), type:'study', matId:p.chunk.matId, subjectId:p.chunk.subjectId, subjectIds:[p.chunk.subjectId],
+    title:p.chunk.title, note:'', start:p.start, dur:p.dur, done:false, pct:0, eff:0
   })).sort((a, b) => a.start - b.start);
   state.tasks[key] = [...kept, ...created];
   resolve(state.tasks[key], key);
@@ -1156,7 +1287,7 @@ function autoPlan(){
   scrollToTime(created[0].start);
   haptic([10, 30, 10]);
   const mins = created.reduce((a, t) => a + t.dur, 0);
-  offerUndo(`${created.length} block${created.length > 1 ? 's' : ''} · ${fmtDur(mins)}${unmet > 20 ? ' · some goals won\'t fit' : ''}`, before);
+  offerUndo(opts.only ? `+${fmtDur(mins)} ${subjectName(opts.only)}` : `${created.length} block${created.length > 1 ? 's' : ''} · ${fmtDur(mins)}${unmet > 20 ? ' · some goals won\'t fit' : ''}`, before);
 }
 
 /* ============================================================
@@ -1227,8 +1358,8 @@ function carryBlocks(blocks, toKey, removeFromToday){
   const dest = tasksOn(toKey);
   for (const t of blocks){
     const rem = t.pct > 0 ? Math.max(15, roundTo(t.dur * (1 - t.pct / 100), 5)) : t.dur;
-    dest.push({ id:uid(), type:'study', matId:t.matId || null, subjectId:(t.subjectIds || [])[0] || null,
-                subjectIds:[...(t.subjectIds || [])], title:t.title, start:cur, dur:rem, done:false, pct:0, eff:0, carried:true });
+    dest.push({ id:uid(), type:'study', matId:t.matId || null, subjectId:t.subjectId || null,
+                subjectIds:t.subjectId ? [t.subjectId] : [], title:t.title, note:t.note || '', start:cur, dur:rem, done:false, pct:0, eff:0, carried:true });
     cur += rem + P.breakLen; n++;
     if (removeFromToday){ const src = tasksOn(taskDate(t.id) || state.date); const i = src.indexOf(t); if (i >= 0) src.splice(i, 1); }
     else t.carried = true;
@@ -1361,6 +1492,26 @@ function renderWeek(){
   }).join('');
 }
 const matPct = m => Math.round((m.done / Math.max(1, m.total)) * 100);
+/* Subjects tab: how much of each daily goal is planned (light) and done (solid) */
+function renderSubjects(){
+  const ss = subjectStats(state.date), box = $('#mats');
+  box.innerHTML = state.subjects.map(s => {
+    const x = ss[s.id], g = x.goal, gap = g ? Math.max(0, g - x.planned) : 0;
+    const pl = g ? Math.min(100, x.planned / g * 100) : (x.planned ? 100 : 0), dn = g ? Math.min(100, x.done / g * 100) : 0;
+    const foot = !g ? (x.planned ? 'No goal' : 'No goal set') : gap > 0 ? `${fmtDur(gap)} unplanned` : (x.done >= g ? 'Goal done ✓' : 'Fully planned');
+    return `<button class="sg" style="--c:${s.color}" data-sid="${s.id}">
+      <div class="sg-hd"><span class="sg-n">${esc(s.name)}</span><span class="sg-v">${Math.round(x.planned)}${g ? '<i>/' + g + '</i>' : ''}m</span></div>
+      <div class="track two"><i class="pl" style="width:${pl}%"></i><i class="dn" style="width:${dn}%"></i></div>
+      <div class="sg-f ${gap > 0 ? 'gap' : 'ok'}">${foot}</div></button>`;
+  }).join('') + `<button class="sg add" id="addSubj"><span>+</span>Subject</button>`;
+}
+function renderGoals(){
+  const tab = state.prefs.gp === 'materials' ? 'materials' : 'subjects', off = !!state.prefs.gpOff;
+  $('#goalsPanel').classList.toggle('off', off);
+  document.querySelectorAll('#gpTabs button').forEach(b => b.classList.toggle('on', b.dataset.gp === tab));
+  if (off) return;
+  tab === 'subjects' ? renderSubjects() : renderMats();
+}
 function renderMats(){
   const add = `<button class="mat add" id="addMat"><span>+</span>Material</button>`;
   $('#mats').innerHTML = state.materials.map(m => `
@@ -1386,17 +1537,20 @@ function renderTimeline(){
   html += `<div class="now-line" id="nowLine" style="display:none"></div>`;
   const fresh = lastRender.key === key;
   for (const t of list){
-    const top = (t.start - lo) * PXPM, h = Math.max(t.dur * PXPM, 24), fixed = t.type === 'fixed';
-    const tag = fixed ? ` · ${catOf(t).name}` : (t.pct > 0 && !t.done ? ` · ${t.pct}%` : '');
+    const top = (t.start - lo) * PXPM, h = Math.max(t.dur * PXPM, 26), fixed = t.type === 'fixed';
+    const p = t.pct || 0, part = !fixed && p > 0 && p < 100;
+    const tag = fixed ? ` · ${catOf(t).name}` : (part ? ` · ${p}%` : '');
     const isNew = fresh && !lastRender.ids.has(t.id);
     html += `<div class="blk ${t.done ? 'done' : ''} ${fixed ? 'fixed' : ''} ${t.dur <= 30 ? 'sm' : ''} ${t.carried ? 'carried' : ''} ${isNew ? 'enter' : ''}"
       data-id="${t.id}" style="top:${top}px;height:${h}px;--c:${colorForTask(t)}">
+      ${!fixed && p > 0 ? `<div class="pfill" style="width:${p}%"></div>` : ''}
       ${fixed ? '<div class="lock"></div>' : '<div class="grip"></div>'}
       <div class="blk-body">
         <div class="blk-time">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)}${tag}${t.virtual ? ' ↻' : ''}${t.carried ? ' →' : ''}</div>
         <div class="blk-title">${esc(t.title)}</div>
+        ${t.note && h >= 58 ? `<div class="blk-note">${esc(trunc(t.note, 54))}</div>` : ''}
       </div>
-      ${fixed ? '' : `<button class="chk" aria-label="toggle done">${ICON.check}</button>`}
+      ${fixed ? '' : `<button class="chk ${part ? 'part' : ''}" style="--p:${p}" aria-label="toggle done">${part ? `<b>${p}</b>` : ICON.check}</button>`}
     </div>`;
   }
   if (!list.length) html += `<div class="empty">Tap the timeline to add a block</div>`;
@@ -1490,12 +1644,40 @@ function refitSummary(r){
   return 'Re-fit · ' + parts.join(' · ');
 }
 function toggleDone(t, force){
-  const next = force != null ? force : !t.done;
+  const next = force != null ? force : !(t.pct >= 100);
   t.done = next; t.pct = next ? 100 : 0;
   if (next) learnFrom(t, false); else { state.history = state.history.filter(r => r.blockId !== t.id); modelDirty = true; }
   save(); haptic(next ? 10 : 5); render();
-  if (next){ const el = document.querySelector(`.blk[data-id="${t.id}"] .chk`); pop(el); }
+  if (next){ const el = document.querySelector(`.blk[data-id="${t.id}"] .chk`); pop(el); onBlockCompleted(t); }
 }
+
+/* ---------- post-completion review: non-blocking card — credit earned, focus stars, notes ---------- */
+let bcTimer = null, bcId = null;
+function onBlockCompleted(t, opts){
+  if (t.type !== 'study' || (opts && opts.fromSheet)) return;
+  const key = taskDate(t.id) || state.date, ss = t.subjectId ? subjectStats(key)[t.subjectId] : null;
+  const line = ss ? `+${fmtDur(t.dur)} · ${subjectName(t.subjectId)} ${Math.round(ss.done)}${ss.goal ? ' / ' + ss.goal : ''}m` : `+${fmtDur(t.dur)}`;
+  bcId = t.id;
+  const card = $('#bcard');
+  card.innerHTML = `<div class="bc-top"><span class="bc-ic">${ICON.check}</span><div class="bc-t"><b>${esc(trunc(t.title, 30))}</b><small>${esc(line)}</small></div><button class="bc-btn" data-bc="undo">Undo</button></div>
+    <div class="bc-row"><span class="bc-q">Focus?</span>${[1,2,3,4,5].map(i => `<button class="star" data-bc="s${i}">★</button>`).join('')}<button class="bc-btn" data-bc="open">Note</button></div>`;
+  card.classList.add('show');
+  clearTimeout(bcTimer); bcTimer = setTimeout(hideBlockCard, 7500);
+}
+function hideBlockCard(){ $('#bcard').classList.remove('show'); bcId = null; }
+$('#bcard').addEventListener('click', e => {
+  const b = e.target.closest('[data-bc]');
+  if (!b || !bcId) return;
+  const t = findTask(bcId);
+  if (!t) return hideBlockCard();
+  const k = b.dataset.bc;
+  if (/^s[1-5]$/.test(k)){
+    t.eff = parseInt(k[1], 10); learnFrom(t, false); save(); haptic(6);
+    document.querySelectorAll('#bcard .star').forEach((s, i) => s.classList.toggle('on', i < t.eff));
+    clearTimeout(bcTimer); bcTimer = setTimeout(hideBlockCard, 1500);
+  } else if (k === 'undo'){ hideBlockCard(); toggleDone(t, false); }
+  else if (k === 'open'){ const id = t.id; hideBlockCard(); openBlockSheet(id); }
+});
 
 function renderStats(){
   const st = dayStats(state.date), w = workload(state.date), s = streak();
@@ -1511,7 +1693,7 @@ function renderStats(){
   sk.classList.toggle('on', s >= 2);
 }
 function render(){
-  renderWeek(); renderMats(); renderTimeline(); renderStats(); renderDayBar();
+  renderWeek(); renderGoals(); renderTimeline(); renderStats(); renderDayBar();
 }
 function scrollToTime(min, instant){
   const [lo] = dayWindow();
@@ -1650,7 +1832,15 @@ function endMatHold(){
 }
 window.addEventListener('pointerup', endMatHold);
 window.addEventListener('pointercancel', endMatHold);
+$('#gpTabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-gp]');
+  if (!b) return;
+  state.prefs.gp = b.dataset.gp; state.prefs.gpOff = false; save(); renderGoals(); haptic(3);
+});
+$('#gpToggle').addEventListener('click', () => { state.prefs.gpOff = !state.prefs.gpOff; save(); renderGoals(); haptic(3); });
 matsEl.addEventListener('click', e => {
+  const sg = e.target.closest('.sg');
+  if (sg){ sg.id === 'addSubj' ? openSheet('newsubj', { draft:{ name:'', dailyGoalMin:60 } }) : openSheet('subject', { id:sg.dataset.sid }); return; }
   const b = e.target.closest('.mstep');
   if (b){
     if (mHold.fired){ mHold.fired = false; return; }
@@ -1669,21 +1859,21 @@ matsEl.addEventListener('click', e => {
 const sheet = $('#sheet'), backdrop = $('#backdrop');
 const sheetStack = [];
 let sheetOpen = false;
-const PARENT_TITLE = { settings:'Settings', set:'Settings', review:'Review', newblock:'New block', block:'Block', mat:'Material' };
+const PARENT_TITLE = { settings:'Settings', set:'Settings', review:'Review', add:'New block', block:'Block', mat:'Material', subject:'Subject' };
 
 function setCtx(mode, p){
   p = p || {};
-  Object.assign(sheetCtx, { mode, id:p.id || null, recurringId:p.recurringId || null, draft:p.draft || null, phase:p.phase || null, tab:p.tab || null, armed:false });
+  Object.assign(sheetCtx, { mode, id:p.id || null, recurringId:p.recurringId || null, draft:p.draft || null, phase:p.phase || null, tab:p.tab || null, armed:false, acc:false });
   if (mode === 'mat' && sheetCtx.id) sheetCtx.draft = materialById(sheetCtx.id) || null;
 }
 const ctxSnap = () => ({ mode:sheetCtx.mode, id:sheetCtx.id, recurringId:sheetCtx.recurringId, draft:sheetCtx.draft, phase:sheetCtx.phase, tab:sheetCtx.tab });
 function showSheet(){
-  sheetOpen = true; backdrop.classList.add('show'); sheet.classList.add('show'); sheet.scrollTop = 0;
+  sheetOpen = true; backdrop.classList.add('show'); sheet.classList.add('show'); sheet.scrollTop = 0; $('#toast').classList.add('top');
   if (NATIVE){ try { NATIVE.setSheetOpen(true); } catch(_){} }
 }
 function hideSheet(){
   sheetOpen = false; sheetStack.length = 0; sheetCtx.mode = null;
-  backdrop.classList.remove('show'); sheet.classList.remove('show');
+  backdrop.classList.remove('show'); sheet.classList.remove('show'); $('#toast').classList.remove('top');
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   if (NATIVE){ try { NATIVE.setSheetOpen(false); } catch(_){} }
 }
@@ -1714,7 +1904,8 @@ function renderSheet(kind){
   switch (sheetCtx.mode){
     case 'block':     renderBlockSheet(); break;
     case 'recurring': renderRecurringSheet(); break;
-    case 'newblock':  renderNewBlockSheet(); break;
+    case 'add':       renderAddSheet(); break;
+    case 'subject':   renderSubjectSheet(); break;
     case 'settings':  renderSettingsHome(); break;
     case 'set':       renderSettingsGroup(); break;
     case 'mat':       renderMatSheet(); break;
@@ -1843,10 +2034,19 @@ function refreshFields(){
     const p = b.dataset.a.split(':'), v = parseInt(p[p.length - 1], 10), sp = fieldSpec(p.slice(1, -1).join(':'));
     if (sp) b.classList.toggle('sel', sp.get() === v);
   });
-  const sub = sheet.querySelector('[data-live="sub"]');
-  if (sub) sub.textContent = liveSub();
+  const q = k => sheet.querySelector(`[data-live="${k}"]`);
+  if (q('sub')) q('sub').textContent = liveSub();
+  if (q('strip')) q('strip').innerHTML = stripInner();
+  if (q('conflict')) q('conflict').textContent = conflictText();
+  const t = sheetCtx.mode === 'block' ? findTask(sheetCtx.id) : null;
+  if (t && t.type === 'study'){
+    const p = t.pct || 0;
+    if (q('pct')) q('pct').textContent = p + '%';
+    if (q('credit')) q('credit').textContent = creditText(t);
+    sheet.querySelectorAll('input.range').forEach(r => { r.value = p; r.style.setProperty('--v', p + '%'); });
+  }
 }
-const draftOnly = () => ['newblock','newsubj','startday','endday'].includes(sheetCtx.mode) || (sheetCtx.mode === 'mat' && !sheetCtx.id);
+const draftOnly = () => ['add','newsubj','startday','endday'].includes(sheetCtx.mode) || (sheetCtx.mode === 'mat' && !sheetCtx.id);
 function afterChange(quiet){
   const mode = sheetCtx.mode;
   if (!mode) return;
@@ -1856,57 +2056,47 @@ function afterChange(quiet){
 }
 
 /* ============================================================
-   STUDY BLOCK PICKERS — a block can reference a material AND subjects
+   BLOCK SHEET — progress first (the thing you touch most), then note, time, details
 ============================================================ */
-function studyPickers(o){
-  const subs = new Set(o.subjectIds || []);
-  const mats = state.materials.map(m => `<button class="mchip ${o.matId === m.id ? 'sel' : ''}" data-a="pm:${m.id}"><span class="cdot" style="background:${m.color}"></span>${esc(m.title)}</button>`).join('');
-  const sj = state.subjects.map(s => `<button class="mchip ${subs.has(s.id) ? 'sel' : ''}" data-a="ps:${s.id}"><span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join('');
-  return `<div class="sec">Material</div><div class="chiprow">${mats}<button class="mchip add" data-a="addmat">+</button></div>
-          <div class="sec">Subjects</div><div class="chiprow">${sj}<button class="mchip add" data-a="addsub">+</button></div>`;
+const materialsFor = sid => state.materials.filter(m => m.subjectIds.includes(sid));
+const retitle = t => { if (t.type === 'study') t.title = blockTitle(t.subjectId, t.matId); };
+const creditText = t => { const s = subjectName(t.subjectId); return s ? `${fmtDur(t.dur * (t.pct || 0) / 100)} of ${fmtDur(t.dur)} counts toward ${s}` : ''; };
+const rangeHtml = (f, v) => `<input type="range" class="range" min="0" max="100" step="5" value="${v}" data-f="${f}" style="--v:${v}%">`;
+function detailChips(t){
+  const subj = state.subjects.map(s => `<button class="mchip ${t.subjectId === s.id ? 'sel' : ''}" data-a="bs:${s.id}"><span class="cdot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join('');
+  const mats = materialsFor(t.subjectId).map(m => `<button class="mchip ${t.matId === m.id ? 'sel' : ''}" data-a="bm:${m.id}">${esc(m.title)}</button>`).join('');
+  return `<div class="sec" style="margin-top:6px">Subject</div><div class="chiprow">${subj}</div>
+    <div class="sec">Material</div><div class="chiprow"><button class="mchip ${!t.matId ? 'sel' : ''}" data-a="bm:">None</button>${mats}</div>`;
 }
-/* returns true when the action was a picker action */
-function pickerAction(o, a, onChange){
-  if (a.startsWith('pm:')){
-    const id = a.slice(3);
-    if (o.matId === id) o.matId = null;
-    else { o.matId = id; const m = materialById(id); if (m && m.subjectIds.length) o.subjectIds = [...m.subjectIds]; }
-  } else if (a.startsWith('ps:')){
-    const id = a.slice(3), s = new Set(o.subjectIds || []);
-    s.has(id) ? s.delete(id) : s.add(id);
-    o.subjectIds = state.subjects.filter(x => s.has(x.id)).map(x => x.id);
-  } else if (a === 'addsub'){
-    pushSheet('newsubj', { draft:{ name:'', dailyGoalMin:60, after:s => { o.subjectIds = [...(o.subjectIds || []), s.id]; onChange && onChange(); renderSheet(); } } });
-    return true;
-  } else if (a === 'addmat'){
-    pushSheet('mat', { draft:{ title:'', subjectIds:[...(o.subjectIds || [])], total:20, unitMin:6, dailyGoalMin:30, done:0,
-      after:m => { o.matId = m.id; if (m.subjectIds.length) o.subjectIds = [...m.subjectIds]; onChange && onChange(); renderSheet(); } } });
-    return true;
-  } else return false;
-  o.subjectId = (o.subjectIds || [])[0] || null;
-  onChange && onChange();
-  return true;
+const starsHtml = t => `<div class="stars">${[1,2,3,4,5].map(i => `<button class="star ${(t.eff || 0) >= i ? 'on' : ''}" data-a="e${i}">★</button>`).join('')}</div>`;
+function progressSection(t){
+  const p = t.pct || 0, ss = t.subjectId ? subjectStats(taskDate(t.id) || state.date)[t.subjectId] : null;
+  const slider = `<div class="prog-top"><b data-live="pct">${p}%</b><span data-live="credit">${esc(creditText(t))}</span></div>${rangeHtml('b.pct', p)}${presets('b.pct', p, [0,25,50,75,100], '%')}`;
+  if (p >= 100){   /* completed: show what it earned, then focus + notes; progress stays adjustable */
+    const g = ss ? ss.goal : 0, pl = g ? Math.min(100, ss.planned / g * 100) : 100, dn = g ? Math.min(100, ss.done / g * 100) : 0;
+    return `<div class="done-sum">
+      <div class="ds-top"><span class="ds-ic">${ICON.check}</span><div><b>Completed</b><small>${esc(fmtDur(t.dur))} counted toward ${esc(subjectName(t.subjectId) || 'your day')}</small></div><button class="ds-link" data-a="reopen">Reopen</button></div>
+      ${ss ? `<div class="track two" style="--c:${colorForTask(t)}"><i class="pl" style="width:${pl}%"></i><i class="dn" style="width:${dn}%"></i></div>
+        <div class="ds-goal">${esc(subjectName(t.subjectId))} · ${Math.round(ss.done)}${g ? ' / ' + g : ''}m today</div>` : ''}
+      <div class="ctl-row" style="border:0;padding:6px 0 0"><span>Focus</span>${starsHtml(t)}</div>
+    </div>
+    <button class="acc ${sheetCtx.adj ? 'open' : ''}" data-a="adj"><span>Adjust progress</span>${ICON.chev}</button>${sheetCtx.adj ? `<div class="prog">${slider}</div>` : ''}`;
+  }
+  return `<div class="prog">${slider}<div class="ctl-row" style="border:0;padding:2px 0 0"><span>Focus</span>${starsHtml(t)}</div></div>`;
 }
-
-/* ============================================================
-   BLOCK SHEET
-============================================================ */
 function renderBlockSheet(){
   const t = findTask(sheetCtx.id);
   if (!t){ hideSheet(); return; }
-  const fixed = t.type === 'fixed';
+  const fixed = t.type === 'fixed', p = t.pct || 0;
   sheet.innerHTML = `
     <div class="handle"></div>
     <div class="sheet-hd"><div class="dot" style="background:${colorForTask(t)}"></div>
-      <div style="min-width:0;flex:1"><div class="sheet-title">${esc(t.title)}</div><div class="sheet-sub" data-live="sub">${esc(liveSub())}</div></div></div>
-    ${fixed ? `<input class="inp" data-t="b.title" value="${esc(t.title)}" placeholder="Name" enterkeyhint="done" autocomplete="off" />${catChips(t.cat, 'bcat')}` : studyPickers(t)}
-    ${frow('Start', 'b.start', 15)}
-    ${frow('Length', 'b.dur', 5)}
+      <div style="min-width:0;flex:1"><div class="sheet-title" data-live="title">${esc(t.title)}</div><div class="sheet-sub" data-live="sub">${esc(liveSub())}</div></div></div>
+    ${fixed ? `<input class="inp" data-t="b.title" value="${esc(t.title)}" placeholder="Name" enterkeyhint="done" autocomplete="off" />${catChips(t.cat, 'bcat')}` : progressSection(t)}
+    <textarea class="note-in" data-t="b.note" rows="2" placeholder="${p >= 100 ? 'What did you cover?' : 'Note — e.g. revise Source A'}">${esc(t.note || '')}</textarea>
+    ${frow('Start', 'b.start', 15)}${frow('Length', 'b.dur', 5)}
     ${presets('b.dur', t.dur, fixed ? [30,60,90,120] : [25,45,60,90])}
-    ${fixed ? '' : `<div class="sec">Outcome</div>
-      ${frow('Done', 'b.pct', 10)}
-      ${presets('b.pct', t.pct || 0, [0,25,50,75,100], '%')}
-      <div class="ctl-row"><span>Focus</span><div class="stars">${[1,2,3,4,5].map(i => `<button class="star ${(t.eff || 0) >= i ? 'on' : ''}" data-a="e${i}">★</button>`).join('')}</div></div>`}
+    ${fixed ? '' : `<button class="acc ${sheetCtx.acc ? 'open' : ''}" data-a="acc"><span>Subject · Material</span><b>${esc(t.title)}</b>${ICON.chev}</button>${sheetCtx.acc ? detailChips(t) : ''}`}
     <div class="sheet-actions"><button class="btn danger" data-a="del">Delete</button><button class="btn primary" data-a="close">Done</button></div>`;
 }
 function renderRecurringSheet(){
@@ -1922,7 +2112,9 @@ function renderRecurringSheet(){
     <div class="sheet-actions"><button class="btn danger" data-a="rdel">Delete</button><button class="btn primary" data-a="close">Done</button></div>`;
 }
 
-/* ---------- new block ---------- */
+/* ============================================================
+   ADD BLOCK — 3 short steps: what → when → material & note
+============================================================ */
 function nextFreeStart(dur = 45){
   const [lo, hi] = dayWindow(), list = allTasksOn(state.date);
   let from = state.date === todayKey() ? nowMinutes() : lo;
@@ -1932,37 +2124,87 @@ function nextFreeStart(dur = 45){
 }
 function openNewBlock(opts){
   opts = opts || {};
-  const last = state.prefs.last || {};
-  const type = opts.type || last.type || 'study';
-  const mat = materialById(last.matId) || null;
-  const dur = type === 'fixed' ? (last.fixedDur || 60) : (last.studyDur || preferredDur());
-  const [lo, hi] = dayWindow();
-  const subjectIds = mat ? [...mat.subjectIds] : (last.subjectIds || []).filter(subjectById);
-  openSheet('newblock', { draft:{
-    type, cat:CATS[last.cat] ? last.cat : 'cl',
-    matId: mat ? mat.id : null,
-    subjectIds: subjectIds.length || mat ? subjectIds : (state.materials[0] ? [] : (state.subjects[0] ? [state.subjects[0].id] : [])),
-    title:'', repeat:false, days:[], dur,
-    start: opts.start != null ? clamp(opts.start, lo, Math.max(lo, hi - dur)) : nextFreeStart(dur)
-  }});
-  if (!sheetCtx.draft.matId && !sheetCtx.draft.subjectIds.length && state.materials[0] && type === 'study'){
-    sheetCtx.draft.matId = state.materials[0].id; sheetCtx.draft.subjectIds = [...state.materials[0].subjectIds]; renderSheet();
-  }
+  const last = state.prefs.last || {}, [lo, hi] = dayWindow();
+  const dur = clamp(last.studyDur || preferredDur(), MIN_STUDY, MAX_STUDY);
+  const d = { step:1, type:'study', cat:CATS[last.cat] ? last.cat : 'cl', subjectId:null, matId:null, note:'', title:'',
+              repeat:false, days:[], dur, start: opts.start != null ? clamp(opts.start, lo, Math.max(lo, hi - dur)) : nextFreeStart(dur), pinned: opts.start != null };
+  if (opts.subjectId && subjectById(opts.subjectId)){ d.subjectId = opts.subjectId; d.step = 2; }
+  openSheet('add', { draft:d });
 }
-function renderNewBlockSheet(){
+const dotsHtml = d => { const n = d.type === 'fixed' ? 2 : 3; return `<div class="steps">${Array.from({ length:n }, (_, i) => `<i class="${i + 1 === d.step ? 'on' : i + 1 < d.step ? 'past' : ''}"></i>`).join('')}</div>`; };
+const stepHead = (d, label) => `<div class="step-hd">${d.step > 1 ? `<button class="back-ic" data-a="aback" aria-label="Back">${ICON.back}</button>` : ''}<div class="step-t">${label}</div>${dotsHtml(d)}</div>`;
+/* proportional day strip with the new block highlighted — instant feedback on where it lands */
+function stripInner(){
+  const d = sheetCtx.draft, [lo, hi] = dayWindow(), span = Math.max(60, hi - lo);
+  let s = allTasksOn(state.date).map(t => { const a = (t.start - lo) / span * 100, w = t.dur / span * 100;
+    return `<i style="left:${a}%;width:${Math.max(1.2, w)}%;background:${colorForTask(t)};opacity:${t.type === 'fixed' ? .4 : .75}"></i>`; }).join('');
+  s += `<i class="new" style="left:${clamp((d.start - lo) / span * 100, 0, 100)}%;width:${Math.max(1.5, d.dur / span * 100)}%"></i>`;
+  return s;
+}
+function conflictText(){
+  const d = sheetCtx.draft, hit = allTasksOn(state.date).find(t => d.start < t.start + t.dur && d.start + d.dur > t.start);
+  return hit ? `Overlaps ${trunc(hit.title, 24)}` : '';
+}
+function renderAddSheet(){
   const d = sheetCtx.draft, fixed = d.type === 'fixed';
+  if (d.step === 1){
+    const ss = subjectStats(state.date);
+    const grid = state.subjects.map(s => { const x = ss[s.id], gap = x.goal && x.planned < x.goal;
+      return `<button class="sub-chip" data-a="as:${s.id}" style="--c:${s.color}"><i></i><span class="n">${esc(s.name)}</span><small class="${gap ? 'gap' : ''}">${x.goal ? `${Math.round(x.planned)}/${x.goal}m` : (x.planned ? fmtDur(x.planned) : 'no goal')}</small></button>`; }).join('');
+    sheet.innerHTML = `<div class="handle"></div>${stepHead(d, 'What are you studying?')}
+      <div class="subgrid">${grid}<button class="sub-chip add" data-a="addsub"><span class="n">+ Subject</span></button></div>
+      <div class="sec">Other</div>
+      <div class="chiprow cats">${CAT_KEYS.map(k => `<button class="mchip" data-a="af:${k}"><span class="cdot" style="background:${CATS[k].color}"></span>${CATS[k].name}</button>`).join('')}</div>
+      <div class="sheet-actions"><button class="btn ghost" data-a="close">Cancel</button></div>`;
+    return;
+  }
+  const subj = subjectById(d.subjectId), chip = fixed
+    ? `<span class="pick" style="--c:${CATS[d.cat].color}"><i></i>${CATS[d.cat].name}</span>`
+    : `<span class="pick" style="--c:${subj ? subj.color : '#7a8194'}"><i></i>${esc(subj ? subj.name : 'Study')}</span>`;
+  if (d.step === 2){
+    const mats = fixed ? [] : materialsFor(d.subjectId);
+    sheet.innerHTML = `<div class="handle"></div>${stepHead(d, 'When?')}
+      <div class="pickrow">${chip}</div>
+      <div class="mstrip" data-live="strip">${stripInner()}</div><div class="conflict" data-live="conflict">${esc(conflictText())}</div>
+      ${fixed ? `<input class="inp" data-t="nb.title" placeholder="${CATS[d.cat].name} — name (optional)" value="${esc(d.title || '')}" enterkeyhint="done" autocomplete="off" />` : ''}
+      ${frow('Start', 'n.start', 15)}${frow('Length', 'n.dur', 5)}
+      ${presets('n.dur', d.dur, fixed ? [30,60,90,120] : [25,45,60,90])}
+      ${fixed ? `<div class="ctl-row"><span>Repeat weekly</span>${tog('repeat:toggle', d.repeat)}</div>${d.repeat ? dayChips(d.days, 'nday') : ''}` : ''}
+      <div class="sheet-actions">${fixed
+        ? `<button class="btn primary" data-a="create">Add</button>`
+        : `<button class="btn ghost" data-a="create">Add</button><button class="btn primary" data-a="anext">${mats.length ? 'Material' : 'Note'} ›</button>`}</div>`;
+    return;
+  }
+  const mats = materialsFor(d.subjectId);
+  sheet.innerHTML = `<div class="handle"></div>${stepHead(d, 'Study from…')}
+    <div class="pickrow">${chip}<span class="pick plain">${fmtTime(d.start)} · ${fmtDur(d.dur)}</span></div>
+    <div class="chiprow"><button class="mchip ${!d.matId ? 'sel' : ''}" data-a="am:">No material</button>
+      ${mats.map(m => `<button class="mchip ${d.matId === m.id ? 'sel' : ''}" data-a="am:${m.id}">${esc(m.title)}</button>`).join('')}
+      <button class="mchip add" data-a="addmat">+</button></div>
+    <textarea class="note-in" data-t="nb.note" rows="2" placeholder="Note — e.g. revise Source A">${esc(d.note || '')}</textarea>
+    <div class="sheet-actions"><button class="btn primary" data-a="create">Add ${esc(blockTitle(d.subjectId, d.matId))}</button></div>`;
+}
+
+/* ============================================================
+   SUBJECT SHEET — how much of the goal is planned / done, and the quickest ways to close the gap
+============================================================ */
+function renderSubjectSheet(){
+  const s = subjectById(sheetCtx.id);
+  if (!s){ backSheet(); return; }
+  const x = subjectStats(state.date)[s.id], g = x.goal, gap = g ? Math.max(0, g - x.planned) : 0;
+  const pl = g ? Math.min(100, x.planned / g * 100) : (x.planned ? 100 : 0), dn = g ? Math.min(100, x.done / g * 100) : 0;
+  const blocks = (state.tasks[state.date] || []).filter(t => t.type === 'study' && t.subjectId === s.id).sort((a, b) => a.start - b.start);
+  const canPlan = state.date >= todayKey();
   sheet.innerHTML = `
     <div class="handle"></div>
-    <div class="chiprow" style="padding-top:0">
-      <button class="mchip ${!fixed ? 'sel' : ''}" data-a="type:study">Study</button>
-      <button class="mchip ${fixed ? 'sel' : ''}" data-a="type:fixed">Fixed</button></div>
-    ${fixed ? `${catChips(d.cat, 'ncat')}
-      <input class="inp" data-t="nb.title" style="margin-top:6px" placeholder="${CATS[d.cat].name}" value="${esc(d.title || '')}" enterkeyhint="done" autocomplete="off" />
-      <div class="ctl-row"><span>Repeat weekly</span>${tog('repeat:toggle', d.repeat)}</div>${d.repeat ? dayChips(d.days, 'nday') : ''}`
-      : studyPickers(d)}
-    ${frow('Start', 'n.start', 15)}${frow('Length', 'n.dur', 5)}
-    ${presets('n.dur', d.dur, fixed ? [30,60,90,120] : [25,45,60,90])}
-    <div class="sheet-actions"><button class="btn ghost" data-a="close">Cancel</button><button class="btn primary" data-a="create">Add</button></div>`;
+    <div class="sheet-hd"><div class="dot" style="background:${s.color}"></div><input class="inp title-in" data-t="s.name" value="${esc(s.name)}" enterkeyhint="done" autocomplete="off" /></div>
+    <div class="stats3"><div><b>${fmtDur(x.planned)}</b><small>Planned</small></div><div><b>${fmtDur(x.done)}</b><small>Done</small></div><div><b>${g ? fmtDur(g) : '—'}</b><small>Goal</small></div></div>
+    <div class="track two big" style="--c:${s.color}"><i class="pl" style="width:${pl}%"></i><i class="dn" style="width:${dn}%"></i></div>
+    <div class="gapline ${gap ? 'gap' : 'ok'}">${!g ? 'Set a daily goal to track it' : gap ? `${fmtDur(gap)} still unplanned` : (x.done >= g ? 'Goal reached' : 'Goal fully planned')}</div>
+    ${frow('Daily goal', 'sj:' + s.id, 15)}
+    ${blocks.length ? `<div class="sec">Today</div>` + blocks.map(t => `<div class="row tap" data-a="open:${t.id}"><div style="min-width:0"><div class="nm"><span class="cdot" style="background:${colorForTask(t)}"></span>${esc(t.title)}</div>
+      <div class="sub">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)} · ${t.dur}m${t.note ? ' · ' + esc(trunc(t.note, 28)) : ''}</div></div><div class="right"><div class="sub" style="margin:0">${t.pct || 0}%</div></div></div>`).join('') : ''}
+    <div class="sheet-actions"><button class="btn ghost" data-a="sadd">+ Block</button>${gap > 0 && canPlan ? `<button class="btn primary" data-a="sfill">Plan ${fmtDur(gap)}</button>` : `<button class="btn primary" data-a="close">Done</button>`}</div>`;
 }
 
 /* ---------- material (new + edit) ---------- */
@@ -2073,10 +2315,11 @@ function renderSettingsGroup(){
     soundRefresh();
     body = `${trow('Block starts', 'notif.start')}${trow('Block ends', 'notif.end')}${cfgRow('Heads-up', 'notif.lead')}${trow('Fixed blocks', 'notif.fixed')}
       <div class="sec">Day</div>${trow('Start-day reminder', 'notif.dayStart', fmtTime(S.wake))}${trow('Wrap-up reminder', 'notif.dayEnd', fmtTime(S.sleep - 30))}
-      <div class="sec">Sound</div>
-      <div class="ctl-row"><span>Alert sound<em>${esc(nativeSound.title)}</em></span><button class="btn ghost tiny" data-a="snd:pick">Choose</button></div>
-      ${nativeSound.custom ? `<div class="ctl-row"><span>Force custom sound<em>For phones that ignore it</em></span>${tog('snd:force', nativeSound.force)}</div>
-      <div class="ctl-row"><span>Preview</span><div style="display:flex;gap:6px"><button class="btn ghost tiny" data-a="snd:preview">Play</button><button class="btn ghost tiny" data-a="snd:clear">Default</button></div></div>` : ''}
+      <div class="sec">Sounds</div>
+      ${['start', 'end'].map(k => { const sn = nativeSound[k] || {}; return `
+        <div class="ctl-row"><span>${k === 'start' ? 'Start sound' : 'End sound'}<em>${esc(sn.title || 'Default')}</em></span>
+          <div style="display:flex;gap:6px">${sn.custom ? `<button class="btn ghost tiny" data-a="snd:preview:${k}">Play</button>` : ''}<button class="btn ghost tiny" data-a="snd:pick:${k}">Choose</button>${sn.custom ? `<button class="btn ghost tiny" data-a="snd:clear:${k}" aria-label="Use default">×</button>` : ''}</div></div>
+        ${sn.custom ? `<div class="ctl-row sub-row"><span>Force it<em>For phones that ignore it</em></span>${tog('snd:force:' + k, sn.force)}</div>` : ''}`; }).join('')}
       ${!nativeStatus.notif ? `<div class="ctl-row"><span>Notifications off</span><button class="btn ghost tiny" data-a="n:perm">Allow</button></div>` : ''}
       ${!nativeStatus.exact ? `<div class="ctl-row"><span>Exact timing off</span><button class="btn ghost tiny" data-a="n:exact">Allow</button></div>` : ''}
       <div class="ctl-row"><span>Test</span><button class="btn ghost tiny" data-a="n:test">Send</button></div>`;
@@ -2171,7 +2414,7 @@ function reviewDay(){
     ${rows ? `<div class="sec">Goals</div>${rows}` : ''}
     ${st.ts.length ? `<div class="sec">Blocks</div>` + [...st.ts].sort((a, b) => a.start - b.start).map(t => `
       <div class="row tap" data-a="open:${t.id}"><div style="min-width:0"><div class="nm"><span class="cdot" style="background:${colorForTask(t)}"></span>${esc(t.title)}</div>
-        <div class="sub">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)} · ${t.dur}m</div></div>
+        <div class="sub">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)} · ${t.dur}m${t.note ? ' · ' + esc(trunc(t.note, 30)) : ''}</div></div>
         <div class="right"><div class="sub" style="margin:0">${t.pct || 0}%</div><div class="sub" style="margin:0;color:#95a5bc;min-width:46px;text-align:right">${t.eff ? '★'.repeat(t.eff) : '—'}</div></div></div>`).join('')
       : `<div class="note">No study blocks.</div>`}`;
 }
@@ -2212,15 +2455,28 @@ function renderShareSheet(){
 function textSet(key, val, commit){
   const d = sheetCtx.draft;
   if (key === 'nb.title'){ d.title = val; return; }
+  if (key === 'nb.note'){ d.note = val; return; }
   if (key === 'sj.name'){ d.name = val; return; }
+  if (key === 's.name'){ const s = subjectById(sheetCtx.id); if (!s) return; s.name = val; if (commit){ if (!val.trim()) s.name = 'Subject'; normalizeState(); save(); render(); } return; }
+  if (key === 'b.note'){ const t = findTask(sheetCtx.id); if (!t) return; t.note = val; if (commit){ save(); render(); } return; }
   const finish = (obj, fallback) => { if (!val.trim()) obj.title = fallback; save(); render(); const h = sheet.querySelector('.sheet-title'); if (h && sheetCtx.mode !== 'mat') h.textContent = obj.title; };
   if (key === 'm.title'){ d.title = val; if (commit && sheetCtx.id) finish(d, 'Material'); return; }
   if (key === 'b.title'){ const t = findTask(sheetCtx.id); if (!t) return; t.title = val; if (commit) finish(t, catOf(t).name); return; }
   if (key === 'r.title'){ const r = state.recurring.find(x => x.id === sheetCtx.recurringId); if (!r) return; r.title = val; if (commit) finish(r, (CATS[r.cat] || CATS.cl).name); }
 }
-sheet.addEventListener('input', e => { if (e.target.dataset.t) textSet(e.target.dataset.t, e.target.value, false); });
+sheet.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.t) textSet(el.dataset.t, el.value, false);
+  else if (el.type === 'range'){ const sp = fieldSpec(el.dataset.f); if (sp){ sp.set(parseInt(el.value, 10)); afterChange(true); } }
+});
 sheet.addEventListener('change', e => {
   const el = e.target;
+  if (el.type === 'range'){
+    const t = sheetCtx.mode === 'block' ? findTask(sheetCtx.id) : null;
+    save(); render(); haptic(4);
+    if (t && t.pct >= 100) { renderSheet(); onBlockCompleted(t, { fromSheet:true }); }
+    return;
+  }
   if (el.matches('input.num')){
     const sp = fieldSpec(el.dataset.f);
     if (!sp) return;
@@ -2235,7 +2491,12 @@ sheet.addEventListener('change', e => {
   if (el.dataset.t) textSet(el.dataset.t, el.value, true);
 });
 sheet.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')){ e.preventDefault(); e.target.blur(); } });
-sheet.addEventListener('focusin', e => { if (e.target.matches('input.num')) setTimeout(() => { try { e.target.select(); } catch(_){} }, 0); });
+sheet.addEventListener('focusin', e => {
+  const el = e.target;
+  if (el.matches('input.num')) setTimeout(() => { try { el.select(); } catch(_){} }, 0);
+  /* keep the focused field visible above the keyboard */
+  if (el.matches('input,textarea')) setTimeout(() => { try { el.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(_){} }, 280);
+});
 
 /* hold a +/- button to repeat */
 const hold = { t:null, i:null, fired:false, a:null };
@@ -2285,11 +2546,21 @@ function handleAction(a, quiet){
   if (mode === 'block'){
     const t = findTask(sheetCtx.id);
     if (!t) return;
-    if (a.startsWith('bcat:')){ t.cat = a.slice(5); save(); render(); renderSheet(); }
+    const refresh = () => { retitle(t); save(); render(); renderSheet(); };
+    if (a === 'acc'){ sheetCtx.acc = !sheetCtx.acc; renderSheet(); }
+    else if (a === 'adj'){ sheetCtx.adj = !sheetCtx.adj; renderSheet(); }
+    else if (a === 'reopen'){ t.pct = 0; t.done = false; learnFrom(t, false); refresh(); }
+    else if (a.startsWith('bcat:')){ t.cat = a.slice(5); save(); render(); renderSheet(); }
     else if (/^e[1-5]$/.test(a)){ t.eff = parseInt(a[1], 10); learnFrom(t, false); save(); haptic(4); renderSheet(); }
+    else if (a.startsWith('bs:')){
+      t.subjectId = a.slice(3); t.subjectIds = [t.subjectId];
+      const m = t.matId && materialById(t.matId);
+      if (m && !m.subjectIds.includes(t.subjectId)) t.matId = null;
+      refresh();
+    }
+    else if (a.startsWith('bm:')){ t.matId = a.slice(3) || null; refresh(); }
     else if (a === 'del'){ deleteTaskObj(t); backSheet(); }
     else if (a === 'close') closeSheet();
-    else if (t.type === 'study') pickerAction(t, a, () => { t.title = studyTitle(t.matId, t.subjectIds); save(); render(); renderSheet(); });
     return;
   }
 
@@ -2305,35 +2576,54 @@ function handleAction(a, quiet){
     return;
   }
 
-  if (mode === 'newblock'){
+  if (mode === 'add'){
     const d = sheetCtx.draft, last = state.prefs.last || {}, [lo, hi] = dayWindow();
-    if (a === 'type:fixed'){ d.type = 'fixed'; d.dur = clamp(last.fixedDur || 60, MIN_FIXED, MAX_FIXED); }
-    else if (a === 'type:study'){ d.type = 'study'; d.repeat = false; d.dur = clamp(last.studyDur || preferredDur(), MIN_STUDY, MAX_STUDY); }
-    else if (a.startsWith('ncat:')) d.cat = a.slice(5);
-    else if (a === 'repeat:toggle'){ d.repeat = !d.repeat; if (d.repeat && !(d.days || []).length) d.days = [isoDow(state.date)]; }
-    else if (a.startsWith('nday:')) d.days = toggleIn(d.days || [], parseInt(a.slice(5), 10));
-    else if (a === 'close'){ backSheet(); return; }
+    if (a.startsWith('as:')){
+      d.type = 'study'; d.subjectId = a.slice(3); d.matId = null; d.step = 2;
+      d.dur = clamp(last.studyDur || preferredDur(), MIN_STUDY, MAX_STUDY);
+      if (!d.pinned) d.start = nextFreeStart(d.dur);
+      renderSheet('fwd'); haptic(4);
+    }
+    else if (a.startsWith('af:')){
+      d.type = 'fixed'; d.cat = a.slice(3); d.step = 2; d.dur = clamp(last.fixedDur || 60, MIN_FIXED, MAX_FIXED);
+      if (!d.pinned) d.start = nextFreeStart(d.dur);
+      renderSheet('fwd'); haptic(4);
+    }
+    else if (a === 'aback'){ d.step = Math.max(1, d.step - 1); renderSheet('back'); }
+    else if (a === 'anext'){ d.step = 3; renderSheet('fwd'); }
+    else if (a.startsWith('am:')){ d.matId = a.slice(3) || null; renderSheet(); }
+    else if (a === 'addsub') pushSheet('newsubj', { draft:{ name:'', dailyGoalMin:60, after:s => { d.type = 'study'; d.subjectId = s.id; d.matId = null; d.step = 2; renderSheet('fwd'); } } });
+    else if (a === 'addmat') pushSheet('mat', { draft:{ title:'', subjectIds:[d.subjectId], total:20, unitMin:6, dailyGoalMin:30, done:0, after:m => { d.matId = m.id; renderSheet(); } } });
+    else if (a === 'repeat:toggle'){ d.repeat = !d.repeat; if (d.repeat && !(d.days || []).length) d.days = [isoDow(state.date)]; renderSheet(); }
+    else if (a.startsWith('nday:')){ d.days = toggleIn(d.days || [], parseInt(a.slice(5), 10)); renderSheet(); }
+    else if (a === 'close') backSheet();
     else if (a === 'create'){
       const before = snapState();
       d.start = clamp(d.start, lo, Math.max(lo, hi - d.dur));
       if (d.type === 'fixed'){
         const title = (d.title || '').trim() || CATS[d.cat].name;
         if (d.repeat && d.days.length) state.recurring.push({ id:uid(), title, cat:d.cat, start:d.start, dur:d.dur, days:[...new Set(d.days)].sort((x, y) => x - y), until:null });
-        else tasksOn(state.date).push({ id:uid(), type:'fixed', cat:d.cat, title, start:d.start, dur:d.dur });
+        else tasksOn(state.date).push({ id:uid(), type:'fixed', cat:d.cat, title, note:'', start:d.start, dur:d.dur });
         lastPrefs({ type:'fixed', cat:d.cat, fixedDur:d.dur });
       } else {
-        if (!d.matId && !(d.subjectIds || []).length){ toast('Pick a material or subject'); return; }
-        tasksOn(state.date).push({ id:uid(), type:'study', matId:d.matId || null, subjectId:d.subjectIds[0] || null,
-          subjectIds:[...d.subjectIds], title:studyTitle(d.matId, d.subjectIds), start:d.start, dur:d.dur, done:false, pct:0, eff:0 });
-        lastPrefs({ type:'study', matId:d.matId || null, subjectIds:[...d.subjectIds], studyDur:d.dur });
+        if (!d.subjectId){ toast('Pick a subject'); return; }
+        tasksOn(state.date).push({ id:uid(), type:'study', matId:d.matId || null, subjectId:d.subjectId, subjectIds:[d.subjectId],
+          title:blockTitle(d.subjectId, d.matId), note:(d.note || '').trim(), start:d.start, dur:d.dur, done:false, pct:0, eff:0 });
+        lastPrefs({ type:'study', studyDur:d.dur });
       }
       resolve(tasksOn(state.date)); save(); backSheet(); render(); haptic(10);
       offerUndo('Block added', before, 3200);
-      return;
     }
-    else if (pickerAction(d, a)){ renderSheet(); return; }
-    else return;
-    renderSheet();
+    return;
+  }
+
+  if (mode === 'subject'){
+    const s = subjectById(sheetCtx.id);
+    if (!s) return;
+    if (a === 'close') closeSheet();
+    else if (a === 'sadd'){ const id = s.id; openNewBlock({ subjectId:id }); }
+    else if (a === 'sfill'){ const id = s.id; hideSheet(); autoPlan({ only:id }); }
+    else if (a.startsWith('open:')) pushSheet('block', { id:a.slice(5) });
     return;
   }
 
@@ -2552,8 +2842,9 @@ function buildDayPlanSVG(){
     body += txt(lineX - 30, cy + (big ? 29 : 25), fmtDur(t.dur), { size:19, weight:600, fill:'#6a7083', anchor:'end' });
     body += box(cardX, y + 6, cardW, rowH - 12, 18, c, `fill-opacity="${fixed ? 0.07 : 0.15}" stroke="${c}" stroke-opacity="${fixed ? 0.4 : 0.28}" ${fixed ? 'stroke-dasharray="7 6"' : ''}`);
     body += box(cardX, y + 6, 7, rowH - 12, 3.5, c);
-    body += txt(cardX + 32, cy - (big ? 1 : 0), trunc(t.title, big ? 34 : 38), { size:big ? 30 : 26, weight:700, fill:fixed ? '#c3c8d6' : '#f0f2f6' });
-    body += txt(cardX + 32, cy + (big ? 32 : 28), trunc(fixed ? catOf(t).name : (subjectNames(subjectsOfTask(t)) || 'Study'), 44), { size:big ? 22 : 20, weight:600, fill:'#868da1' });
+    const sub = fixed ? catOf(t).name : (t.note || '');          // study blocks already say "Subject – Material"
+    body += txt(cardX + 32, sub ? cy - (big ? 1 : 0) : cy + 10, trunc(t.title, big ? 34 : 38), { size:big ? 30 : 26, weight:700, fill:fixed ? '#c3c8d6' : '#f0f2f6' });
+    if (sub) body += txt(cardX + 32, cy + (big ? 32 : 28), trunc(sub, 46), { size:big ? 22 : 20, weight:600, fill:'#868da1' });
     prevEnd = t.start + t.dur; y += rowH;
   }
   body += slim(y + 22, 'Wind down', fmtTime(hi)); y += 54;
@@ -2629,7 +2920,7 @@ function buildDayReportSVG(){
     else body += `<circle cx="${P + 16}" cy="${cy}" r="12" fill="none" stroke="#6a7083" stroke-width="3" stroke-dasharray="4 5"/>`;
     body += box(P + 52, cy - 17, 6, 34, 3, c);
     body += txt(P + 74, cy - 2, trunc(t.title, 30), { size:26, weight:700, fill:(t.done || p >= 100) ? '#f0f2f6' : '#aab0c0' });
-    body += txt(P + 74, cy + 24, `${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)} · ${fmtDur(t.dur)}`, { size:19, weight:600, fill:'#6a7083' });
+    body += txt(P + 74, cy + 24, `${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)} · ${fmtDur(t.dur)}${t.note ? ' · ' + trunc(t.note, 30) : ''}`, { size:19, weight:600, fill:'#6a7083' });
     body += txt(W - P, cy + 8, t.eff ? '★'.repeat(t.eff) : (p ? p + '%' : 'missed'), { size:t.eff ? 24 : 22, weight:700, fill:t.eff ? '#e0b57c' : '#6a7083', anchor:'end' });
     y += 72;
   }
@@ -2643,14 +2934,16 @@ function buildDayReportSVG(){
 /* ============================================================
    SOUND (Android): pick a custom alert sound, optionally force-play it
 ============================================================ */
-let nativeSound = { title:'Default', custom:false, force:false };
-function soundRefresh(){ if (NATIVE && NATIVE.getSound){ try { nativeSound = JSON.parse(NATIVE.getSound()); } catch(_){} } }
+let nativeSound = { start:{ title:'Default', custom:false, force:false }, end:{ title:'Default', custom:false, force:false } };
+function soundRefresh(){ if (NATIVE && NATIVE.getSounds){ try { nativeSound = JSON.parse(NATIVE.getSounds()); } catch(_){} } }
+/* k = "pick:start" | "preview:end" | "clear:start" | "force:end" */
 function soundAction(k){
-  if (!NATIVE || !NATIVE.getSound) return;
-  if (k === 'pick') NATIVE.pickSound();
-  else if (k === 'preview') NATIVE.previewSound();
-  else if (k === 'clear'){ NATIVE.clearSound(); soundRefresh(); renderSheet(); }
-  else if (k === 'force'){ NATIVE.setSoundForce(!nativeSound.force); soundRefresh(); renderSheet(); }
+  if (!NATIVE || !NATIVE.getSounds) return;
+  const [act, kind] = k.split(':');
+  if (act === 'pick') NATIVE.pickSound(kind);
+  else if (act === 'preview') NATIVE.previewSound(kind);
+  else if (act === 'clear'){ NATIVE.clearSound(kind); soundRefresh(); renderSheet(); }
+  else if (act === 'force'){ NATIVE.setSoundForce(kind, !(nativeSound[kind] || {}).force); soundRefresh(); renderSheet(); }
 }
 window.__ffSoundChanged = () => { soundRefresh(); if (sheetCtx.mode === 'set') renderSheet(); };
 

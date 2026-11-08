@@ -42,6 +42,7 @@ import app.focusflow.data.StateStore
 import app.focusflow.notify.Notifier
 import app.focusflow.notify.Scheduler
 import app.focusflow.notify.Sound
+import app.focusflow.notify.SoundKind
 import app.focusflow.util.Bg
 import org.json.JSONObject
 import java.io.File
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
     @Volatile
     private var pageReady = false
     private val pendingJs = ArrayList<String>()
+    private var soundKind = SoundKind.START
     private var fileCallback: ValueCallback<Array<Uri>>? = null
 
     private val backCallback = object : OnBackPressedCallback(false) {
@@ -92,7 +94,7 @@ class MainActivity : ComponentActivity() {
             val uri = res.data?.let { IntentCompat.getParcelableExtra(it, RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java) }
             if (uri != null) {
                 val title = try { RingtoneManager.getRingtone(this, uri)?.getTitle(this) } catch (e: Exception) { null }
-                saveSound(uri, title ?: "Custom", force = false)
+                saveSound(soundKind, uri, title ?: "Custom", force = false)
             }
         }
 
@@ -100,7 +102,7 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri != null) {
                 try { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) } catch (e: SecurityException) { }
-                saveSound(uri, displayName(uri) ?: "Audio file", force = true)   // arbitrary files need "force"
+                saveSound(soundKind, uri, displayName(uri) ?: "Audio file", force = true)   // arbitrary files need "force"
             }
         }
 
@@ -384,12 +386,15 @@ class MainActivity : ComponentActivity() {
     }
 
     // ================================================================== sound
-    internal fun soundJson(): String = JSONObject()
-        .put("title", Sound.title(this)).put("custom", Sound.uri(this) != null).put("force", Sound.force(this)).toString()
+    internal fun soundsJson(): String {
+        fun one(k: SoundKind) = JSONObject().put("title", Sound.title(this, k)).put("custom", Sound.uri(this, k) != null).put("force", Sound.force(this, k))
+        return JSONObject().put("start", one(SoundKind.START)).put("end", one(SoundKind.END)).toString()
+    }
 
-    internal fun pickSound() {
+    internal fun pickSound(kind: SoundKind) {
+        soundKind = kind
         AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(R.string.sound_title)
+            .setTitle(if (kind == SoundKind.END) R.string.sound_title_end else R.string.sound_title_start)
             .setItems(arrayOf(getString(R.string.sound_system), getString(R.string.sound_file), getString(R.string.sound_default))) { _, which ->
                 when (which) {
                     0 -> ringtoneLauncher.launch(
@@ -397,10 +402,10 @@ class MainActivity : ComponentActivity() {
                             .putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
                             .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
                             .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-                            .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Sound.uri(this))
+                            .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Sound.uri(this, kind))
                     )
                     1 -> audioFileLauncher.launch(arrayOf("audio/*"))
-                    else -> { Sound.clear(this); soundChanged() }
+                    else -> { Sound.clear(this, kind); soundChanged() }
                 }
             }.show()
     }
@@ -410,8 +415,8 @@ class MainActivity : ComponentActivity() {
         js("window.__ffSoundChanged&&window.__ffSoundChanged()")
     }
 
-    private fun saveSound(uri: Uri, title: String, force: Boolean) {
-        Sound.set(this, uri, title, force)
+    private fun saveSound(kind: SoundKind, uri: Uri, title: String, force: Boolean) {
+        Sound.set(this, kind, uri, title, force)
         soundChanged()
     }
 

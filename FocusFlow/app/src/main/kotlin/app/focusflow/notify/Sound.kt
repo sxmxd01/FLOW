@@ -10,9 +10,15 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 
+/** Which alert a sound belongs to. Heads-up and day reminders use the START sound. */
+enum class SoundKind(val key: String) {
+    START("start"), END("end");
+    companion object { fun of(key: String?): SoundKind = if (key == "end") END else START }
+}
+
 /**
- * Custom alert sound. Two ways to get it heard:
- *  • channel sound (system ringtone picked) – the OS plays it;
+ * Custom alert sounds – one for block starts, one for block ends. Two ways to get them heard:
+ *  • channel sound (a system sound was picked) – the OS plays it;
  *  • "force": the channel is silent and we play the sound ourselves, for phones (some Samsung
  *    One UI builds) that hide or ignore per-channel sounds, and for arbitrary audio files.
  * Android freezes a channel's sound after creation, so every change bumps [version], which gives
@@ -26,29 +32,29 @@ object Sound {
 
     private fun prefs(ctx: Context) = ctx.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    fun uri(ctx: Context): Uri? = prefs(ctx).getString("uri", null)?.let { Uri.parse(it) }
-    fun title(ctx: Context): String = prefs(ctx).getString("title", null) ?: "Default"
-    fun force(ctx: Context): Boolean = uri(ctx) != null && prefs(ctx).getBoolean("force", false)
+    fun uri(ctx: Context, k: SoundKind): Uri? = prefs(ctx).getString("uri_${k.key}", null)?.let { Uri.parse(it) }
+    fun title(ctx: Context, k: SoundKind): String = prefs(ctx).getString("title_${k.key}", null) ?: "Default"
+    fun force(ctx: Context, k: SoundKind): Boolean = uri(ctx, k) != null && prefs(ctx).getBoolean("force_${k.key}", false)
     fun version(ctx: Context): Int = prefs(ctx).getInt("ver", 0)
 
-    fun set(ctx: Context, uri: Uri, title: String, force: Boolean) {
-        prefs(ctx).edit().putString("uri", uri.toString()).putString("title", title)
-            .putBoolean("force", force).putInt("ver", version(ctx) + 1).apply()
+    fun set(ctx: Context, k: SoundKind, uri: Uri, title: String, force: Boolean) {
+        prefs(ctx).edit().putString("uri_${k.key}", uri.toString()).putString("title_${k.key}", title)
+            .putBoolean("force_${k.key}", force).putInt("ver", version(ctx) + 1).apply()
     }
 
-    fun setForce(ctx: Context, force: Boolean) {
-        if (uri(ctx) == null) return
-        prefs(ctx).edit().putBoolean("force", force).putInt("ver", version(ctx) + 1).apply()
+    fun setForce(ctx: Context, k: SoundKind, force: Boolean) {
+        if (uri(ctx, k) == null) return
+        prefs(ctx).edit().putBoolean("force_${k.key}", force).putInt("ver", version(ctx) + 1).apply()
     }
 
-    fun clear(ctx: Context) {
-        prefs(ctx).edit().remove("uri").remove("title").remove("force").putInt("ver", version(ctx) + 1).apply()
+    fun clear(ctx: Context, k: SoundKind) {
+        prefs(ctx).edit().remove("uri_${k.key}").remove("title_${k.key}").remove("force_${k.key}").putInt("ver", version(ctx) + 1).apply()
     }
 
     /** [preview] ignores Do-Not-Disturb / silent mode (the user explicitly asked to hear it). */
-    fun play(ctx: Context, preview: Boolean = false) {
+    fun play(ctx: Context, k: SoundKind, preview: Boolean = false) {
         val app = ctx.applicationContext
-        val uri = uri(app) ?: return
+        val uri = uri(app, k) ?: return
         if (!preview) {
             val am = app.getSystemService(AudioManager::class.java)
             val nm = app.getSystemService(NotificationManager::class.java)

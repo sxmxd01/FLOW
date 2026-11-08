@@ -32,26 +32,26 @@ object Notifier {
         val ver = "_v${Sound.version(app)}"
         nm.notificationChannels.filter { it.id.startsWith("ff_") && !it.id.endsWith(ver) }.forEach { nm.deleteNotificationChannel(it.id) }
 
-        val soundUri = Sound.uri(app)
         val attrs = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
 
-        fun make(base: String, name: Int, desc: Int, importance: Int, vib: LongArray?) {
+        fun make(base: String, name: Int, desc: Int, importance: Int, vib: LongArray?, kind: SoundKind) {
+            val soundUri = Sound.uri(app, kind)
             val ch = NotificationChannel(id(app, base), app.getString(name), importance).apply {
                 description = app.getString(desc)
                 setShowBadge(false)
                 if (vib != null) { enableVibration(true); vibrationPattern = vib }
                 when {
-                    Sound.force(app) -> setSound(null, null)                      // we play it ourselves
+                    Sound.force(app, kind) -> setSound(null, null)               // we play it ourselves
                     soundUri != null -> setSound(soundUri, attrs)                // let the system play it
                 }
             }
             nm.createNotificationChannel(ch)
         }
-        make(CH_START, R.string.ch_start_name, R.string.ch_start_desc, NotificationManager.IMPORTANCE_HIGH, longArrayOf(0, 180, 90, 180))
-        make(CH_END, R.string.ch_end_name, R.string.ch_end_desc, NotificationManager.IMPORTANCE_HIGH, longArrayOf(0, 120))
-        make(CH_LEAD, R.string.ch_lead_name, R.string.ch_lead_desc, NotificationManager.IMPORTANCE_DEFAULT, null)
-        make(CH_DAY, R.string.ch_day_name, R.string.ch_day_desc, NotificationManager.IMPORTANCE_DEFAULT, null)
+        make(CH_START, R.string.ch_start_name, R.string.ch_start_desc, NotificationManager.IMPORTANCE_HIGH, longArrayOf(0, 180, 90, 180), SoundKind.START)
+        make(CH_END, R.string.ch_end_name, R.string.ch_end_desc, NotificationManager.IMPORTANCE_HIGH, longArrayOf(0, 120), SoundKind.END)
+        make(CH_LEAD, R.string.ch_lead_name, R.string.ch_lead_desc, NotificationManager.IMPORTANCE_DEFAULT, null, SoundKind.START)
+        make(CH_DAY, R.string.ch_day_name, R.string.ch_day_desc, NotificationManager.IMPORTANCE_DEFAULT, null, SoundKind.START)
     }
 
     fun notificationsAllowed(ctx: Context): Boolean = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
@@ -99,7 +99,7 @@ object Notifier {
             Scheduler.Kind.START -> {
                 channel = id(ctx, CH_START); title = ctx.getString(R.string.n_start_title, b.title)
                 text = ctx.getString(R.string.n_start_text, range, durText)
-                big = listOfNotNull(text, b.subjectName, nextLine).joinToString("\n"); timeout = b.dur * 60_000L
+                big = listOfNotNull(text, b.note.ifBlank { null }, b.subjectName, nextLine).joinToString("\n"); timeout = b.dur * 60_000L
             }
             Scheduler.Kind.END -> {
                 channel = id(ctx, CH_END); title = ctx.getString(R.string.n_end_title, b.title)
@@ -109,7 +109,7 @@ object Notifier {
             else -> {
                 channel = id(ctx, CH_LEAD); title = ctx.getString(R.string.n_lead_title, b.title, snap.notif.leadMin)
                 text = ctx.getString(R.string.n_start_text, range, durText)
-                big = listOfNotNull(text, b.subjectName).joinToString("\n"); timeout = snap.notif.leadMin * 60_000L
+                big = listOfNotNull(text, b.note.ifBlank { null }, b.subjectName).joinToString("\n"); timeout = snap.notif.leadMin * 60_000L
             }
         }
         val builder = base(ctx, channel, title, text, b.color)
@@ -120,7 +120,7 @@ object Notifier {
         if (ev.kind == Scheduler.Kind.END && !b.isFixed) {
             builder.addAction(R.drawable.ic_check, ctx.getString(R.string.n_action_done), Intents.markDone(ctx, nid, b.id, b.date.toString(), nid))
         }
-        deliver(ctx, nid, builder.build())
+        deliver(ctx, nid, builder.build(), if (ev.kind == Scheduler.Kind.END) SoundKind.END else SoundKind.START)
     }
 
     @SuppressLint("MissingPermission")
@@ -148,7 +148,7 @@ object Notifier {
         val n = base(ctx, id(ctx, CH_DAY), title, text, 0xFF95A0B8.toInt())
             .setWhen(ev.time).setShowWhen(true).setTimeoutAfter(3 * 3_600_000L)
             .setContentIntent(open1).addAction(R.drawable.ic_stat_focus, ctx.getString(label), open1).build()
-        deliver(ctx, nid, n)
+        deliver(ctx, nid, n, SoundKind.START)
     }
 
     private fun base(ctx: Context, channel: String, title: String, text: String, color: Int) =
@@ -158,9 +158,9 @@ object Notifier {
             .setPriority(NotificationCompat.PRIORITY_HIGH).setAutoCancel(true)
 
     @SuppressLint("MissingPermission")
-    private fun deliver(ctx: Context, id: Int, n: android.app.Notification) {
+    private fun deliver(ctx: Context, id: Int, n: android.app.Notification, kind: SoundKind) {
         NotificationManagerCompat.from(ctx).notify(id, n)
-        if (Sound.force(ctx)) Sound.play(ctx)
+        if (Sound.force(ctx, kind)) Sound.play(ctx, kind)
     }
 
     /** Settings → Alerts → Send. Returns false if notifications are blocked. */
@@ -169,7 +169,7 @@ object Notifier {
         ensureChannels(ctx)
         val n = base(ctx, id(ctx, CH_START), ctx.getString(R.string.n_test_title), ctx.getString(R.string.n_test_text), 0xFF95A0B8.toInt())
             .setContentIntent(Intents.openApp(ctx, TEST_ID)).build()
-        deliver(ctx, TEST_ID, n)
+        deliver(ctx, TEST_ID, n, SoundKind.START)
         return true
     }
 }
