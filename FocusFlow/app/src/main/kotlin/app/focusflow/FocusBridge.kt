@@ -39,6 +39,9 @@ class FocusBridge(private val activity: MainActivity) {
         main.postDelayed(syncRunnable, 350)
     }
 
+    @JavascriptInterface
+    fun getVersion(): String = activity.versionLabel()
+
     // ------------------------------------------------------------ permissions
     @JavascriptInterface
     fun getStatus(): String = activity.statusJson()

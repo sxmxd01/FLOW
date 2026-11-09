@@ -32,6 +32,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.IntentCompat
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -151,7 +152,13 @@ class MainActivity : ComponentActivity() {
 
         onBackPressedDispatcher.addCallback(this, backCallback)
         configureWebView()
-        webView.loadUrl(APP_URL)
+        // New build installed? Drop any cached web files so the new UI always shows.
+        val (_, code) = versionInfo()
+        if (prefs.getLong(KEY_LAST_VERSION, -1L) != code) {
+            webView.clearCache(true)
+            prefs.edit().putLong(KEY_LAST_VERSION, code).apply()
+        }
+        webView.loadUrl("$APP_URL?v=$code")
 
         if (savedInstanceState == null) handleIntent(intent)
 
@@ -426,6 +433,15 @@ class MainActivity : ComponentActivity() {
         }
     } catch (e: Exception) { null }
 
+    private fun versionInfo(): Pair<String, Long> = try {
+        val pi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+        else @Suppress("DEPRECATION") packageManager.getPackageInfo(packageName, 0)
+        (pi.versionName ?: "?") to PackageInfoCompat.getLongVersionCode(pi)
+    } catch (e: Exception) { "?" to 0L }
+
+    internal fun versionLabel(): String = versionInfo().let { "v${it.first} · build ${it.second}" }
+
     private fun cleanSharedCache() {
         val dir = File(cacheDir, "shared")
         val cutoff = System.currentTimeMillis() - 24 * 3_600_000L
@@ -437,5 +453,6 @@ class MainActivity : ComponentActivity() {
         private const val APP_URL = "https://appassets.androidplatform.net/assets/index.html"
         private const val KEY_ASKED_NOTIF = "asked_notif"
         private const val KEY_ASKED_EXACT = "asked_exact"
+        private const val KEY_LAST_VERSION = "last_version"
     }
 }

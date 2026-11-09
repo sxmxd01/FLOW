@@ -11,11 +11,24 @@ android {
         applicationId = "app.focusflow"
         minSdk = 30            // Android 11+
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.2.0"
+    }
+
+    // One fixed key for every build, so a new APK installs OVER the old one (no uninstall needed from now on).
+    signingConfigs {
+        create("focusflow") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("focusflow")
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -25,7 +38,7 @@ android {
             )
             // Convenience: lets `assembleRelease` produce an installable APK out of the box.
             // Replace with your own keystore before publishing to the Play Store.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("focusflow")
         }
     }
 

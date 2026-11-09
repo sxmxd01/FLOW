@@ -7,6 +7,16 @@ A time-management system (not a to-do list) for Android 11–16+, built from you
 **Planner:** scores every 15-min slot with what it has learned about you; learns from *every* block (rated or not), adapts to your real wake-up / bedtime, re-fits a late start into gaps and breaks, tightens breaks, shortens blocks, and only then slides bedtime (limit is yours) — leftovers roll to tomorrow.
 **Also:** home-screen widget, start/end/heads-up alerts + day reminders, separate custom start / end alert sounds (system sound or any audio file, with "force" for phones that ignore channel sounds), typed fields everywhere, undo, backup/restore.
 
+## Update to a new build (important)
+
+The zip is the **source code**, not an APK. The APK comes from the GitHub build:
+**Actions → newest "Build APK" run → Artifacts → `FocusFlow-1.2.0-build<N>`** (the `<N>` should go up with every push).
+
+Builds are now signed with the fixed key in `app/debug.keystore`, so new APKs install **over** the old app and keep your data.
+Builds made before this one were signed with a random key, so **one time only**: in the old app open Settings → Data → Export, uninstall it, install the new APK, then Settings → Data → Import.
+
+To confirm which build you are running: Settings (gear) → the footer shows `FocusFlow v1.2.0 · build 3`.
+
 ## Build
 
 1. Open this folder in **Android Studio** (Meerkat / 2024.3.1 or newer; the project targets Android 16 / API 36) and let Gradle sync (it downloads Gradle 8.9 and AGP 8.7.3 automatically).

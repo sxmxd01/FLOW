@@ -562,6 +562,22 @@ header{padding-bottom:6px!important}
 .bc-q{font-size:11.5px;font-weight:600;color:#868da1;margin-right:4px;flex:1}
 .bc-row .star{width:34px;height:34px}
 .bc-row .bc-btn{margin-left:6px}
+
+.ver{text-align:center;font-size:11px;color:#5f6579;font-weight:600;margin:14px 0 2px;letter-spacing:.3px}
+
+/* v4.1: more room for the timeline */
+.blk-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blk-note-in{font-weight:500;font-size:11.5px;color:#8d94a8}
+.gp-head{margin:0 0 4px}
+.seg.mini button{padding:5px 11px}
+.sg{padding:8px 10px 7px 12px}
+.sg-hd{margin-bottom:5px}
+.sg-f{margin-top:5px;font-size:10px}
+.day-chip{padding:4px 2px 5px!important}
+.daybar{min-height:50px;padding:7px 8px 7px 12px;margin-bottom:7px}
+.week,.goals{max-height:140px;overflow:hidden;transition:max-height .28s var(--ease),opacity .2s,margin .28s var(--ease),padding .28s var(--ease)}
+.week{max-height:80px}
+body.scrolled .week,body.scrolled .goals{max-height:0;opacity:0;margin-top:0;margin-bottom:0;padding-top:0!important;padding-bottom:0!important;pointer-events:none}
 </style>
 </head>
 <body>
@@ -1540,15 +1556,18 @@ function renderTimeline(){
     const top = (t.start - lo) * PXPM, h = Math.max(t.dur * PXPM, 26), fixed = t.type === 'fixed';
     const p = t.pct || 0, part = !fixed && p > 0 && p < 100;
     const tag = fixed ? ` · ${catOf(t).name}` : (part ? ` · ${p}%` : '');
+    const noteLine = t.note && h >= 58 ? `<div class="blk-note">${esc(trunc(t.note, 54))}</div>` : '';
+    const noteIn = t.note && h < 58 && h >= 40 ? `<span class="blk-note-in"> · ${esc(trunc(t.note, 42))}</span>` : '';
+    const noteMark = t.note && h < 40 ? ' ✎' : '';
     const isNew = fresh && !lastRender.ids.has(t.id);
     html += `<div class="blk ${t.done ? 'done' : ''} ${fixed ? 'fixed' : ''} ${t.dur <= 30 ? 'sm' : ''} ${t.carried ? 'carried' : ''} ${isNew ? 'enter' : ''}"
       data-id="${t.id}" style="top:${top}px;height:${h}px;--c:${colorForTask(t)}">
       ${!fixed && p > 0 ? `<div class="pfill" style="width:${p}%"></div>` : ''}
       ${fixed ? '<div class="lock"></div>' : '<div class="grip"></div>'}
       <div class="blk-body">
-        <div class="blk-time">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)}${tag}${t.virtual ? ' ↻' : ''}${t.carried ? ' →' : ''}</div>
-        <div class="blk-title">${esc(t.title)}</div>
-        ${t.note && h >= 58 ? `<div class="blk-note">${esc(trunc(t.note, 54))}</div>` : ''}
+        <div class="blk-time">${fmtShort(t.start)} – ${fmtShort(t.start + t.dur)}${tag}${t.virtual ? ' ↻' : ''}${t.carried ? ' →' : ''}${noteMark}</div>
+        <div class="blk-title">${esc(t.title)}${noteIn}</div>
+        ${noteLine}
       </div>
       ${fixed ? '' : `<button class="chk ${part ? 'part' : ''}" style="--p:${p}" aria-label="toggle done">${part ? `<b>${p}</b>` : ICON.check}</button>`}
     </div>`;
@@ -1695,7 +1714,9 @@ function renderStats(){
 function render(){
   renderWeek(); renderGoals(); renderTimeline(); renderStats(); renderDayBar();
 }
+let progUntil = 0, lastSY = 0;
 function scrollToTime(min, instant){
+  progUntil = Date.now() + 800;
   const [lo] = dayWindow();
   $('#tlWrap').scrollTo({ top:Math.max(0, (min - lo) * PXPM - 50), behavior: instant || reducedMotion() ? 'auto' : 'smooth' });
 }
@@ -1707,6 +1728,14 @@ function scrollDefault(instant){
     : (list.length ? Math.min(...list.map(t => t.start)) : lo);
   scrollToTime(target, instant);
 }
+$('#tlWrap').addEventListener('scroll', () => {
+  const el = $('#tlWrap'), y = el.scrollTop, dy = y - lastSY;
+  lastSY = y;
+  if (Date.now() < progUntil || sheetOpen) return;
+  const on = document.body.classList.contains('scrolled');
+  if (!on && y > 90 && dy > 6){ document.body.classList.add('scrolled'); progUntil = Date.now() + 450; }
+  else if (on && (dy < -10 || y < 30)){ document.body.classList.remove('scrolled'); progUntil = Date.now() + 450; }
+}, { passive:true });
 function goDate(key){
   if (key === state.date) return;
   const dir = key > state.date ? 1 : -1;
@@ -2270,6 +2299,7 @@ function renderSettingsHome(){
       <button class="mrow" data-a="go:${k}">${gIcon(k)}
         <span class="mt"><b>${SET_TITLES[k]}</b><small>${esc(groupSummary(k))}</small></span>
         ${k === 'alerts' && warn ? '<i class="dotwarn"></i>' : ''}<span class="chev">${ICON.chev}</span></button>`).join('')}</div>
+    ${nativeVersion ? `<div class="ver">FocusFlow ${esc(nativeVersion)}</div>` : ''}
     <div class="sheet-actions"><button class="btn primary" data-a="close">Close</button></div>`;
 }
 function renderSettingsGroup(){
@@ -2934,6 +2964,7 @@ function buildDayReportSVG(){
 /* ============================================================
    SOUND (Android): pick a custom alert sound, optionally force-play it
 ============================================================ */
+let nativeVersion = '';
 let nativeSound = { start:{ title:'Default', custom:false, force:false }, end:{ title:'Default', custom:false, force:false } };
 function soundRefresh(){ if (NATIVE && NATIVE.getSounds){ try { nativeSound = JSON.parse(NATIVE.getSounds()); } catch(_){} } }
 /* k = "pick:start" | "preview:end" | "clear:start" | "force:end" */
@@ -3134,7 +3165,7 @@ function boot(){
   render();
   requestAnimationFrame(() => scrollDefault(true));
   tick();
-  if (NATIVE){ nativeStatusRefresh(); soundRefresh(); try { NATIVE.ready(); } catch(_){} }
+  if (NATIVE){ nativeStatusRefresh(); soundRefresh(); try { nativeVersion = NATIVE.getVersion(); } catch(_){} try { NATIVE.ready(); } catch(_){} }
 }
 boot();
 </script>
