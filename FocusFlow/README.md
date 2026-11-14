@@ -3,6 +3,7 @@
 A time-management system (not a to-do list) for Android 11–16+, built from your FocusFlow planner.
 
 **Subjects first:** every block belongs to ONE subject (and optionally a material: “AR – FinalLap”). Subject cards show planned vs done vs the daily goal; partial progress counts proportionally. Add a block in 3 short steps: subject → time → material & note.
+**Production polish:** light / dark / auto theme (share images follow it), no limits on block length or wake / sleep times, confirmation before big accidental moves, uncapped custom alert sounds (played to the end by a foreground service), smoother keyed animations.
 **Day flow:** Start day → (live block bar, +10, done, Re-fit when behind) → End day → share the report.
 **Planner:** scores every 15-min slot with what it has learned about you; learns from *every* block (rated or not), adapts to your real wake-up / bedtime, re-fits a late start into gaps and breaks, tightens breaks, shortens blocks, and only then slides bedtime (limit is yours) — leftovers roll to tomorrow.
 **Also:** home-screen widget, start/end/heads-up alerts + day reminders, separate custom start / end alert sounds (system sound or any audio file, with "force" for phones that ignore channel sounds), typed fields everywhere, undo, backup/restore.
@@ -10,12 +11,12 @@ A time-management system (not a to-do list) for Android 11–16+, built from you
 ## Update to a new build (important)
 
 The zip is the **source code**, not an APK. The APK comes from the GitHub build:
-**Actions → newest "Build APK" run → Artifacts → `FocusFlow-1.2.0-build<N>`** (the `<N>` should go up with every push).
+**Actions → newest "Build APK" run → Artifacts → `FocusFlow-1.3.0-build<N>`** (the `<N>` should go up with every push).
 
 Builds are now signed with the fixed key in `app/debug.keystore`, so new APKs install **over** the old app and keep your data.
 Builds made before this one were signed with a random key, so **one time only**: in the old app open Settings → Data → Export, uninstall it, install the new APK, then Settings → Data → Import.
 
-To confirm which build you are running: Settings (gear) → the footer shows `FocusFlow v1.2.0 · build 3`.
+To confirm which build you are running: Settings (gear) → the footer shows `FocusFlow v1.3.0 · build 4`.
 
 ## Build
 

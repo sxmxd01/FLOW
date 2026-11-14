@@ -9,5 +9,6 @@
     <color name="ff_accent">#A3B3C9</color>
     <color name="ff_green">#8BB59A</color>
     <color name="ff_icon_bg">#0E1015</color>
+    <color name="ff_splash_bg">#F4F5F9</color>
     <color name="ff_notif">#95A0B8</color>
 </resources>

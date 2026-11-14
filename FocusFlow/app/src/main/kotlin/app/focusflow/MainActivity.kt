@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.media.RingtoneManager
@@ -35,6 +36,7 @@ import androidx.core.content.IntentCompat
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewAssetLoader
@@ -127,9 +129,10 @@ class MainActivity : ComponentActivity() {
         )
         window.isNavigationBarContrastEnforced = false
 
-        root = FrameLayout(this).apply { setBackgroundColor(BG) }
+        val light = prefs.getBoolean(KEY_LIGHT, false)     // last theme the user saw → no dark/light flash on launch
+        root = FrameLayout(this).apply { setBackgroundColor(bgColor(light)) }
         webView = WebView(this).apply {
-            setBackgroundColor(BG)
+            setBackgroundColor(bgColor(light))
             overScrollMode = View.OVER_SCROLL_NEVER
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
@@ -139,6 +142,7 @@ class MainActivity : ComponentActivity() {
             FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
         )
         setContentView(root)
+        applyBars(light)
 
         // The page is laid out between the system bars (and above the keyboard).
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
@@ -163,6 +167,11 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) handleIntent(intent)
 
         Bg.run { cleanSharedCache() }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (pageReady) js("window.__ffSystemTheme&&window.__ffSystemTheme(${isSystemDark()})")   // theme "Auto" follows the system
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -433,6 +442,26 @@ class MainActivity : ComponentActivity() {
         }
     } catch (e: Exception) { null }
 
+    // ================================================================== theme
+    private fun bgColor(light: Boolean) = if (light) 0xFFF4F5F9.toInt() else 0xFF0A0B0E.toInt()
+
+    private fun applyBars(light: Boolean) {
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = light       // dark icons on the light theme, light icons on dark
+            isAppearanceLightNavigationBars = light
+        }
+    }
+
+    internal fun isSystemDark(): Boolean =
+        (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+    internal fun setLight(light: Boolean) {
+        prefs.edit().putBoolean(KEY_LIGHT, light).apply()
+        root.setBackgroundColor(bgColor(light))
+        webView.setBackgroundColor(bgColor(light))
+        applyBars(light)
+    }
+
     private fun versionInfo(): Pair<String, Long> = try {
         val pi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
@@ -449,7 +478,7 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val BG = 0xFF0A0B0E.toInt()
+        private const val KEY_LIGHT = "light"
         private const val APP_URL = "https://appassets.androidplatform.net/assets/index.html"
         private const val KEY_ASKED_NOTIF = "asked_notif"
         private const val KEY_ASKED_EXACT = "asked_exact"

@@ -32,6 +32,9 @@
     <string name="n_dayend_text">%1$d of %2$d blocks done. Close the day and share your report.</string>
     <string name="n_action_start_day">Start day</string>
     <string name="n_action_end_day">End day</string>
+    <string name="ch_playing_name">Alert sound playback</string>
+    <string name="sound_playing">Playing alert sound</string>
+    <string name="sound_stop">Stop</string>
     <string name="sound_title_start">Start sound</string>
     <string name="sound_title_end">End sound</string>
     <string name="sound_system">System sounds</string>

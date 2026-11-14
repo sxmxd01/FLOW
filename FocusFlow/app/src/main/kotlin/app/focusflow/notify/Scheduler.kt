@@ -57,7 +57,7 @@ object Scheduler {
                 out += Event(e, Kind.END, b, d)
             }
             if (snap.notif.dayStart) out += Event(epoch(d, snap.wake, zone), Kind.DAY_START, null, d)
-            if (snap.notif.dayEnd) out += Event(epoch(d, snap.sleep - 30, zone), Kind.DAY_END, null, d)
+            if (snap.notif.dayEnd) out += Event(epoch(d, maxOf(snap.wake + 1, snap.sleep - 30), zone), Kind.DAY_END, null, d)
             out += Event(epoch(d.plusDays(1), 0, zone) + 2_000L, Kind.ROLLOVER, null, d)
             d = d.plusDays(1)
         }

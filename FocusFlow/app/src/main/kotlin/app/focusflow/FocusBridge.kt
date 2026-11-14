@@ -42,6 +42,13 @@ class FocusBridge(private val activity: MainActivity) {
     @JavascriptInterface
     fun getVersion(): String = activity.versionLabel()
 
+    @JavascriptInterface
+    fun getSystemDark(): Boolean = activity.isSystemDark()
+
+    /** The web UI tells us which theme is showing so status/navigation bars and the window background match. */
+    @JavascriptInterface
+    fun setTheme(light: Boolean) { activity.runOnUiThread { activity.setLight(light) } }
+
     // ------------------------------------------------------------ permissions
     @JavascriptInterface
     fun getStatus(): String = activity.statusJson()

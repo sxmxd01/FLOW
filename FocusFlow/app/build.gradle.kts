@@ -11,8 +11,8 @@ android {
         applicationId = "app.focusflow"
         minSdk = 30            // Android 11+
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.2.0"
+        versionCode = 4
+        versionName = "1.3.0"
     }
 
     // One fixed key for every build, so a new APK installs OVER the old one (no uninstall needed from now on).

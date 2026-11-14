@@ -2,13 +2,16 @@ package app.focusflow.notify
 
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 
 /** Which alert a sound belongs to. Heads-up and day reminders use the START sound. */
 enum class SoundKind(val key: String) {
@@ -26,7 +29,6 @@ enum class SoundKind(val key: String) {
  */
 object Sound {
     private const val PREFS = "ff_sound"
-    private const val MAX_PLAY_MS = 9_000L
     private val main = Handler(Looper.getMainLooper())
     private var player: MediaPlayer? = null
 
@@ -51,7 +53,10 @@ object Sound {
         prefs(ctx).edit().remove("uri_${k.key}").remove("title_${k.key}").remove("force_${k.key}").putInt("ver", version(ctx) + 1).apply()
     }
 
-    /** [preview] ignores Do-Not-Disturb / silent mode (the user explicitly asked to hear it). */
+    /**
+     * Plays the sound for the whole length of the file. [preview] ignores Do-Not-Disturb / silent mode
+     * (the user explicitly asked to hear it).
+     */
     fun play(ctx: Context, k: SoundKind, preview: Boolean = false) {
         val app = ctx.applicationContext
         val uri = uri(app, k) ?: return
@@ -61,22 +66,30 @@ object Sound {
             if (am.ringerMode != AudioManager.RINGER_MODE_NORMAL) return
             if (nm.currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL) return
         }
+        try {
+            ContextCompat.startForegroundService(app, Intent(app, SoundService::class.java).putExtra(SoundService.EXTRA_URI, uri.toString()))
+        } catch (e: Exception) {          // foreground start refused (e.g. inexact alarm): play in-process, still uncapped
+            Log.w("FocusFlow", "sound service unavailable, playing in-process", e)
+            playInProcess(app, uri)
+        }
+    }
+
+    private fun playInProcess(app: Context, uri: Uri) {
         main.post {
             stop()
             try {
                 val mp = MediaPlayer()
                 player = mp
                 mp.setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
                 )
+                mp.setWakeMode(app, PowerManager.PARTIAL_WAKE_LOCK)
                 mp.setDataSource(app, uri)
                 mp.setOnPreparedListener { it.start() }
                 mp.setOnCompletionListener { stop() }
                 mp.setOnErrorListener { _, _, _ -> stop(); true }
                 mp.prepareAsync()
-                main.postDelayed({ if (player === mp) stop() }, MAX_PLAY_MS)
             } catch (e: Exception) {
                 Log.w("FocusFlow", "sound failed", e)
                 stop()
